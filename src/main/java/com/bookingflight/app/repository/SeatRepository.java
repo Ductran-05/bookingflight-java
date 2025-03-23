@@ -8,4 +8,6 @@ import com.bookingflight.app.domain.Seat;
 @Repository
 public interface SeatRepository extends JpaRepository<Seat, String> {
 
+    Object getSeatBySeatCode(String seatCode);
+
 }
