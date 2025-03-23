@@ -22,7 +22,8 @@ public class Seat {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     String id;
-    String SeatId;
+    String seatCode;
+    String seatName;
     Number price;
     String description;
 }

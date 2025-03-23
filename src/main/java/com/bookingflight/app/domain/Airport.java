@@ -24,7 +24,7 @@ public class Airport {
     @GeneratedValue(strategy = GenerationType.UUID)
     String id;
     String airportCode;
-    String AirportName;
+    String airportName;
 
     @ManyToOne
     @JoinColumn(name = "cityId")
