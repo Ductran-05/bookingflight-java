@@ -19,7 +19,8 @@ public enum ErrorCode {
     TICKET_EXISTED(1001, "Ticket number existed"),
     TICKET_NOT_EXISTED(1003, "Ticket number not existed"),
     SEAT_EXISTED(1001, "Seat existed"),
-    SEAT_NOT_EXISTED(1003, "Seat not existed"),;
+    SEAT_NOT_EXISTED(1003, "Seat not existed"),
+    PLANE_EXISTED(1001, "Plane existed"),;
 
     ErrorCode(int code, String message) {
         this.code = code;

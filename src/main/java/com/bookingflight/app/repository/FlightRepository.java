@@ -2,12 +2,9 @@ package com.bookingflight.app.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-
-import com.bookingflight.app.domain.Seat;
+import com.bookingflight.app.domain.Flight;
 
 @Repository
-public interface SeatRepository extends JpaRepository<Seat, String> {
-
-    Seat getSeatBySeatCode(String seatCode);
+public interface FlightRepository extends JpaRepository<Flight, String> {
 
 }

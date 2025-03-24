@@ -7,6 +7,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
@@ -26,13 +27,13 @@ public class Flight {
     @GeneratedValue(strategy = GenerationType.UUID)
     String id;
     String flightCode;
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "planeId")
     Plane plane;
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "departureAirportId")
     Airport departureAirport;
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "arrivalAirportId")
     Airport arrivalAirport;
     Date departureTime;
