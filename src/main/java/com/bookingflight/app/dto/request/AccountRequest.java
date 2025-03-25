@@ -1,6 +1,5 @@
 package com.bookingflight.app.dto.request;
 
-
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.NoArgsConstructor;

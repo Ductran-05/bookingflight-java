@@ -14,13 +14,18 @@ public enum ErrorCode {
     BOOKING_EXISTED(1001, "Booking's id existed"),
     BOOKING_NOT_EXISTED(1003, "Booking not existed"),
     ACCOUNT_NOT_EXISTED(1003, "Account not existed"),
+    ACCOUNT_USERNAME_EXISTED(1003, "Account username already existed"),
+    ACCOUNT_EMAIL_EXISTED(1003, "Account email already existed"),
+    ACCOUNT_PHONE_EXISTED(1003, "Account phone already existed"),
     PLANE_NOT_EXISTED(1003, "Plane not existed"),
     CUSTOMER_NOT_EXISTED(1003, "Customer not existed"),
     TICKET_EXISTED(1001, "Ticket number existed"),
     TICKET_NOT_EXISTED(1003, "Ticket number not existed"),
     SEAT_EXISTED(1001, "Seat existed"),
     SEAT_NOT_EXISTED(1003, "Seat not existed"),
-    PLANE_EXISTED(1001, "Plane existed"),;
+    PLANE_EXISTED(1001, "Plane existed"),
+    AIRLINE_NOT_EXISTED(1003, "Airline not existed"),
+    AIRLINE_EXISTED(1003, "Airline existed"),;
 
     ErrorCode(int code, String message) {
         this.code = code;
