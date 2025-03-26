@@ -2,6 +2,8 @@ plugins {
 	java
 	id("org.springframework.boot") version "3.4.4"
 	id("io.spring.dependency-management") version "1.1.7"
+	id("io.freefair.lombok") version "6.5.0-rc1"
+
 }
 
 group = "com.bookingflight"
@@ -18,8 +20,7 @@ repositories {
 }
 
 dependencies {
-	implementation ("org.mapstruct:mapstruct:1.5.5.Final")
-    annotationProcessor ("org.mapstruct:mapstruct-processor:1.5.5.Final")
+
 	implementation("org.springframework.boot:spring-boot-starter")
 	implementation("org.springframework.boot:spring-boot-starter-security")
 	implementation("org.springframework.boot:spring-boot-starter-web")
@@ -29,7 +30,9 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-actuator")
 	implementation("org.projectlombok:lombok")
     annotationProcessor("org.projectlombok:lombok")
-    // implementation("mysql:mysql-connector-j:8.0.33")
+//     implementation("mysql:mysql-connector-j:8.0.33")
+	implementation ("org.mapstruct:mapstruct:1.5.5.Final")
+	annotationProcessor ("org.mapstruct:mapstruct-processor:1.5.5.Final")
 	runtimeOnly("com.mysql:mysql-connector-j")
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
 }
