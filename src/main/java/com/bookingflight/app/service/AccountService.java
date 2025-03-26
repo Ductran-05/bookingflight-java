@@ -7,10 +7,8 @@ import com.bookingflight.app.exception.AppException;
 import com.bookingflight.app.exception.ErrorCode;
 import com.bookingflight.app.mapper.AccountMapper;
 import com.bookingflight.app.repository.AccountRepository;
-import com.bookingflight.app.repository.PlaneRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.stream.Collectors;
 
