@@ -31,7 +31,6 @@ public class AirlineService {
     }
     public AirlineResponse createAirline(AirlineRequest request) {
         Airline airline = airlineMapper.toAirline(request);
-        System.out.println("To Airline: " + airline);
         if(airlineRepository.existsByAirlineCode(airline.getAirlineCode())) {
             throw new AppException(ErrorCode.AIRLINE_EXISTED);
         }

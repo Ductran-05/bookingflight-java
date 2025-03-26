@@ -25,7 +25,9 @@ public enum ErrorCode {
     SEAT_NOT_EXISTED(1003, "Seat not existed"),
     PLANE_EXISTED(1001, "Plane existed"),
     AIRLINE_NOT_EXISTED(1003, "Airline not existed"),
-    AIRLINE_EXISTED(1003, "Airline existed"),;
+    AIRLINE_EXISTED(1003, "Airline existed"),
+    CITY_NOT_EXISTED(1003, "City not existed"),
+    CITY_EXISTED(1003, "City existed"),;
 
     ErrorCode(int code, String message) {
         this.code = code;
