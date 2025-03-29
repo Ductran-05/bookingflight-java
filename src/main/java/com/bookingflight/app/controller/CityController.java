@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/city")
+@RequestMapping("/citys")
 @RequiredArgsConstructor
 public class CityController {
     private final CityService cityService;
@@ -25,6 +25,7 @@ public class CityController {
                 .build();
         return ResponseEntity.ok().body(response);
     }
+
     @GetMapping("/{id}")
     public ResponseEntity<APIResponse<CityResponse>> getCityById(@PathVariable("id") String id) {
         APIResponse<CityResponse> response = APIResponse.<CityResponse>builder()
@@ -34,6 +35,7 @@ public class CityController {
                 .build();
         return ResponseEntity.ok().body(response);
     }
+
     @PostMapping
     public ResponseEntity<APIResponse<CityResponse>> createCity(@RequestBody CityRequest cityRequest) {
         APIResponse<CityResponse> response = APIResponse.<CityResponse>builder()
@@ -43,8 +45,10 @@ public class CityController {
                 .build();
         return ResponseEntity.ok().body(response);
     }
+
     @PutMapping("/{id}")
-    public ResponseEntity<APIResponse<CityResponse>> updateCity(@PathVariable("id") String id, @RequestBody CityRequest cityRequest) {
+    public ResponseEntity<APIResponse<CityResponse>> updateCity(@PathVariable("id") String id,
+            @RequestBody CityRequest cityRequest) {
         APIResponse<CityResponse> response = APIResponse.<CityResponse>builder()
                 .Code(200)
                 .Message("Success")
@@ -52,6 +56,7 @@ public class CityController {
                 .build();
         return ResponseEntity.ok().body(response);
     }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<APIResponse<CityResponse>> deleteCity(@PathVariable("id") String id) {
         cityService.deleteCity(id);

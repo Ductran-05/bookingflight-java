@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -45,7 +46,7 @@ public class PlaneController {
     }
 
     @PostMapping()
-    public ResponseEntity<APIResponse<PlaneResponse>> createPlane(PlaneRequest request) {
+    public ResponseEntity<APIResponse<PlaneResponse>> createPlane(@RequestBody PlaneRequest request) {
         APIResponse<PlaneResponse> apiResponse = APIResponse.<PlaneResponse>builder()
                 .Code(201)
                 .Message("Create plane successfully")

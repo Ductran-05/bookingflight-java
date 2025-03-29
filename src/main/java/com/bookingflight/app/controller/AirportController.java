@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/airport")
+@RequestMapping("/airports")
 @RequiredArgsConstructor
 public class AirportController {
     private final AirportService airportService;
@@ -47,7 +47,9 @@ public class AirportController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<APIResponse<AirportResponse>> updateAirport(@PathVariable("id") String id, @RequestBody AirportRequest airportRequest) {
+    public ResponseEntity<APIResponse<AirportResponse>> updateAirport(@PathVariable("id") String id,
+            @RequestBody AirportRequest airportRequest) {
+
         APIResponse<AirportResponse> response = APIResponse.<AirportResponse>builder()
                 .Code(200)
                 .Message("Success")

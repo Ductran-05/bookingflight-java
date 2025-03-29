@@ -30,10 +30,10 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-actuator")
 	implementation("org.projectlombok:lombok")
     annotationProcessor("org.projectlombok:lombok")
-//     implementation("mysql:mysql-connector-j:8.0.33")
+	implementation("mysql:mysql-connector-java:8.0.33")
 	implementation ("org.mapstruct:mapstruct:1.5.5.Final")
 	annotationProcessor ("org.mapstruct:mapstruct-processor:1.5.5.Final")
-	runtimeOnly("com.mysql:mysql-connector-j")
+	// runtimeOnly("com.mysql:mysql-connector-j")
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
 }
 

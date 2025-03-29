@@ -34,6 +34,7 @@ public class AirportService {
     }
 
     public AirportResponse createAirport(AirportRequest request) {
+
         City city = cityRepository.findByCityCode(request.getCityCode())
                 .orElseThrow(() -> new AppException(ErrorCode.CITY_NOT_EXISTED));
 
