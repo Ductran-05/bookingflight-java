@@ -4,10 +4,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.bookingflight.app.domain.Airport;
 import com.bookingflight.app.domain.Flight;
-import com.bookingflight.app.domain.Flight_Airport;
-import com.bookingflight.app.domain.Plane;
 import com.bookingflight.app.dto.request.FlightRequest;
 import com.bookingflight.app.dto.request.Flight_AirportRequest;
 import com.bookingflight.app.dto.request.Flight_SeatRequest;
@@ -19,7 +16,6 @@ import com.bookingflight.app.mapper.Flight_AirportMapper;
 import com.bookingflight.app.mapper.Flight_SeatMapper;
 import com.bookingflight.app.repository.*;
 import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
 
 @Service
 @AllArgsConstructor
@@ -38,11 +34,11 @@ public class FlightService {
         private final Flight_SeatMapper flight_SeatMapper;
 
         public FlightResponse createFlight(FlightRequest request) {
-                Plane plane = planeRepository.findById(request.getPlaneId())
+                planeRepository.findById(request.getPlaneId())
                                 .orElseThrow(() -> new AppException(ErrorCode.PLANE_NOT_EXISTED));
-                Airport departureAirport = airportRepository.findById(request.getDepartureAirportId())
+                airportRepository.findById(request.getDepartureAirportId())
                                 .orElseThrow(() -> new AppException(ErrorCode.AIRPORT_NOT_EXISTED));
-                Airport arrivalAirport = airportRepository.findById(request.getArrivalAirportId())
+                airportRepository.findById(request.getArrivalAirportId())
                                 .orElseThrow(() -> new AppException(ErrorCode.AIRPORT_NOT_EXISTED));
                 flightRepository.findByFlightCode(request.getFlightCode())
                                 .ifPresent(flight -> {

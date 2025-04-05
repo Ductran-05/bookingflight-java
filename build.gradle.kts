@@ -21,22 +21,21 @@ repositories {
 
 dependencies {
 
-	implementation("org.springframework.boot:spring-boot-starter")
-    implementation("org.springframework.boot:spring-boot-starter-security")
-	implementation("org.springframework.boot:spring-boot-starter-web")
-	testImplementation("org.springframework.boot:spring-boot-starter-test")
-	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
-	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 	implementation("org.springframework.boot:spring-boot-starter-actuator")
-	implementation("org.projectlombok:lombok")
-    annotationProcessor("org.projectlombok:lombok")
-	// implementation("mysql:mysql-connector-java:8.0.33")
-	implementation ("org.mapstruct:mapstruct:1.5.5.Final")
-	annotationProcessor ("org.mapstruct:mapstruct-processor:1.5.5.Final")
-	runtimeOnly("com.mysql:mysql-connector-j")
-	developmentOnly("org.springframework.boot:spring-boot-devtools")
+	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+    implementation("org.springframework.boot:spring-boot-starter-security")
+	implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
 	implementation("org.springframework.boot:spring-boot-starter-validation")
+	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
+	implementation("org.thymeleaf.extras:thymeleaf-extras-springsecurity6")
+	developmentOnly("org.springframework.boot:spring-boot-devtools")
+	// runtimeOnly("com.mysql:mysql-connector-j")
+	implementation("mysql:mysql-connector-java:8.0.33")
+	testImplementation("org.springframework.boot:spring-boot-starter-test")
+	testImplementation("org.springframework.security:spring-security-test")
+	implementation("org.mapstruct:mapstruct:1.5.5.Final")
+    annotationProcessor("org.mapstruct:mapstruct-processor:1.5.5.Final")
 }
 
 tasks.withType<Test> {

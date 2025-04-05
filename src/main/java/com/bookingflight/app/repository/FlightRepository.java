@@ -5,7 +5,6 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import com.bookingflight.app.domain.Flight;
-import com.bookingflight.app.dto.request.FlightRequest;
 
 @Repository
 public interface FlightRepository extends JpaRepository<Flight, String> {
