@@ -1,6 +1,9 @@
 package com.bookingflight.app.exception;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -15,6 +18,17 @@ public class GlobalException {
         response.setMessage(exception.getErrorCode().getMessage());
         response.setCode(exception.getErrorCode().getCode());
         return ResponseEntity.badRequest().body(response);
+    }
+
+    @ExceptionHandler(value = {
+            UsernameNotFoundException.class,
+            BadCredentialsException.class })
+    public ResponseEntity<APIResponse<Object>> handleIdException(Exception ex) {
+        APIResponse<Object> res = new APIResponse<Object>();
+        res.setMessage(ex.getMessage());
+        res.setCode(HttpStatus.BAD_REQUEST.value());
+        res.setData(null);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(res);
     }
 
 }

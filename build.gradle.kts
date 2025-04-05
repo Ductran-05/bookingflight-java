@@ -35,6 +35,8 @@ dependencies {
 	annotationProcessor ("org.mapstruct:mapstruct-processor:1.5.5.Final")
 	runtimeOnly("com.mysql:mysql-connector-j")
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
+	implementation("org.springframework.boot:spring-boot-starter-validation")
+	implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
 }
 
 tasks.withType<Test> {
