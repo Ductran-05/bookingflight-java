@@ -34,12 +34,11 @@ public class AirportService {
     }
 
     public AirportResponse createAirport(AirportRequest request) {
-
-        City city = cityRepository.findByCityCode(request.getCityCode())
+        City city = cityRepository.findById(request.getCityId())
                 .orElseThrow(() -> new AppException(ErrorCode.CITY_NOT_EXISTED));
 
         Airport airport = airportMapper.toAirport(request);
-        airport.setCity(city); // City is now managed
+        airport.setCity(city); // Set the city object
 
         if (airportRepository.existsByAirportCode(airport.getAirportCode())) {
             throw new AppException(ErrorCode.AIRPORT_EXISTED);
@@ -51,7 +50,15 @@ public class AirportService {
     public AirportResponse updateAirport(String id, AirportRequest request) {
         Airport airport = airportRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.AIRPORT_NOT_EXISTED));
+
         airportMapper.updateAirport(airport, request);
+
+        if (request.getCityId() != null) {
+            City city = cityRepository.findById(request.getCityId())
+                    .orElseThrow(() -> new AppException(ErrorCode.CITY_NOT_EXISTED));
+            airport.setCity(city);
+        }
+
         return airportMapper.toAirportResponse(airportRepository.save(airport));
     }
 

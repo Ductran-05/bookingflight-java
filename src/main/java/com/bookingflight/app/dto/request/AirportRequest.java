@@ -11,5 +11,5 @@ import lombok.experimental.FieldDefaults;
 public class AirportRequest {
     String airportCode;
     String airportName;
-    String cityCode;
+    String cityId;
 }
