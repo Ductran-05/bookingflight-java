@@ -2,6 +2,7 @@ package com.bookingflight.app.util;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
@@ -36,6 +37,7 @@ public class SecurityUtil {
             .issuedAt(now)
             .expiresAt(validity)
             .subject(authentication.getName())
+            .id(UUID.randomUUID().toString())
             .claim("projectjava", authentication)
             .build();
 

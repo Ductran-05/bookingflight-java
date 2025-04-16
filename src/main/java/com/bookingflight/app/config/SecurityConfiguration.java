@@ -40,10 +40,9 @@ public class SecurityConfiguration {
                 .csrf(csrf -> csrf.disable())
 
                 .authorizeHttpRequests(authz -> authz
-                        .requestMatchers("/", "/login").permitAll() // Đảm bảo /login không yêu cầu xác thực
+                        .requestMatchers("/", "/login", "/accounts", "/accounts/{id}").permitAll() // Đảm bảo /login
                         .anyRequest().authenticated()) // Các route khác yêu cầu xác thực
                 // .anyRequest().permitAll()) // Tạm thời cho phép tất cả các route để kiểm tra
-                // Cấu hình OAuth2 bảo vệ các route, nhưng không áp dụng cho /login
                 .oauth2ResourceServer(oauth2 -> oauth2
                         .jwt(Customizer.withDefaults())
                         .authenticationEntryPoint(cusAuthEntryPoint))
