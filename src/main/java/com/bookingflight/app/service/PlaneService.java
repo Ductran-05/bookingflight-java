@@ -42,6 +42,7 @@ public class PlaneService {
         Plane plane = planeRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.PLANE_NOT_EXISTED));
         planeMapper.updatePlane(plane, request);
+
         return planeMapper.toPlaneResponse(planeRepository.save(plane));
     }
 

@@ -34,6 +34,7 @@ public class FlightService {
         private final Flight_SeatMapper flight_SeatMapper;
 
         public FlightResponse createFlight(FlightRequest request) {
+                // validate
                 planeRepository.findById(request.getPlaneId())
                                 .orElseThrow(() -> new AppException(ErrorCode.PLANE_NOT_EXISTED));
                 airportRepository.findById(request.getDepartureAirportId())

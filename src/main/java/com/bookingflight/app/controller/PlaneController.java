@@ -56,7 +56,8 @@ public class PlaneController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<APIResponse<PlaneResponse>> updatePlane(@PathVariable String id, PlaneRequest request) {
+    public ResponseEntity<APIResponse<PlaneResponse>> updatePlane(@PathVariable String id,
+            @RequestBody PlaneRequest request) {
         APIResponse<PlaneResponse> apiResponse = APIResponse.<PlaneResponse>builder()
                 .Code(200)
                 .Message("Update plane successfully")

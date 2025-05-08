@@ -31,4 +31,12 @@ public class GlobalException {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(res);
     }
 
+    @ExceptionHandler(value = Exception.class)
+    ResponseEntity<APIResponse<String>> handleAppException() {
+        APIResponse<String> response = new APIResponse<>();
+        response.setMessage(ErrorCode.UNIDENTIFIED_EXCEPTION.getMessage());
+        response.setCode(ErrorCode.UNIDENTIFIED_EXCEPTION.getCode());
+        return ResponseEntity.badRequest().body(response);
+    }
+
 }
