@@ -34,9 +34,9 @@ public class GlobalException {
     }
 
     @ExceptionHandler(value = Exception.class)
-    ResponseEntity<APIResponse<String>> handleAppException() {
+    ResponseEntity<APIResponse<String>> handleAppException(Exception exception) {
         APIResponse<String> response = new APIResponse<>();
-        response.setMessage(ErrorCode.UNIDENTIFIED_EXCEPTION.getMessage());
+        response.setMessage(exception.getMessage());
         response.setCode(ErrorCode.UNIDENTIFIED_EXCEPTION.getCode());
         return ResponseEntity.badRequest().body(response);
     }

@@ -13,4 +13,5 @@ public class PlaneResponse {
     String planeCode;
     String planeName;
     String airlineId;
+    String airlineName;
 }

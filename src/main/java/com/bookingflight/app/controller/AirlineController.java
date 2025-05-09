@@ -1,11 +1,9 @@
 package com.bookingflight.app.controller;
 
-import com.bookingflight.app.domain.Airline;
 import com.bookingflight.app.dto.request.AirlineRequest;
 import com.bookingflight.app.dto.response.APIResponse;
 import com.bookingflight.app.dto.response.AirlineResponse;
 import com.bookingflight.app.service.AirlineService;
-import com.bookingflight.app.service.PlaneService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/airline")
+@RequestMapping("/api/airlines")
 @RequiredArgsConstructor
 public class AirlineController {
     private final AirlineService airlineService;

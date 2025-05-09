@@ -13,4 +13,5 @@ public class AirportResponse {
     String airportCode;
     String airportName;
     String cityId;
+    String cityName;
 }

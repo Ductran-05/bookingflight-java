@@ -1,21 +1,58 @@
 package com.bookingflight.app.mapper;
 
 import com.bookingflight.app.domain.Airport;
+import com.bookingflight.app.domain.City;
 import com.bookingflight.app.dto.request.AirportRequest;
 import com.bookingflight.app.dto.response.AirportResponse;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
+import com.bookingflight.app.exception.AppException;
+import com.bookingflight.app.exception.ErrorCode;
+import com.bookingflight.app.repository.CityRepository;
+
+import lombok.RequiredArgsConstructor;
+
 import org.mapstruct.MappingTarget;
+import org.springframework.stereotype.Component;
 
-@Mapper(componentModel = "spring")
-public interface AirportMapper {
+@Component
+@RequiredArgsConstructor
+public class AirportMapper {
 
-    @Mapping(target = "cityId", source = "city.id")
-    AirportResponse toAirportResponse(Airport airport);
+    private final CityRepository cityRepository;
 
-    @Mapping(target = "city", ignore = true)
-    Airport toAirport(AirportRequest airportRequest);
+    public Airport toAirport(AirportRequest request) {
+        Airport airport = new Airport();
+        airport.setAirportCode(request.getAirportCode());
+        airport.setAirportName(request.getAirportName());
 
-    @Mapping(target = "city", ignore = true)
-    void updateAirport(@MappingTarget Airport airport, AirportRequest airportRequest);
+        City city = cityRepository.findById(request.getCityId())
+                .orElseThrow(() -> new AppException(ErrorCode.CITY_NOT_EXISTED));
+        airport.setCity(city);
+
+        return airport;
+    }
+
+    public void updateAirport(@MappingTarget Airport airport, AirportRequest request) {
+        airport.setAirportCode(request.getAirportCode());
+        airport.setAirportName(request.getAirportName());
+
+        if (request.getCityId() != null) {
+            City city = cityRepository.findById(request.getCityId())
+                    .orElseThrow(() -> new AppException(ErrorCode.CITY_NOT_EXISTED));
+            airport.setCity(city);
+        }
+    }
+
+    public AirportResponse toAirportResponse(Airport airport) {
+        AirportResponse response = new AirportResponse();
+        response.setId(airport.getId());
+        response.setAirportCode(airport.getAirportCode());
+        response.setAirportName(airport.getAirportName());
+
+        if (airport.getCity() != null) {
+            response.setCityId(airport.getCity().getId());
+            response.setCityName(airport.getCity().getCityName());
+        }
+
+        return response;
+    }
 }
