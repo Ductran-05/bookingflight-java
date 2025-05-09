@@ -21,7 +21,7 @@ public class AuthController {
     final SecurityUtil securityUtil;
     final AuthenticationManagerBuilder authenticationManagerBuilder;
 
-    @PostMapping("/login")
+    @PostMapping("/auth")
     public ResponseEntity<APIResponse<LoginResponse>> login(@Valid @RequestBody LoginRequest loginRequest) {
         // Nạp input gồm username/password vào Security
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
