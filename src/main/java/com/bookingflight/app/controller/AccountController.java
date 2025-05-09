@@ -4,6 +4,8 @@ import com.bookingflight.app.dto.request.AccountRequest;
 import com.bookingflight.app.dto.response.APIResponse;
 import com.bookingflight.app.dto.response.AccountResponse;
 import com.bookingflight.app.service.AccountService;
+
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -39,7 +41,7 @@ public class AccountController {
     }
 
     @PostMapping
-    public ResponseEntity<APIResponse<AccountResponse>> createAccount(@RequestBody AccountRequest request) {
+    public ResponseEntity<APIResponse<AccountResponse>> createAccount(@RequestBody @Valid AccountRequest request) {
         String hashPassword = this.passwordEncoder.encode(request.getPassword());
         request.setPassword(hashPassword);
         APIResponse<AccountResponse> apiResponse = APIResponse.<AccountResponse>builder()

@@ -1,6 +1,5 @@
 package com.bookingflight.app.mapper;
 
-import org.aspectj.lang.annotation.After;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Context;
 import org.mapstruct.Mapper;
@@ -8,7 +7,6 @@ import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 
 import com.bookingflight.app.domain.Flight;
-import com.bookingflight.app.domain.Plane;
 import com.bookingflight.app.dto.request.FlightRequest;
 import com.bookingflight.app.dto.response.FlightResponse;
 import com.bookingflight.app.exception.AppException;
