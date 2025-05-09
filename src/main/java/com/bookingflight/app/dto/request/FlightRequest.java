@@ -1,7 +1,10 @@
 package com.bookingflight.app.dto.request;
 
 import java.sql.Date;
+import java.time.LocalDateTime;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.AccessLevel;
 import lombok.Data;
@@ -16,8 +19,13 @@ public class FlightRequest {
     String planeId;
     String departureAirportId;
     String arrivalAirportId;
-    Date departureTime;
-    Date arrivalTime;
+
+    @JsonFormat(pattern = "HH:mm dd/MM/yyyy")
+    LocalDateTime departureTime;
+
+    @JsonFormat(pattern = "HH:mm dd/MM/yyyy")
+    LocalDateTime arrivalTime;
+
     Number originPrice;
 
     List<Flight_AirportRequest> intermediateAirports;
