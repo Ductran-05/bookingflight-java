@@ -17,7 +17,9 @@ public class FlightResponse {
     String planeId;
     String planeName;
     String departureAirportId;
+    String departureAirportName;
     String arrivalAirportId;
+    String arrivalAirportName;
     Date departureTime;
     Date arrivalTime;
     Number originPrice;

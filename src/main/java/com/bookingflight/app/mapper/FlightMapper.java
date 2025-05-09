@@ -40,6 +40,8 @@ public interface FlightMapper {
         @Mapping(target = "planeName", source = "plane.planeName")
         @Mapping(target = "departureAirportId", source = "departureAirport.id")
         @Mapping(target = "arrivalAirportId", source = "arrivalAirport.id")
+        @Mapping(target = "departureAirportName", source = "departureAirport.airportName")
+        @Mapping(target = "arrivalAirportName", source = "arrivalAirport.airportName")
         FlightResponse toFlightResponse(Flight flight);
 
 }
