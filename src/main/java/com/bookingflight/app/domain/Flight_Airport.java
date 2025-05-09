@@ -1,6 +1,9 @@
 package com.bookingflight.app.domain;
 
 import java.sql.Date;
+import java.time.LocalDateTime;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -31,7 +34,11 @@ public class Flight_Airport {
     @ManyToOne
     @JoinColumn(name = "airportId")
     Airport airport;
-    Date departureTime;
-    Date arrivalTime;
+    @JsonFormat(pattern = "HH:mm dd/MM/yyyy")
+    LocalDateTime departureTime;
+
+    @JsonFormat(pattern = "HH:mm dd/MM/yyyy")
+    LocalDateTime arrivalTime;
+
     String note;
 }

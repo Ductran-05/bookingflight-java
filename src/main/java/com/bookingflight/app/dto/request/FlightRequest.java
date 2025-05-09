@@ -1,6 +1,5 @@
 package com.bookingflight.app.dto.request;
 
-import java.sql.Date;
 import java.time.LocalDateTime;
 import java.util.List;
 
