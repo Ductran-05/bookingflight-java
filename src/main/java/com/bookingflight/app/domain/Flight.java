@@ -25,7 +25,9 @@ public class Flight {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     String id;
+
     String flightCode;
+
     @ManyToOne
     @JoinColumn(name = "planeId")
     Plane plane;

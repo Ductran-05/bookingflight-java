@@ -15,6 +15,7 @@ public class FlightResponse {
     String id;
     String flightCode;
     String planeId;
+    String planeName;
     String departureAirportId;
     String arrivalAirportId;
     Date departureTime;

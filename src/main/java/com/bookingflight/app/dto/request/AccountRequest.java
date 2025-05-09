@@ -15,7 +15,7 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class AccountRequest {
 
-    @NotBlank(message = "Username must not be blank")
+    @NotBlank(message = "USERNAME_IS_REQUIRED")
     @Size(min = 4, max = 20, message = "Username must be between 4 and 20 characters")
     String username;
 

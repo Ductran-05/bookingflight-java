@@ -30,6 +30,7 @@ public enum ErrorCode {
     CITY_EXISTED(1003, "City existed"),
     FLIGHT_SEAT_NOT_EXISTED(1003, "Flight seat not existed"),
     FLIGHT_AIRPORT_NOT_EXISTED(1003, "Flight airport not existed"),
+    USERNAME_IS_REQUIRED(1003, "Username is required"),
     ;
 
     ErrorCode(int code, String message) {

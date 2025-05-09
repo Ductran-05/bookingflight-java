@@ -37,6 +37,7 @@ public interface FlightMapper {
         }
 
         @Mapping(target = "planeId", source = "plane.id")
+        @Mapping(target = "planeName", source = "plane.planeName")
         @Mapping(target = "departureAirportId", source = "departureAirport.id")
         @Mapping(target = "arrivalAirportId", source = "arrivalAirport.id")
         FlightResponse toFlightResponse(Flight flight);
