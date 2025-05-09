@@ -20,7 +20,7 @@ import com.bookingflight.app.service.FlightService;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/flights")
+@RequestMapping("/api/flights")
 @RequiredArgsConstructor
 public class FlightController {
     private final FlightService flightService;

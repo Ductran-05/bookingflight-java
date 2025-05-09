@@ -20,7 +20,7 @@ import com.bookingflight.app.service.SeatService;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/seats")
+@RequestMapping("/api/seats")
 @RequiredArgsConstructor
 public class SeatController {
     private final SeatService seatService;
