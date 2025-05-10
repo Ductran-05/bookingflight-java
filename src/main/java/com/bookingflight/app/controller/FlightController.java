@@ -67,12 +67,11 @@ public class FlightController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<APIResponse<String>> deleteFlight(@PathVariable("id") String id) {
+    public ResponseEntity<APIResponse<FlightResponse>> deleteFlight(@PathVariable("id") String id) {
         flightService.deleteFlight(id);
-        APIResponse<String> response = APIResponse.<String>builder()
+        APIResponse<FlightResponse> response = APIResponse.<FlightResponse>builder()
                 .Code(200)
                 .Message("Success")
-                .data("Delete flight successfully")
                 .build();
         return ResponseEntity.ok().body(response);
     }

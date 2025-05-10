@@ -12,4 +12,6 @@ public interface Flight_SeatRepository extends JpaRepository<Flight_Seat, String
 
     List<Flight_Seat> findAllByFlightId(String flightId);
 
+    void deleteAllByFlightId(String id);
+
 }

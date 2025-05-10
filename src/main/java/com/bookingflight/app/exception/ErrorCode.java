@@ -40,7 +40,9 @@ public enum ErrorCode {
     PHONE_IS_REQUIRED(1003, "Phone number must not be blank"),
     PHONE_INVALID(1003, "Invalid phone number format"),
     ROLE_IS_REQUIRED(1003, "Role must not be null"),
-    ROLE_INVALID(1003, "Role must be a positive number");
+    ROLE_INVALID(1003, "Role must be a positive number"),
+    FLIGHT_NOT_FOUND(1003, "Flight not found"),
+    TICKET_NOT_FOUND(1003, "Ticket not found");
 
     ;
 

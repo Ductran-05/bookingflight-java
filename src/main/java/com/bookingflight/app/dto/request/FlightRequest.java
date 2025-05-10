@@ -27,6 +27,6 @@ public class FlightRequest {
 
     Number originPrice;
 
-    List<Flight_AirportRequest> intermediateAirports;
+    List<Flight_AirportRequest> listFlight_Airport;
     List<Flight_SeatRequest> listFlight_Seat;
 }

@@ -5,6 +5,8 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.bookingflight.app.domain.Flight;
+import com.bookingflight.app.domain.Flight_Airport;
+import com.bookingflight.app.domain.Flight_Seat;
 import com.bookingflight.app.dto.request.FlightRequest;
 import com.bookingflight.app.dto.request.Flight_AirportRequest;
 import com.bookingflight.app.dto.request.Flight_SeatRequest;
@@ -15,96 +17,83 @@ import com.bookingflight.app.mapper.FlightMapper;
 import com.bookingflight.app.mapper.Flight_AirportMapper;
 import com.bookingflight.app.mapper.Flight_SeatMapper;
 import com.bookingflight.app.repository.*;
+
+import jakarta.transaction.Transactional;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.experimental.FieldDefaults;
 
 @Service
 @AllArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
+
 public class FlightService {
 
-        private final Flight_AirportRepository flight_AirportRepository;
-        private final FlightMapper flightMapper;
-        private final FlightRepository flightRepository;
-        private final PlaneRepository planeRepository;
-        private final AirportRepository airportRepository;
-        private final Flight_AirportService flight_AirportService;
-        private final Flight_SeatService flight_SeatService;
-        private final Flight_AirportMapper flight_AirportMapper;
-        private final Flight_SeatRepository flight_SeatRepository;
-        private final SeatRepository seatRepository;
-        private final Flight_SeatMapper flight_SeatMapper;
+        final FlightRepository flightRepository;
+        final FlightMapper flightMapper;
+        final Flight_AirportRepository flight_AirportRepository;
+        final Flight_AirportMapper flight_AirportMapper;
+        final Flight_SeatRepository flight_SeatRepository;
+        final Flight_SeatMapper flight_SeatMapper;
 
         public FlightResponse createFlight(FlightRequest request) {
-                // validate
-                planeRepository.findById(request.getPlaneId())
-                                .orElseThrow(() -> new AppException(ErrorCode.PLANE_NOT_EXISTED));
-                airportRepository.findById(request.getDepartureAirportId())
-                                .orElseThrow(() -> new AppException(ErrorCode.AIRPORT_NOT_EXISTED));
-                airportRepository.findById(request.getArrivalAirportId())
-                                .orElseThrow(() -> new AppException(ErrorCode.AIRPORT_NOT_EXISTED));
-                flightRepository.findByFlightCode(request.getFlightCode())
-                                .ifPresent(flight -> {
-                                        throw new AppException(ErrorCode.FLIGHT_EXISTED);
-                                });
-
-                Flight flight = flightMapper.toFlight(request, planeRepository, airportRepository);
+                Flight flight = flightMapper.toFlight(request);
                 flightRepository.save(flight);
 
-                for (Flight_AirportRequest flight_AirportRequest : request.getIntermediateAirports()) {
-                        flight_AirportRequest.setFlightId(flight.getId());
-                        flight_AirportService.createFlight_Airport(flight_AirportRequest);
+                for (Flight_AirportRequest flight_AirportRequest : request.getListFlight_Airport()) {
+                        Flight_Airport flight_Airport = flight_AirportMapper.toFlight_Airport(flight_AirportRequest,
+                                        flight);
+                        flight_AirportRepository.save(flight_Airport);
                 }
 
                 for (Flight_SeatRequest flight_SeatRequest : request.getListFlight_Seat()) {
-                        flight_SeatRequest.setFlightId(flight.getId());
-                        flight_SeatService.createFlight_Seat(flight_SeatRequest);
+                        Flight_Seat flight_Seat = flight_SeatMapper.toFlight_Seat(flight_SeatRequest, flight);
+                        flight_SeatRepository.save(flight_Seat);
                 }
 
-                return toResponse(flight);
+                return flightMapper.toFlightResponse(flight);
         }
 
         public List<FlightResponse> getAllFlights() {
-                List<Flight> flights = flightRepository.findAll();
-                return flights.stream().map(t -> toResponse(t)).toList();
+                return flightRepository.findAll().stream().map(flightMapper::toFlightResponse).toList();
         }
 
-        public FlightResponse getFlightById(String id) {
+        public FlightResponse getFlightById(String id) throws AppException {
                 Flight flight = flightRepository.findById(id)
-                                .orElseThrow(() -> new AppException(ErrorCode.FLIGHT_NOT_EXISTED));
-                return toResponse(flight);
+                                .orElseThrow(() -> new AppException(ErrorCode.FLIGHT_NOT_FOUND));
+                return flightMapper.toFlightResponse(flight);
         }
 
-        public FlightResponse updateFlight(String id, FlightRequest request) {
+        @Transactional
+        public FlightResponse updateFlight(String id, FlightRequest request) throws AppException {
                 Flight flight = flightRepository.findById(id)
-                                .orElseThrow(() -> new AppException(ErrorCode.FLIGHT_NOT_EXISTED));
-                flight = flightMapper.toFlight(request, planeRepository, airportRepository);
-                flight.setId(id);
+                                .orElseThrow(() -> new AppException(ErrorCode.FLIGHT_NOT_FOUND));
+                flight_SeatRepository.deleteAllByFlightId(id);
+                flight_AirportRepository.deleteAllByFlightId(id);
+
+                flight = flightMapper.updateFlight(id, request);
                 flightRepository.save(flight);
-                return toResponse(flight);
+
+                for (Flight_AirportRequest flight_AirportRequest : request.getListFlight_Airport()) {
+                        Flight_Airport flight_Airport = flight_AirportMapper.toFlight_Airport(flight_AirportRequest,
+                                        flight);
+                        flight_AirportRepository.save(flight_Airport);
+                }
+
+                for (Flight_SeatRequest flight_SeatRequest : request.getListFlight_Seat()) {
+                        Flight_Seat flight_Seat = flight_SeatMapper.toFlight_Seat(flight_SeatRequest, flight);
+                        flight_SeatRepository.save(flight_Seat);
+                }
+                return flightMapper.toFlightResponse(flight);
         }
 
-        public void deleteFlight(String id) {
+        @Transactional
+        public void deleteFlight(String id) throws AppException {
+
                 Flight flight = flightRepository.findById(id)
-                                .orElseThrow(() -> new AppException(ErrorCode.FLIGHT_NOT_EXISTED));
-                flight_AirportService.deleteAllByFlightId(id);
-                flight_SeatService.deleteAllByFlightId(id);
+                                .orElseThrow(() -> new AppException(ErrorCode.FLIGHT_NOT_FOUND));
+                flight_SeatRepository.deleteAllByFlightId(id);
+                flight_AirportRepository.deleteAllByFlightId(id);
                 flightRepository.delete(flight);
-        }
-
-        public FlightResponse toResponse(Flight flight) {
-                FlightResponse flightResponse = flightMapper.toFlightResponse(flight);
-                flightResponse.setIntermediateAirports(flight_AirportRepository.findAllByFlightId(flight.getId())
-                                .stream()
-                                .map(flight_Airport -> flight_AirportMapper.toFlight_AirportResponse(flight_Airport,
-                                                flightRepository,
-                                                airportRepository))
-                                .toList());
-                flightResponse.setListFlight_SeatResponses(
-                                flight_SeatRepository.getAllFlight_SeatByFlightId(flight.getId())
-                                                .stream()
-                                                .map(flight_Seat -> flight_SeatMapper.toFlight_SeatResponse(flight_Seat,
-                                                                flightRepository,
-                                                                seatRepository))
-                                                .toList());
-                return flightResponse;
         }
 }

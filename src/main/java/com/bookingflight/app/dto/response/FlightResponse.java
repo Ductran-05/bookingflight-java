@@ -1,18 +1,21 @@
 package com.bookingflight.app.dto.response;
 
-import java.sql.Date;
 import java.time.LocalDateTime;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
 @Data
 @NoArgsConstructor
+@Builder
+@AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class FlightResponse {
     String id;
@@ -32,6 +35,6 @@ public class FlightResponse {
 
     Number originPrice;
 
-    List<Flight_AirportResponse> intermediateAirports;
+    List<Flight_AirportResponse> listFlight_AirportResponses;
     List<Flight_SeatResponse> listFlight_SeatResponses;
 }

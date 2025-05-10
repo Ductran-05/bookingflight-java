@@ -1,51 +1,45 @@
 package com.bookingflight.app.mapper;
 
-import org.mapstruct.AfterMapping;
-import org.mapstruct.Context;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.MappingTarget;
+import org.springframework.stereotype.Component;
+
+import com.bookingflight.app.domain.Flight;
 import com.bookingflight.app.domain.Flight_Airport;
 import com.bookingflight.app.dto.request.Flight_AirportRequest;
 import com.bookingflight.app.dto.response.Flight_AirportResponse;
 import com.bookingflight.app.exception.AppException;
 import com.bookingflight.app.exception.ErrorCode;
 import com.bookingflight.app.repository.AirportRepository;
-import com.bookingflight.app.repository.FlightRepository;
 
-@Mapper(componentModel = "spring")
-public interface Flight_AirportMapper {
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 
-        @Mapping(target = "flight", ignore = true)
-        @Mapping(target = "airport", ignore = true)
-        @Mapping(target = "id", ignore = true)
-        Flight_Airport toFlight_Airport(Flight_AirportRequest request,
-                        @Context FlightRepository flightRepository,
-                        @Context AirportRepository airportRepository);
+@Component
+@RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
+public class Flight_AirportMapper {
+        final AirportRepository airportRepository;
 
-        @AfterMapping
-        default void setAttributes(Flight_AirportRequest request, @MappingTarget Flight_Airport flight_Airport,
-                        @Context FlightRepository flightRepository,
-                        @Context AirportRepository airportRepository) {
-
-                flight_Airport.setFlight(flightRepository.findById(request.getFlightId())
-                                .orElseThrow(() -> new AppException(ErrorCode.FLIGHT_NOT_EXISTED)));
-                flight_Airport.setAirport(airportRepository.findById(request.getAirportId())
-                                .orElseThrow(() -> new AppException(ErrorCode.AIRPORT_NOT_EXISTED)));
+        public Flight_Airport toFlight_Airport(Flight_AirportRequest request, Flight flight) {
+                return Flight_Airport.builder()
+                                .airport(airportRepository.findById(request.getAirportId())
+                                                .orElseThrow(() -> new AppException(ErrorCode.AIRPORT_NOT_EXISTED)))
+                                .flight(flight)
+                                .departureTime(request.getDepartureTime())
+                                .arrivalTime(request.getArrivalTime())
+                                .note(request.getNote())
+                                .build();
         }
 
-        // Mapping từ Entity sang Response
-        @Mapping(target = "flightId", ignore = true)
-        @Mapping(target = "airportId", ignore = true)
-        @Mapping(target = "airportName", ignore = true)
-        Flight_AirportResponse toFlight_AirportResponse(Flight_Airport entity,
-                        @Context FlightRepository flightRepository,
-                        @Context AirportRepository airportRepository);
-
-        @AfterMapping
-        default void setResponseAttributes(Flight_Airport entity, @MappingTarget Flight_AirportResponse response) {
-                response.setFlightId(entity.getFlight().getId());
-                response.setAirportId(entity.getAirport().getId());
-                response.setAirportName(entity.getAirport().getAirportName());
+        public Flight_AirportResponse toFlight_AirportResponse(Flight_Airport flight_Airport) {
+                return Flight_AirportResponse.builder()
+                                .id(flight_Airport.getId())
+                                .flightId(flight_Airport.getFlight().getId())
+                                .airportId(flight_Airport.getAirport().getId())
+                                .airportName(flight_Airport.getAirport().getAirportName())
+                                .departureTime(flight_Airport.getDepartureTime())
+                                .arrivalTime(flight_Airport.getArrivalTime())
+                                .note(flight_Airport.getNote())
+                                .build();
         }
 }
