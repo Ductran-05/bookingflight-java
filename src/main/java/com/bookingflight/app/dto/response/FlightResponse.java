@@ -3,6 +3,8 @@ package com.bookingflight.app.dto.response;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.bookingflight.app.domain.Flight_Airport;
+import com.bookingflight.app.domain.Flight_Seat;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.AccessLevel;
@@ -35,6 +37,6 @@ public class FlightResponse {
 
     Number originPrice;
 
-    List<Flight_AirportResponse> listFlight_AirportResponses;
-    List<Flight_SeatResponse> listFlight_SeatResponses;
+    List<Flight_AirportResponse> listFlight_Airport;
+    List<Flight_SeatResponse> listFlight_Seat;
 }

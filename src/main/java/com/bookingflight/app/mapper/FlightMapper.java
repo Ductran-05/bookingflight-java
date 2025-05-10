@@ -56,12 +56,12 @@ public class FlightMapper {
                                 .departureTime(flight.getDepartureTime())
                                 .arrivalTime(flight.getArrivalTime())
                                 .originPrice(flight.getOriginPrice())
-                                .listFlight_AirportResponses(flight_AirportRepository.findAllByFlightId(flight.getId())
+                                .listFlight_Airport(flight_AirportRepository.findAllByFlightId(flight.getId())
                                                 .stream()
                                                 .map(flight_Airport -> flight_AirportMapper
                                                                 .toFlight_AirportResponse(flight_Airport))
                                                 .toList())
-                                .listFlight_SeatResponses(
+                                .listFlight_Seat(
                                                 flight_SeatRepository.findAllByFlightId(flight.getId()).stream()
                                                                 .map(flight_Seat -> flight_SeatMapper
                                                                                 .toFlight_SeatResponse(flight_Seat))
