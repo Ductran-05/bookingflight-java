@@ -3,8 +3,6 @@ package com.bookingflight.app.dto.response;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import com.bookingflight.app.domain.Flight_Airport;
-import com.bookingflight.app.domain.Flight_Seat;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.AccessLevel;

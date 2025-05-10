@@ -5,7 +5,7 @@ public enum ErrorCode {
     USER_NOT_EXISTED(1003, "User not existed"),
     UNIDENTIFIED_EXCEPTION(9999, "Unidentified exception"),
     INCORRECT_PASSWORD(1004, "Incorrect password"),
-    AIRPORT_EXISTED(1001, "Airport's name existed"),
+    AIRPORT_EXISTED(1001, "Airport existed"),
     AIRPORT_NOT_EXISTED(1003, "Airport not existed"),
     EMAIL_EXISTED(1001, "Email existed"),
     FLIGHT_EXISTED(1001, "Flight's number existed"),

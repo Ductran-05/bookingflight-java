@@ -37,18 +37,26 @@ public class FlightService {
         final Flight_SeatMapper flight_SeatMapper;
 
         public FlightResponse createFlight(FlightRequest request) {
-                Flight flight = flightMapper.toFlight(request);
-                flightRepository.save(flight);
 
-                for (Flight_AirportRequest flight_AirportRequest : request.getListFlight_Airport()) {
-                        Flight_Airport flight_Airport = flight_AirportMapper.toFlight_Airport(flight_AirportRequest,
-                                        flight);
-                        flight_AirportRepository.save(flight_Airport);
+                Flight flight = flightMapper.toFlight(request);
+                flightRepository.findByFlightCode(request.getFlightCode()).ifPresent(flight1 -> {
+                        throw new AppException(ErrorCode.FLIGHT_EXISTED);
+                });
+                flightRepository.save(flight);
+                if (request.getListFlight_Airport() != null) {
+                        for (Flight_AirportRequest flight_AirportRequest : request.getListFlight_Airport()) {
+                                Flight_Airport flight_Airport = flight_AirportMapper.toFlight_Airport(
+                                                flight_AirportRequest,
+                                                flight);
+                                flight_AirportRepository.save(flight_Airport);
+                        }
                 }
 
-                for (Flight_SeatRequest flight_SeatRequest : request.getListFlight_Seat()) {
-                        Flight_Seat flight_Seat = flight_SeatMapper.toFlight_Seat(flight_SeatRequest, flight);
-                        flight_SeatRepository.save(flight_Seat);
+                if (request.getListFlight_Seat() != null) {
+                        for (Flight_SeatRequest flight_SeatRequest : request.getListFlight_Seat()) {
+                                Flight_Seat flight_Seat = flight_SeatMapper.toFlight_Seat(flight_SeatRequest, flight);
+                                flight_SeatRepository.save(flight_Seat);
+                        }
                 }
 
                 return flightMapper.toFlightResponse(flight);
