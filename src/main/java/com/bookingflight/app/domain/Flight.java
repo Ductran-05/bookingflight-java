@@ -29,7 +29,6 @@ public class Flight {
     String id;
 
     String flightCode;
-    String flightName;
 
     @ManyToOne
     @JoinColumn(name = "planeId")
