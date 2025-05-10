@@ -12,5 +12,6 @@ public class Flight_SeatResponse {
     String id;
     String flightId;
     String seatId;
+    String seatName;
     Number quantity;
 }

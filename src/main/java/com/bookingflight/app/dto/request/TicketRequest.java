@@ -15,4 +15,5 @@ public class TicketRequest {
     String passengerPhone;
     String passengerIDCard;
     String passengerEmail;
+    Boolean haveBaggage;
 }

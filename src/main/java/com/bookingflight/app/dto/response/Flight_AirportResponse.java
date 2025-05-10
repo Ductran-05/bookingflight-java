@@ -16,6 +16,7 @@ public class Flight_AirportResponse {
     String id;
     String flightId;
     String airportId;
+    String airportName;
     @JsonFormat(pattern = "HH:mm dd/MM/yyyy")
     LocalDateTime departureTime;
 

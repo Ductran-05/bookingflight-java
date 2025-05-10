@@ -37,6 +37,7 @@ public interface Flight_AirportMapper {
         // Mapping từ Entity sang Response
         @Mapping(target = "flightId", ignore = true)
         @Mapping(target = "airportId", ignore = true)
+        @Mapping(target = "airportName", ignore = true)
         Flight_AirportResponse toFlight_AirportResponse(Flight_Airport entity,
                         @Context FlightRepository flightRepository,
                         @Context AirportRepository airportRepository);
@@ -45,5 +46,6 @@ public interface Flight_AirportMapper {
         default void setResponseAttributes(Flight_Airport entity, @MappingTarget Flight_AirportResponse response) {
                 response.setFlightId(entity.getFlight().getId());
                 response.setAirportId(entity.getAirport().getId());
+                response.setAirportName(entity.getAirport().getAirportName());
         }
 }

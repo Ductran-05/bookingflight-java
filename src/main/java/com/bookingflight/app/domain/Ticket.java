@@ -9,6 +9,7 @@ import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -17,6 +18,7 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Builder
 @Table(name = "Ticket")
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Ticket {
@@ -33,4 +35,5 @@ public class Ticket {
     String passengerPhone;
     String passengerIDCard;
     String passengerEmail;
+    Boolean haveBaggage;
 }
