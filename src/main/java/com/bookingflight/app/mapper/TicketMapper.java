@@ -14,12 +14,12 @@ import com.bookingflight.app.repository.SeatRepository;
 
 @Component
 @RequiredArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class TicketMapper {
     final FlightRepository flightRepository;
     final SeatRepository seatRepository;
 
-    public Ticket toTiket(TicketRequest request) {
+    public Ticket toTicket(TicketRequest request) {
         Ticket ticket = Ticket.builder()
                 .flight(flightRepository.findById(request.getFlightId()).get())
                 .seat(seatRepository.findById(request.getSeatId()).get())
