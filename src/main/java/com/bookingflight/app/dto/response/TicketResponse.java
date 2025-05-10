@@ -15,6 +15,7 @@ import lombok.experimental.FieldDefaults;
 public class TicketResponse {
     String id;
     String flightId;
+    String flightName;
     String seatId;
     String seatName;
     String passengerName;

@@ -36,6 +36,7 @@ public class TicketMapper {
         return TicketResponse.builder()
                 .id(ticket.getId())
                 .flightId(ticket.getFlight().getId())
+                .flightName(ticket.getFlight().getFlightName())
                 .seatId(ticket.getSeat().getId())
                 .seatName(ticket.getSeat().getSeatName())
                 .passengerName(ticket.getPassengerName())
