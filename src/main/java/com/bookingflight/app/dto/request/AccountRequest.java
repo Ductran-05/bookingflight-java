@@ -16,26 +16,26 @@ import lombok.experimental.FieldDefaults;
 public class AccountRequest {
 
     @NotBlank(message = "USERNAME_IS_REQUIRED")
-    @Size(min = 4, max = 20, message = "Username must be between 4 and 20 characters")
+    @Size(min = 4, max = 20, message = "USERNAME_INVALID")
     String username;
 
-    @NotBlank(message = "Password must not be blank")
-    @Size(min = 6, max = 50, message = "Password must be between 6 and 50 characters")
+    @NotBlank(message = "PASSWORD_IS_REQUIRED")
+    @Size(min = 6, max = 50, message = "PASSWORD_INVALID")
     String password;
 
-    @NotBlank(message = "Email must not be blank")
-    @Pattern(regexp = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$", message = "Invalid email format")
+    @NotBlank(message = "EMAIL_IS_REQUIRED")
+    @Pattern(regexp = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$", message = "EMAIL_INVALID")
     String email;
 
-    @NotBlank(message = "Full name must not be blank")
-    @Size(max = 50, message = "Full name must not exceed 50 characters")
+    @NotBlank(message = "FULL_NAME_IS_REQUIRED")
+    @Size(max = 50, message = "FULL_NAME_INVALID")
     String fullName;
 
-    @NotBlank(message = "Phone number must not be blank")
-    @Pattern(regexp = "^(\\+84|0)[0-9]{9}$", message = "Invalid phone number format")
+    @NotBlank(message = "PHONE_IS_REQUIRED")
+    @Pattern(regexp = "^(\\+84|0)[0-9]{9}$", message = "PHONE_INVALID")
     String phone;
 
-    @NotNull(message = "Role must not be null")
-    @Min(value = 1, message = "Role must be a positive number")
+    @NotNull(message = "ROLE_IS_REQUIRED")
+    @Min(value = 1, message = "ROLE_INVALID")
     Number role;
 }

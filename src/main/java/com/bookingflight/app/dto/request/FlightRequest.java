@@ -15,6 +15,7 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class FlightRequest {
     String flightCode;
+    String flightName;
     String planeId;
     String departureAirportId;
     String arrivalAirportId;

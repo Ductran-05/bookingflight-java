@@ -4,7 +4,6 @@ public enum ErrorCode {
     USER_EXISTED(1001, "User existed"),
     USER_NOT_EXISTED(1003, "User not existed"),
     UNIDENTIFIED_EXCEPTION(9999, "Unidentified exception"),
-    PASSWORD_INVALID(1002, "Password must be at least 3 characters"),
     INCORRECT_PASSWORD(1004, "Incorrect password"),
     AIRPORT_EXISTED(1001, "Airport's name existed"),
     AIRPORT_NOT_EXISTED(1003, "Airport not existed"),
@@ -31,6 +30,18 @@ public enum ErrorCode {
     FLIGHT_SEAT_NOT_EXISTED(1003, "Flight seat not existed"),
     FLIGHT_AIRPORT_NOT_EXISTED(1003, "Flight airport not existed"),
     USERNAME_IS_REQUIRED(1003, "Username is required"),
+    USERNAME_INVALID(1003, "Username must be at least 4 characters and max 20 characters"),
+    PASSWORD_INVALID(1003, "Password must be at least 6 characters and max 50 characters"),
+    PASSWORD_IS_REQUIRED(1003, "Password is required"),
+    EMAIL_IS_REQUIRED(1003, "Email must not be blank"),
+    EMAIL_INVALID(1003, "Invalid email format"),
+    FULL_NAME_IS_REQUIRED(1003, "Full name must not be blank"),
+    FULL_NAME_INVALID(1003, "Full name must be at most 50 characters"),
+    PHONE_IS_REQUIRED(1003, "Phone number must not be blank"),
+    PHONE_INVALID(1003, "Invalid phone number format"),
+    ROLE_IS_REQUIRED(1003, "Role must not be null"),
+    ROLE_INVALID(1003, "Role must be a positive number");
+
     ;
 
     ErrorCode(int code, String message) {

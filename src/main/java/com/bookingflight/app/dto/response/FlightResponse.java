@@ -17,6 +17,7 @@ import lombok.experimental.FieldDefaults;
 public class FlightResponse {
     String id;
     String flightCode;
+    String flightName;
     String planeId;
     String planeName;
     String departureAirportId;
