@@ -79,7 +79,7 @@ public class FlightController {
         return ResponseEntity.ok().body(response);
     }
 
-    @GetMapping("/{id}/seats")
+    @GetMapping("/seats/{id}")
     public ResponseEntity<APIResponse<List<SeatResponse>>> getSeatsByFlightId(@PathVariable("id") String id) {
         APIResponse<List<SeatResponse>> response = APIResponse.<List<SeatResponse>>builder()
                 .Code(200)
