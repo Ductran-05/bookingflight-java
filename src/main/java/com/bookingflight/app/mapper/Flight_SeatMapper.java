@@ -33,6 +33,7 @@ public class Flight_SeatMapper {
                                 .flightId(flight_Seat.getFlight().getId())
                                 .seatId(flight_Seat.getSeat().getId())
                                 .seatName(flight_Seat.getSeat().getSeatName())
+                                .price(flight_Seat.getSeat().getPrice())
                                 .quantity(flight_Seat.getQuantity())
                                 .build();
         }
