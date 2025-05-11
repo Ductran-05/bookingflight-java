@@ -24,6 +24,6 @@ public class Seat {
     String id;
     String seatCode;
     String seatName;
-    Double price;
+    Number price;
     String description;
 }
