@@ -7,8 +7,8 @@ import com.bookingflight.app.service.AccountService;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,10 +18,10 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AccountController {
     private final AccountService accountService;
-    private final PasswordEncoder passwordEncoder;
 
     @GetMapping("/{id}")
     public ResponseEntity<APIResponse<AccountResponse>> getAccountById(@PathVariable("id") String id) {
+
         APIResponse<AccountResponse> apiResponse = APIResponse.<AccountResponse>builder()
                 .Code(200)
                 .Message("Get account by id")
@@ -42,8 +42,7 @@ public class AccountController {
 
     @PostMapping
     public ResponseEntity<APIResponse<AccountResponse>> createAccount(@RequestBody @Valid AccountRequest request) {
-        String hashPassword = this.passwordEncoder.encode(request.getPassword());
-        request.setPassword(hashPassword);
+
         APIResponse<AccountResponse> apiResponse = APIResponse.<AccountResponse>builder()
                 .Code(201)
                 .Message("Create account")

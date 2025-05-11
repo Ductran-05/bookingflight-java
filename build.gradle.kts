@@ -36,6 +36,8 @@ dependencies {
 	testImplementation("org.springframework.security:spring-security-test")
 	implementation("org.mapstruct:mapstruct:1.5.5.Final")
     annotationProcessor("org.mapstruct:mapstruct-processor:1.5.5.Final")
+	implementation("org.jasypt:jasypt:1.9.3")
+
 }
 
 tasks.withType<Test> {
