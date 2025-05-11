@@ -4,6 +4,7 @@ import com.bookingflight.app.dto.request.AirlineRequest;
 import com.bookingflight.app.dto.response.APIResponse;
 import com.bookingflight.app.dto.response.AirlineResponse;
 import com.bookingflight.app.service.AirlineService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -37,7 +38,7 @@ public class AirlineController {
     }
 
     @PostMapping
-    public ResponseEntity<APIResponse<AirlineResponse>> createAirline(@RequestBody AirlineRequest airlineRequest) {
+    public ResponseEntity<APIResponse<AirlineResponse>> createAirline(@RequestBody @Valid AirlineRequest airlineRequest) {
         System.out.println("Request: " + airlineRequest);
         APIResponse<AirlineResponse> response = APIResponse.<AirlineResponse>builder()
                 .Code(200)

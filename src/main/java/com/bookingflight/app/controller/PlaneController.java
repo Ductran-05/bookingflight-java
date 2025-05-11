@@ -2,6 +2,7 @@ package com.bookingflight.app.controller;
 
 import java.util.List;
 
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -46,7 +47,7 @@ public class PlaneController {
     }
 
     @PostMapping()
-    public ResponseEntity<APIResponse<PlaneResponse>> createPlane(@RequestBody PlaneRequest request) {
+    public ResponseEntity<APIResponse<PlaneResponse>> createPlane(@RequestBody @Valid PlaneRequest request) {
         APIResponse<PlaneResponse> apiResponse = APIResponse.<PlaneResponse>builder()
                 .Code(201)
                 .Message("Create plane successfully")

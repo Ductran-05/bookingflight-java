@@ -4,6 +4,7 @@ import com.bookingflight.app.dto.request.TicketRequest;
 import com.bookingflight.app.dto.response.APIResponse;
 import com.bookingflight.app.dto.response.TicketResponse;
 import com.bookingflight.app.service.TicketService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -41,7 +42,7 @@ public class TicketController {
     }
 
     @PostMapping
-    public ResponseEntity<APIResponse<TicketResponse>> createTicket(@RequestBody TicketRequest request) {
+    public ResponseEntity<APIResponse<TicketResponse>> createTicket(@RequestBody @Valid TicketRequest request) {
         TicketResponse ticket = ticketService.createTicket(request);
         APIResponse<TicketResponse> apiResponse = APIResponse.<TicketResponse>builder()
                 .Code(HttpStatus.CREATED.value())

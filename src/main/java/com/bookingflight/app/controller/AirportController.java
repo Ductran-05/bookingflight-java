@@ -4,6 +4,7 @@ import com.bookingflight.app.dto.request.AirportRequest;
 import com.bookingflight.app.dto.response.APIResponse;
 import com.bookingflight.app.dto.response.AirportResponse;
 import com.bookingflight.app.service.AirportService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -37,7 +38,7 @@ public class AirportController {
     }
 
     @PostMapping
-    public ResponseEntity<APIResponse<AirportResponse>> createAirport(@RequestBody AirportRequest airportRequest) {
+    public ResponseEntity<APIResponse<AirportResponse>> createAirport(@RequestBody @Valid AirportRequest airportRequest) {
         APIResponse<AirportResponse> response = APIResponse.<AirportResponse>builder()
                 .Code(200)
                 .Message("Created airport successfully")
