@@ -13,9 +13,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.bookingflight.app.domain.Seat;
 import com.bookingflight.app.dto.request.FlightRequest;
 import com.bookingflight.app.dto.response.APIResponse;
 import com.bookingflight.app.dto.response.FlightResponse;
+import com.bookingflight.app.dto.response.SeatResponse;
 import com.bookingflight.app.service.FlightService;
 
 import lombok.RequiredArgsConstructor;
@@ -73,6 +75,16 @@ public class FlightController {
         APIResponse<FlightResponse> response = APIResponse.<FlightResponse>builder()
                 .Code(200)
                 .Message("Success")
+                .build();
+        return ResponseEntity.ok().body(response);
+    }
+
+    @GetMapping("/{id}/seats")
+    public ResponseEntity<APIResponse<List<SeatResponse>>> getSeatsByFlightId(@PathVariable("id") String id) {
+        APIResponse<List<SeatResponse>> response = APIResponse.<List<SeatResponse>>builder()
+                .Code(200)
+                .Message("Success")
+                .data(flightService.getSeatsByFlightId(id))
                 .build();
         return ResponseEntity.ok().body(response);
     }

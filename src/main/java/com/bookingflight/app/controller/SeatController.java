@@ -77,4 +77,5 @@ public class SeatController {
         seatService.deleteSeat(id);
         return ResponseEntity.ok(apiResponse); // return HTTP status 204 with no content.
     }
+
 }
