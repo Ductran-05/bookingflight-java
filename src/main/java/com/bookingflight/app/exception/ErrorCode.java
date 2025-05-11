@@ -1,5 +1,7 @@
 package com.bookingflight.app.exception;
 
+import com.bookingflight.app.domain.City;
+
 public enum ErrorCode {
     USER_EXISTED(1001, "User existed"),
     USER_NOT_EXISTED(1003, "User not existed"),
@@ -42,7 +44,13 @@ public enum ErrorCode {
     ROLE_IS_REQUIRED(1003, "Role must not be null"),
     ROLE_INVALID(1003, "Role must be a positive number"),
     FLIGHT_NOT_FOUND(1003, "Flight not found"),
-    TICKET_NOT_FOUND(1003, "Ticket not found");
+    TICKET_NOT_FOUND(1003, "Ticket not found"),
+    CITY_IS_REQUIRED(1003, "City code is required"),
+    CODE_SIZE_INVALID(1003, "Code must be between 2 and 10 characters"),
+    CODE_FORMAT_INVALID(1003, "Code must be uppercase letters and/or digits"),
+    NAME_IS_REQUIRED(1003, "Name is required"),
+    NAME_SIZE_INVALID(1003, "Name must not exceed 100 characters"),
+    NAME_FORMAT_INVALID(1003, "Name must contain only letters and spaces");
 
     ;
 

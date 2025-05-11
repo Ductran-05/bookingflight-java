@@ -4,6 +4,8 @@ import com.bookingflight.app.dto.request.CityRequest;
 import com.bookingflight.app.dto.response.APIResponse;
 import com.bookingflight.app.dto.response.CityResponse;
 import com.bookingflight.app.service.CityService;
+
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -37,7 +39,7 @@ public class CityController {
     }
 
     @PostMapping
-    public ResponseEntity<APIResponse<CityResponse>> createCity(@RequestBody CityRequest cityRequest) {
+    public ResponseEntity<APIResponse<CityResponse>> createCity(@RequestBody @Valid CityRequest cityRequest) {
         APIResponse<CityResponse> response = APIResponse.<CityResponse>builder()
                 .Code(200)
                 .Message("Created city successfully")
@@ -48,7 +50,7 @@ public class CityController {
 
     @PutMapping("/{id}")
     public ResponseEntity<APIResponse<CityResponse>> updateCity(@PathVariable("id") String id,
-            @RequestBody CityRequest cityRequest) {
+            @RequestBody @Valid CityRequest cityRequest) {
         APIResponse<CityResponse> response = APIResponse.<CityResponse>builder()
                 .Code(200)
                 .Message("Success")
