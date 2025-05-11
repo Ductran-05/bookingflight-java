@@ -16,7 +16,7 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Flight_AirportRequest {
-    @NotBlank(message = "FLIGHT_ID_IS_REQUIRED")
+//    @NotBlank(message = "FLIGHT_ID_IS_REQUIRED")
     String flightId;
 
     @NotBlank(message = "AIRPORT_ID_IS_REQUIRED")
