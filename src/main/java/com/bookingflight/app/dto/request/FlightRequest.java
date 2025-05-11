@@ -42,7 +42,7 @@ public class FlightRequest {
 
     @NotNull(message = "ORIGIN_PRICE_IS_REQUIRED")
     @Min(value = 0, message = "ORIGIN_PRICE_MUST_BE_POSITIVE")
-    Double originPrice;
+    Number originPrice;
 
     @Valid
     List<@NotNull Flight_AirportRequest> listFlight_Airport;

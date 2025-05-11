@@ -23,7 +23,7 @@ public class SeatRequest {
 
     @NotNull(message = "PRICE_IS_REQUIRED")
     @Min(value = 0, message = "PRICE_MUST_BE_POSITIVE")
-    Double price;
+    Number price;
 
     @Size(max = 200, message = "DESCRIPTION_TOO_LONG")
     String description;
