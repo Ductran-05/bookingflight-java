@@ -8,6 +8,10 @@ import com.bookingflight.app.exception.ErrorCode;
 import com.bookingflight.app.mapper.AccountMapper;
 import com.bookingflight.app.repository.AccountRepository;
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -23,10 +27,9 @@ public class AccountService {
                 .orElseThrow(() -> new AppException(ErrorCode.ACCOUNT_NOT_EXISTED)));
     }
 
-    public List<AccountResponse> getAllAccounts() {
-        return accountRepository.findAll().stream()
-                .map(accountMapper::toAccountResponse)
-                .collect(Collectors.toList());
+    public List<AccountResponse> getAllAccounts(Specification<Account> spec, Pageable pageable) {
+        Page<Account> accounts = accountRepository.findAll(spec, pageable);
+        return accounts.getContent().stream().map(accountMapper::toAccountResponse).collect(Collectors.toList());
     }
 
     public AccountResponse createAccount(AccountRequest accountRequest) {

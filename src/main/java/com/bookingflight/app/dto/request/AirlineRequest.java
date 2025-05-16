@@ -13,8 +13,8 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class AirlineRequest {
 
-    @NotBlank(message = "AIRLINE_CODE_IS_REQUIRED")
-    @Pattern(regexp = "^[A-Z]{2,3}$", message = "AIRLINE_CODE_INVALID")
+    @NotBlank(message = "CODE_IS_REQUIRED")
+    @Pattern(regexp = "^[A-Z]{3}$", message = "CODE_INVALID")
     String airlineCode;
 
     @NotBlank(message = "AIRLINE_NAME_IS_REQUIRED")

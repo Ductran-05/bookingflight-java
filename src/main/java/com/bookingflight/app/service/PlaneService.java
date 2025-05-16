@@ -3,6 +3,8 @@ package com.bookingflight.app.service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import com.bookingflight.app.domain.Plane;
@@ -21,10 +23,9 @@ public class PlaneService {
     private final PlaneRepository planeRepository;
     private final PlaneMapper planeMapper;
 
-    public List<PlaneResponse> getAllPlanes() {
-        return planeRepository.findAll().stream()
-                .map(planeMapper::toPlaneResponse)
-                .collect(Collectors.toList());
+    public List<PlaneResponse> getAllPlanes(Specification<Plane> spec, Pageable pageable) {
+        List<Plane> planes = planeRepository.findAll(spec, pageable).getContent();
+        return planes.stream().map(planeMapper::toPlaneResponse).collect(Collectors.toList());
     }
 
     public PlaneResponse getPlaneById(String id) {

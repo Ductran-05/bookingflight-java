@@ -3,6 +3,9 @@ package com.bookingflight.app.controller;
 import java.util.List;
 
 import jakarta.validation.Valid;
+
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,10 +16,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.bookingflight.app.domain.Seat;
 import com.bookingflight.app.dto.request.SeatRequest;
 import com.bookingflight.app.dto.response.APIResponse;
 import com.bookingflight.app.dto.response.SeatResponse;
 import com.bookingflight.app.service.SeatService;
+import com.turkraft.springfilter.boot.Filter;
 
 import lombok.RequiredArgsConstructor;
 
@@ -27,11 +32,12 @@ public class SeatController {
     private final SeatService seatService;
 
     @GetMapping()
-    public ResponseEntity<APIResponse<List<SeatResponse>>> getAllSeats() {
+    public ResponseEntity<APIResponse<List<SeatResponse>>> getAllSeats(@Filter Specification<Seat> spec,
+            Pageable pageable) {
         APIResponse<List<SeatResponse>> apiResponse = APIResponse.<List<SeatResponse>>builder()
                 .Code(200)
                 .Message("Get all seats successfully")
-                .data(seatService.getAllSeats())
+                .data(seatService.getAllSeats(spec, pageable))
                 .build();
         return ResponseEntity.ok(apiResponse); // return HTTP status 200 with APIResponse object. //
 

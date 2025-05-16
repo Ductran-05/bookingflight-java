@@ -2,12 +2,13 @@ package com.bookingflight.app.service;
 
 import java.util.List;
 
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import com.bookingflight.app.domain.Flight;
 import com.bookingflight.app.domain.Flight_Airport;
 import com.bookingflight.app.domain.Flight_Seat;
-import com.bookingflight.app.domain.Seat;
 import com.bookingflight.app.dto.request.FlightRequest;
 import com.bookingflight.app.dto.request.Flight_AirportRequest;
 import com.bookingflight.app.dto.request.Flight_SeatRequest;
@@ -66,8 +67,9 @@ public class FlightService {
                 return flightMapper.toFlightResponse(flight);
         }
 
-        public List<FlightResponse> getAllFlights() {
-                return flightRepository.findAll().stream().map(flightMapper::toFlightResponse).toList();
+        public List<FlightResponse> getAllFlights(Specification<Flight> spec, Pageable pageable) {
+                List<Flight> flights = flightRepository.findAll(spec, pageable).getContent();
+                return flights.stream().map(flightMapper::toFlightResponse).toList();
         }
 
         public FlightResponse getFlightById(String id) throws AppException {

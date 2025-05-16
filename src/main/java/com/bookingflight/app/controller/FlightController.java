@@ -3,6 +3,9 @@ package com.bookingflight.app.controller;
 import java.util.List;
 
 import jakarta.validation.Valid;
+
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,12 +16,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.bookingflight.app.domain.Seat;
+import com.bookingflight.app.domain.Flight;
 import com.bookingflight.app.dto.request.FlightRequest;
 import com.bookingflight.app.dto.response.APIResponse;
 import com.bookingflight.app.dto.response.FlightResponse;
 import com.bookingflight.app.dto.response.SeatResponse;
 import com.bookingflight.app.service.FlightService;
+import com.turkraft.springfilter.boot.Filter;
 
 import lombok.RequiredArgsConstructor;
 
@@ -29,11 +33,12 @@ public class FlightController {
     private final FlightService flightService;
 
     @GetMapping()
-    public ResponseEntity<APIResponse<List<FlightResponse>>> getAllFlights() {
+    public ResponseEntity<APIResponse<List<FlightResponse>>> getAllFlights(@Filter Specification<Flight> spec,
+            Pageable pageable) {
         APIResponse<List<FlightResponse>> response = APIResponse.<List<FlightResponse>>builder()
                 .Code(200)
                 .Message("Success")
-                .data(flightService.getAllFlights())
+                .data(flightService.getAllFlights(spec, pageable))
                 .build();
         return ResponseEntity.ok().body(response);
     }

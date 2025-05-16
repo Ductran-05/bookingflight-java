@@ -5,7 +5,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -25,10 +25,11 @@ public class Ticket {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     String id;
-    @OneToOne
+
+    @ManyToOne
     @JoinColumn(name = "flightId")
     Flight flight;
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "seatId")
     Seat seat;
     String passengerName;

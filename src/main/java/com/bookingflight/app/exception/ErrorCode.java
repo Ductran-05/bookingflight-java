@@ -99,6 +99,7 @@ public enum ErrorCode {
     NAME_IS_REQUIRED(400, "Name is required"),
     NAME_SIZE_INVALID(400, "Name must not exceed 100 characters"),
     NAME_FORMAT_INVALID(400, "Name must contain only letters and spaces"),
+    CODE_IS_REQUIRED(400, "Code is required"),
 
     // Server errors
     UNIDENTIFIED_EXCEPTION(500, "Unidentified server error");

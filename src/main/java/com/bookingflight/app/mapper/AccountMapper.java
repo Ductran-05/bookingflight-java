@@ -3,13 +3,8 @@ package com.bookingflight.app.mapper;
 import com.bookingflight.app.domain.Account;
 import com.bookingflight.app.dto.request.AccountRequest;
 import com.bookingflight.app.dto.response.AccountResponse;
-import com.bookingflight.app.repository.AccountRepository;
-
 import lombok.RequiredArgsConstructor;
-
 import org.jasypt.util.text.BasicTextEncryptor;
-import org.mapstruct.Mapper;
-import org.mapstruct.MappingTarget;
 import org.springframework.stereotype.Component;
 
 @Component

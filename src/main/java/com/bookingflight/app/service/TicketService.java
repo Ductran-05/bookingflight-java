@@ -10,6 +10,9 @@ import com.bookingflight.app.repository.FlightRepository;
 import com.bookingflight.app.repository.SeatRepository;
 import com.bookingflight.app.repository.TicketRepository;
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,8 +42,8 @@ public class TicketService {
         return ticketMapper.toTicketResponse(ticket);
     }
 
-    public List<TicketResponse> getAllTickets() {
-        List<Ticket> tickets = ticketRepository.findAll();
+    public List<TicketResponse> getAllTickets(Specification<Ticket> spec, Pageable pageable) {
+        List<Ticket> tickets = ticketRepository.findAll(spec, pageable).getContent();
         return tickets.stream().map(ticketMapper::toTicketResponse).collect(Collectors.toList());
     }
 

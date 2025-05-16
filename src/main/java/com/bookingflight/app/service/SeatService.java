@@ -3,6 +3,8 @@ package com.bookingflight.app.service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import com.bookingflight.app.domain.Seat;
@@ -21,10 +23,9 @@ public class SeatService {
     private final SeatRepository seatRepository;
     private final SeatMapper seatMapper;
 
-    public List<SeatResponse> getAllSeats() {
-        return seatRepository.findAll().stream()
-                .map(seatMapper::toSeatResponse)
-                .collect(Collectors.toList());
+    public List<SeatResponse> getAllSeats(Specification<Seat> spec, Pageable pageable) {
+        List<Seat> seats = seatRepository.findAll(spec, pageable).getContent();
+        return seats.stream().map(seatMapper::toSeatResponse).collect(Collectors.toList());
     }
 
     public SeatResponse getSeatById(String id) {

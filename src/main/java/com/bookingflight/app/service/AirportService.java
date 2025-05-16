@@ -10,6 +10,9 @@ import com.bookingflight.app.mapper.AirportMapper;
 import com.bookingflight.app.repository.AirportRepository;
 import com.bookingflight.app.repository.CityRepository;
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,10 +25,11 @@ public class AirportService {
     private final AirportRepository airportRepository;
     private final CityRepository cityRepository;
 
-    public List<AirportResponse> getAllAirports() {
-        return airportRepository.findAll().stream()
+    public List<AirportResponse> getAllAirports(Specification<Airport> spec, Pageable pageable) {
+        List<AirportResponse> airportResponses = airportRepository.findAll(spec, pageable).getContent().stream()
                 .map(airportMapper::toAirportResponse)
                 .collect(Collectors.toList());
+        return airportResponses;
     }
 
     public AirportResponse getAirportById(String id) {

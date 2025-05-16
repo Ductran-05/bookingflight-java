@@ -8,6 +8,10 @@ import com.bookingflight.app.exception.ErrorCode;
 import com.bookingflight.app.mapper.AirlineMapper;
 import com.bookingflight.app.repository.AirlineRepository;
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,10 +23,9 @@ public class AirlineService {
     private final AirlineMapper airlineMapper;
     private final AirlineRepository airlineRepository;
 
-    public List<AirlineResponse> getAllAirlines() {
-        return airlineRepository.findAll().stream()
-                .map(airlineMapper::toAirlineResponse)
-                .collect(Collectors.toList());
+    public List<AirlineResponse> getAllAirlines(Specification<Airline> spec, Pageable pageable) {
+        Page<Airline> airlines = airlineRepository.findAll(spec, pageable);
+        return airlines.getContent().stream().map(airlineMapper::toAirlineResponse).collect(Collectors.toList());
     }
 
     public AirlineResponse getAirlineById(String id) {

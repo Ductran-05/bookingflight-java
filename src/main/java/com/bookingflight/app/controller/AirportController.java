@@ -1,11 +1,17 @@
 package com.bookingflight.app.controller;
 
+import com.bookingflight.app.domain.Airport;
 import com.bookingflight.app.dto.request.AirportRequest;
 import com.bookingflight.app.dto.response.APIResponse;
 import com.bookingflight.app.dto.response.AirportResponse;
 import com.bookingflight.app.service.AirportService;
+import com.turkraft.springfilter.boot.Filter;
+
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,11 +24,12 @@ public class AirportController {
     private final AirportService airportService;
 
     @GetMapping
-    public ResponseEntity<APIResponse<List<AirportResponse>>> getAirports() {
+    public ResponseEntity<APIResponse<List<AirportResponse>>> getAirports(@Filter Specification<Airport> spec,
+            Pageable pageable) {
         APIResponse<List<AirportResponse>> response = APIResponse.<List<AirportResponse>>builder()
                 .Code(200)
                 .Message("Success")
-                .data(airportService.getAllAirports())
+                .data(airportService.getAllAirports(spec, pageable))
                 .build();
         return ResponseEntity.ok().body(response);
     }
@@ -38,7 +45,8 @@ public class AirportController {
     }
 
     @PostMapping
-    public ResponseEntity<APIResponse<AirportResponse>> createAirport(@RequestBody @Valid AirportRequest airportRequest) {
+    public ResponseEntity<APIResponse<AirportResponse>> createAirport(
+            @RequestBody @Valid AirportRequest airportRequest) {
         APIResponse<AirportResponse> response = APIResponse.<AirportResponse>builder()
                 .Code(200)
                 .Message("Created airport successfully")

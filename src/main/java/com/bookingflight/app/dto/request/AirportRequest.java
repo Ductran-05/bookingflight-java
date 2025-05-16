@@ -12,7 +12,7 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class AirportRequest {
-    @NotBlank(message = "AIRPORT_CODE_IS_REQUIRED")
+    @NotBlank(message = "CODE_IS_REQUIRED")
     @Pattern(regexp = "^[A-Z]{3}$", message = "AIRPORT_CODE_INVALID")
     String airportCode;
 
