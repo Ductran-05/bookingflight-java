@@ -24,6 +24,8 @@ public enum ErrorCode {
     PLANE_EXISTED(409, "Plane already exists"),
     AIRLINE_EXISTED(409, "Airline already exists"),
     CITY_EXISTED(409, "City already exists"),
+    PERMISSION_EXISTED(409, "Permission already exists"),
+    ROLE_ALREADY_EXISTS(409, "Role already exists"),
 
     // Not Found errors (resource doesn't exist)
     USER_NOT_EXISTED(404, "User not found"),
@@ -41,6 +43,8 @@ public enum ErrorCode {
     FLIGHT_SEAT_NOT_EXISTED(404, "Flight seat not found"),
     FLIGHT_AIRPORT_NOT_EXISTED(404, "Flight airport not found"),
     FLIGHT_NOT_FOUND(404, "Flight not found"),
+    PERMISSION_NOT_FOUND(404, "Permission not found"),
+    ROLE_NOT_FOUND(404, "Role not found"),
 
     // Authentication errors
     INCORRECT_PASSWORD(401, "Incorrect password"),
@@ -100,9 +104,8 @@ public enum ErrorCode {
     NAME_SIZE_INVALID(400, "Name must not exceed 100 characters"),
     NAME_FORMAT_INVALID(400, "Name must contain only letters and spaces"),
     CODE_IS_REQUIRED(400, "Code is required"),
-
     // Server errors
-    UNIDENTIFIED_EXCEPTION(500, "Unidentified server error");
+    UNIDENTIFIED_EXCEPTION(500, "Unidentified server error"),;
 
     private int code;
     private String message;

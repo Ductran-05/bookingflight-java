@@ -43,7 +43,7 @@ public class PlaneController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<APIResponse<PlaneResponse>> getPlaneById(@PathVariable String id) {
+    public ResponseEntity<APIResponse<PlaneResponse>> getPlaneById(@PathVariable("id") String id) {
         APIResponse<PlaneResponse> apiResponse = APIResponse.<PlaneResponse>builder()
                 .Code(200)
                 .Message("Get plane by id successfully")
@@ -63,7 +63,7 @@ public class PlaneController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<APIResponse<PlaneResponse>> updatePlane(@PathVariable String id,
+    public ResponseEntity<APIResponse<PlaneResponse>> updatePlane(@PathVariable("id") String id,
             @RequestBody PlaneRequest request) {
         APIResponse<PlaneResponse> apiResponse = APIResponse.<PlaneResponse>builder()
                 .Code(200)
@@ -74,7 +74,7 @@ public class PlaneController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<APIResponse<Void>> deletePlane(@PathVariable String id) {
+    public ResponseEntity<APIResponse<Void>> deletePlane(@PathVariable("id") String id) {
         APIResponse<Void> apiResponse = APIResponse.<Void>builder()
                 .Code(204)
                 .Message("Delete plane successfully")
