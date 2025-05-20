@@ -1,7 +1,5 @@
 package com.bookingflight.app.controller;
 
-import java.util.List;
-
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bookingflight.app.domain.Role;
+import com.bookingflight.app.dto.ResultPaginationDTO;
 import com.bookingflight.app.dto.request.RoleRequest;
 import com.bookingflight.app.dto.response.APIResponse;
 import com.bookingflight.app.dto.response.RoleResponse;
@@ -31,9 +30,9 @@ public class RoleController {
     final RoleService roleService;
 
     @GetMapping()
-    public ResponseEntity<APIResponse<List<RoleResponse>>> getAllRoles(@Filter Specification<Role> spec,
+    public ResponseEntity<APIResponse<ResultPaginationDTO>> getAllRoles(@Filter Specification<Role> spec,
             Pageable pageable) {
-        APIResponse<List<RoleResponse>> response = APIResponse.<List<RoleResponse>>builder().Code(200)
+        APIResponse<ResultPaginationDTO> response = APIResponse.<ResultPaginationDTO>builder().Code(200)
                 .Message("Success")
                 .data(roleService.getAllRoles(spec, pageable))
                 .build();

@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bookingflight.app.domain.Flight;
+import com.bookingflight.app.dto.ResultPaginationDTO;
 import com.bookingflight.app.dto.request.FlightRequest;
 import com.bookingflight.app.dto.response.APIResponse;
 import com.bookingflight.app.dto.response.FlightResponse;
@@ -33,9 +34,9 @@ public class FlightController {
     private final FlightService flightService;
 
     @GetMapping()
-    public ResponseEntity<APIResponse<List<FlightResponse>>> getAllFlights(@Filter Specification<Flight> spec,
+    public ResponseEntity<APIResponse<ResultPaginationDTO>> getAllFlights(@Filter Specification<Flight> spec,
             Pageable pageable) {
-        APIResponse<List<FlightResponse>> response = APIResponse.<List<FlightResponse>>builder()
+        APIResponse<ResultPaginationDTO> response = APIResponse.<ResultPaginationDTO>builder()
                 .Code(200)
                 .Message("Success")
                 .data(flightService.getAllFlights(spec, pageable))

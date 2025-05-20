@@ -1,18 +1,18 @@
 package com.bookingflight.app.service;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import com.bookingflight.app.domain.Plane;
+import com.bookingflight.app.dto.ResultPaginationDTO;
 import com.bookingflight.app.dto.request.PlaneRequest;
 import com.bookingflight.app.dto.response.PlaneResponse;
 import com.bookingflight.app.exception.AppException;
 import com.bookingflight.app.exception.ErrorCode;
 import com.bookingflight.app.mapper.PlaneMapper;
+import com.bookingflight.app.mapper.ResultPanigationMapper;
 import com.bookingflight.app.repository.PlaneRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -22,10 +22,12 @@ import lombok.RequiredArgsConstructor;
 public class PlaneService {
     private final PlaneRepository planeRepository;
     private final PlaneMapper planeMapper;
+    private final ResultPanigationMapper resultPanigationMapper;
 
-    public List<PlaneResponse> getAllPlanes(Specification<Plane> spec, Pageable pageable) {
-        List<Plane> planes = planeRepository.findAll(spec, pageable).getContent();
-        return planes.stream().map(planeMapper::toPlaneResponse).collect(Collectors.toList());
+    public ResultPaginationDTO getAllPlanes(Specification<Plane> spec, Pageable pageable) {
+        Page<PlaneResponse> page = planeRepository.findAll(spec, pageable)
+                .map(planeMapper::toPlaneResponse);
+        return resultPanigationMapper.toResultPanigationMapper(page);
     }
 
     public PlaneResponse getPlaneById(String id) {

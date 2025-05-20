@@ -2,6 +2,7 @@ package com.bookingflight.app.service;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.bookingflight.app.domain.Flight;
 import com.bookingflight.app.domain.Flight_Airport;
 import com.bookingflight.app.domain.Flight_Seat;
+import com.bookingflight.app.dto.ResultPaginationDTO;
 import com.bookingflight.app.dto.request.FlightRequest;
 import com.bookingflight.app.dto.request.Flight_AirportRequest;
 import com.bookingflight.app.dto.request.Flight_SeatRequest;
@@ -19,6 +21,7 @@ import com.bookingflight.app.exception.ErrorCode;
 import com.bookingflight.app.mapper.FlightMapper;
 import com.bookingflight.app.mapper.Flight_AirportMapper;
 import com.bookingflight.app.mapper.Flight_SeatMapper;
+import com.bookingflight.app.mapper.ResultPanigationMapper;
 import com.bookingflight.app.mapper.SeatMapper;
 import com.bookingflight.app.repository.*;
 
@@ -32,6 +35,7 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 
 public class FlightService {
+        private final ResultPanigationMapper resultPanigationMapper;
 
         final FlightRepository flightRepository;
         final FlightMapper flightMapper;
@@ -40,6 +44,12 @@ public class FlightService {
         final Flight_SeatRepository flight_SeatRepository;
         final Flight_SeatMapper flight_SeatMapper;
         final SeatMapper seatMapper;
+
+        public ResultPaginationDTO getAllFlights(Specification<Flight> spec, Pageable pageable) {
+                Page<FlightResponse> page = flightRepository.findAll(spec, pageable)
+                                .map(flightMapper::toFlightResponse);
+                return resultPanigationMapper.toResultPanigationMapper(page);
+        }
 
         public FlightResponse createFlight(FlightRequest request) {
 
@@ -65,11 +75,6 @@ public class FlightService {
                 }
 
                 return flightMapper.toFlightResponse(flight);
-        }
-
-        public List<FlightResponse> getAllFlights(Specification<Flight> spec, Pageable pageable) {
-                List<Flight> flights = flightRepository.findAll(spec, pageable).getContent();
-                return flights.stream().map(flightMapper::toFlightResponse).toList();
         }
 
         public FlightResponse getFlightById(String id) throws AppException {

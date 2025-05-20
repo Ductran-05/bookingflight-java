@@ -1,24 +1,29 @@
 package com.bookingflight.app.service;
 
 import com.bookingflight.app.domain.Account;
+import com.bookingflight.app.dto.ResultPaginationDTO;
 import com.bookingflight.app.dto.request.AccountRequest;
 import com.bookingflight.app.dto.response.AccountResponse;
 import com.bookingflight.app.exception.AppException;
 import com.bookingflight.app.exception.ErrorCode;
 import com.bookingflight.app.mapper.AccountMapper;
+import com.bookingflight.app.mapper.ResultPanigationMapper;
 import com.bookingflight.app.repository.AccountRepository;
+
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
+@Data
 @RequiredArgsConstructor
 public class AccountService {
+
+    private final ResultPanigationMapper resultPanigationMapper;
     private final AccountMapper accountMapper;
     private final AccountRepository accountRepository;
 
@@ -27,9 +32,9 @@ public class AccountService {
                 .orElseThrow(() -> new AppException(ErrorCode.ACCOUNT_NOT_EXISTED)));
     }
 
-    public List<AccountResponse> getAllAccounts(Specification<Account> spec, Pageable pageable) {
-        Page<Account> accounts = accountRepository.findAll(spec, pageable);
-        return accounts.getContent().stream().map(accountMapper::toAccountResponse).collect(Collectors.toList());
+    public ResultPaginationDTO getAllAccounts(Specification<Account> spec, Pageable pageable) {
+        Page<AccountResponse> page = accountRepository.findAll(spec, pageable).map(accountMapper::toAccountResponse);
+        return resultPanigationMapper.toResultPanigationMapper(page);
     }
 
     public AccountResponse createAccount(AccountRequest accountRequest) {

@@ -1,17 +1,17 @@
 package com.bookingflight.app.service;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import com.bookingflight.app.domain.Permission;
+import com.bookingflight.app.dto.ResultPaginationDTO;
 import com.bookingflight.app.dto.request.PermissionRequest;
 import com.bookingflight.app.dto.response.PermissionResponse;
 import com.bookingflight.app.exception.AppException;
 import com.bookingflight.app.exception.ErrorCode;
 import com.bookingflight.app.mapper.PermissionMapper;
+import com.bookingflight.app.mapper.ResultPanigationMapper;
 import com.bookingflight.app.repository.PermissionRepository;
 
 import lombok.AccessLevel;
@@ -27,10 +27,12 @@ import lombok.experimental.FieldDefaults;
 public class PermissionService {
     final PermissionRepository permissionRepository;
     final PermissionMapper permissionMapper;
+    final ResultPanigationMapper resultPanigationMapper;
 
-    public List<PermissionResponse> getAllPermissions(Specification<Permission> spec, Pageable pageable) {
-        List<Permission> permissions = permissionRepository.findAll(spec, pageable).getContent();
-        return permissions.stream().map(permissionMapper::toPermissionResponse).collect(Collectors.toList());
+    public ResultPaginationDTO getAllPermissions(Specification<Permission> spec, Pageable pageable) {
+        Page<PermissionResponse> page = permissionRepository.findAll(spec, pageable)
+                .map(permissionMapper::toPermissionResponse);
+        return resultPanigationMapper.toResultPanigationMapper(page);
     }
 
     public PermissionResponse getPermissionById(String id) {

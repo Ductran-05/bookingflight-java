@@ -1,6 +1,7 @@
 package com.bookingflight.app.controller;
 
 import com.bookingflight.app.domain.Airline;
+import com.bookingflight.app.dto.ResultPaginationDTO;
 import com.bookingflight.app.dto.request.AirlineRequest;
 import com.bookingflight.app.dto.response.APIResponse;
 import com.bookingflight.app.dto.response.AirlineResponse;
@@ -15,8 +16,6 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("/api/airlines")
 @RequiredArgsConstructor
@@ -24,12 +23,12 @@ public class AirlineController {
         private final AirlineService airlineService;
 
         @GetMapping
-        public ResponseEntity<APIResponse<List<AirlineResponse>>> getAirlines(@Filter Specification<Airline> spec,
+        public ResponseEntity<APIResponse<ResultPaginationDTO>> getAirlines(@Filter Specification<Airline> spec,
                         Pageable pageable) {
-                APIResponse<List<AirlineResponse>> response = APIResponse.<List<AirlineResponse>>builder()
+                APIResponse<ResultPaginationDTO> response = APIResponse.<ResultPaginationDTO>builder()
                                 .Code(200)
                                 .Message("Success")
-                                .data(airlineService.getAllAirlines(spec, pageable))
+                                .data(airlineService.getAllAirline(spec, pageable))
                                 .build();
                 return ResponseEntity.ok().body(response);
         }

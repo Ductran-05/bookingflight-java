@@ -2,34 +2,37 @@ package com.bookingflight.app.service;
 
 import com.bookingflight.app.domain.Airport;
 import com.bookingflight.app.domain.City;
+import com.bookingflight.app.dto.ResultPaginationDTO;
 import com.bookingflight.app.dto.request.AirportRequest;
 import com.bookingflight.app.dto.response.AirportResponse;
 import com.bookingflight.app.exception.AppException;
 import com.bookingflight.app.exception.ErrorCode;
 import com.bookingflight.app.mapper.AirportMapper;
+import com.bookingflight.app.mapper.ResultPanigationMapper;
 import com.bookingflight.app.repository.AirportRepository;
 import com.bookingflight.app.repository.CityRepository;
+
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 @Service
+@Data
 @RequiredArgsConstructor
 public class AirportService {
+
     private final AirportMapper airportMapper;
     private final AirportRepository airportRepository;
     private final CityRepository cityRepository;
+    private final ResultPanigationMapper resultPanigationMapper;
 
-    public List<AirportResponse> getAllAirports(Specification<Airport> spec, Pageable pageable) {
-        List<AirportResponse> airportResponses = airportRepository.findAll(spec, pageable).getContent().stream()
-                .map(airportMapper::toAirportResponse)
-                .collect(Collectors.toList());
-        return airportResponses;
+    public ResultPaginationDTO getAllAirports(Specification<Airport> spec, Pageable pageable) {
+        Page<AirportResponse> page = airportRepository.findAll(spec, pageable).map(airportMapper::toAirportResponse);
+        return resultPanigationMapper.toResultPanigationMapper(page);
     }
 
     public AirportResponse getAirportById(String id) {

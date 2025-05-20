@@ -1,23 +1,23 @@
 package com.bookingflight.app.service;
 
 import com.bookingflight.app.domain.Ticket;
+import com.bookingflight.app.dto.ResultPaginationDTO;
 import com.bookingflight.app.dto.request.TicketRequest;
 import com.bookingflight.app.dto.response.TicketResponse;
 import com.bookingflight.app.exception.AppException;
 import com.bookingflight.app.exception.ErrorCode;
+import com.bookingflight.app.mapper.ResultPanigationMapper;
 import com.bookingflight.app.mapper.TicketMapper;
 import com.bookingflight.app.repository.FlightRepository;
 import com.bookingflight.app.repository.SeatRepository;
 import com.bookingflight.app.repository.TicketRepository;
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -26,6 +26,13 @@ public class TicketService {
     private final TicketMapper ticketMapper;
     private final FlightRepository flightRepository;
     private final SeatRepository seatRepository;
+    private final ResultPanigationMapper resultPanigationMapper;
+
+    public ResultPaginationDTO getAllTickets(Specification<Ticket> spec, Pageable pageable) {
+        Page<TicketResponse> page = ticketRepository.findAll(spec, pageable)
+                .map(ticketMapper::toTicketResponse);
+        return resultPanigationMapper.toResultPanigationMapper(page);
+    }
 
     public TicketResponse createTicket(TicketRequest request) {
         flightRepository.findById(request.getFlightId())
@@ -40,11 +47,6 @@ public class TicketService {
         Ticket ticket = ticketRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.TICKET_NOT_FOUND));
         return ticketMapper.toTicketResponse(ticket);
-    }
-
-    public List<TicketResponse> getAllTickets(Specification<Ticket> spec, Pageable pageable) {
-        List<Ticket> tickets = ticketRepository.findAll(spec, pageable).getContent();
-        return tickets.stream().map(ticketMapper::toTicketResponse).collect(Collectors.toList());
     }
 
     @Transactional

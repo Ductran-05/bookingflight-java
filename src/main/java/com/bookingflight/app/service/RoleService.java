@@ -1,8 +1,6 @@
 package com.bookingflight.app.service;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -10,10 +8,12 @@ import org.springframework.stereotype.Service;
 import com.bookingflight.app.domain.Permission;
 import com.bookingflight.app.domain.Permission_Role;
 import com.bookingflight.app.domain.Role;
+import com.bookingflight.app.dto.ResultPaginationDTO;
 import com.bookingflight.app.dto.request.RoleRequest;
 import com.bookingflight.app.dto.response.RoleResponse;
 import com.bookingflight.app.exception.AppException;
 import com.bookingflight.app.exception.ErrorCode;
+import com.bookingflight.app.mapper.ResultPanigationMapper;
 import com.bookingflight.app.mapper.RoleMapper;
 import com.bookingflight.app.repository.PermissionRepository;
 import com.bookingflight.app.repository.Permission_RoleRepostiory;
@@ -35,10 +35,12 @@ public class RoleService {
     final Permission_RoleRepostiory permission_RoleRepostiory;
     final PermissionService permissionService;
     final PermissionRepository permissionRepository;
+    private final ResultPanigationMapper resultPanigationMapper;
 
-    public List<RoleResponse> getAllRoles(Specification<Role> spec, Pageable pageable) {
-        List<Role> roles = roleRepository.findAll(spec, pageable).getContent();
-        return roles.stream().map(roleMapper::toRoleResponse).collect(Collectors.toList());
+    public ResultPaginationDTO getAllRoles(Specification<Role> spec, Pageable pageable) {
+        Page<RoleResponse> page = roleRepository.findAll(spec, pageable)
+                .map(roleMapper::toRoleResponse);
+        return resultPanigationMapper.toResultPanigationMapper(page);
     }
 
     public RoleResponse getRole(String id) {

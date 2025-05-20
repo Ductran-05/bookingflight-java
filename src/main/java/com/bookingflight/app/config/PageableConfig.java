@@ -17,7 +17,7 @@ public class PageableConfig implements WebMvcConfigurer {
 
         resolver.setFallbackPageable(PageRequest.of(0, Integer.MAX_VALUE)); // Không giới hạn mặc định
         resolver.setMaxPageSize(Integer.MAX_VALUE); // Không giới hạn tối đa
-        resolver.setOneIndexedParameters(false); // page bắt đầu từ 0
+        resolver.setOneIndexedParameters(true); // page bắt đầu từ 1
         resolvers.add(resolver);
     }
 }

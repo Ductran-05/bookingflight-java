@@ -1,6 +1,7 @@
 package com.bookingflight.app.controller;
 
 import com.bookingflight.app.domain.Ticket;
+import com.bookingflight.app.dto.ResultPaginationDTO;
 import com.bookingflight.app.dto.request.TicketRequest;
 import com.bookingflight.app.dto.response.APIResponse;
 import com.bookingflight.app.dto.response.TicketResponse;
@@ -16,8 +17,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("/api/tickets")
 @RequiredArgsConstructor
@@ -25,13 +24,12 @@ public class TicketController {
     private final TicketService ticketService;
 
     @GetMapping
-    public ResponseEntity<APIResponse<List<TicketResponse>>> getAllTickets(@Filter Specification<Ticket> spec,
+    public ResponseEntity<APIResponse<ResultPaginationDTO>> getAllTickets(@Filter Specification<Ticket> spec,
             Pageable pageable) {
-        List<TicketResponse> tickets = ticketService.getAllTickets(spec, pageable);
-        APIResponse<List<TicketResponse>> apiResponse = APIResponse.<List<TicketResponse>>builder()
+        APIResponse<ResultPaginationDTO> apiResponse = APIResponse.<ResultPaginationDTO>builder()
                 .Code(HttpStatus.OK.value())
                 .Message("Get all tickets successfully")
-                .data(tickets)
+                .data(ticketService.getAllTickets(spec, pageable))
                 .build();
         return ResponseEntity.ok(apiResponse);
 

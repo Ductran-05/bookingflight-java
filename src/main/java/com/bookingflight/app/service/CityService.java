@@ -1,30 +1,31 @@
 package com.bookingflight.app.service;
 
 import com.bookingflight.app.domain.City;
+import com.bookingflight.app.dto.ResultPaginationDTO;
 import com.bookingflight.app.dto.request.CityRequest;
 import com.bookingflight.app.dto.response.CityResponse;
 import com.bookingflight.app.exception.AppException;
 import com.bookingflight.app.exception.ErrorCode;
 import com.bookingflight.app.mapper.CityMapper;
+import com.bookingflight.app.mapper.ResultPanigationMapper;
 import com.bookingflight.app.repository.CityRepository;
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class CityService {
     private final CityMapper cityMapper;
     private final CityRepository cityRepository;
+    private final ResultPanigationMapper resultPanigationMapper;
 
-    public List<CityResponse> getAllCities(Specification<City> spec, Pageable pageable) {
-        List<City> cities = cityRepository.findAll(spec, pageable).getContent();
-        return cities.stream().map(cityMapper::toCityResponse).collect(Collectors.toList());
+    public ResultPaginationDTO getAllCities(Specification<City> spec, Pageable pageable) {
+        Page<CityResponse> page = cityRepository.findAll(spec, pageable).map(cityMapper::toCityResponse);
+        return resultPanigationMapper.toResultPanigationMapper(page);
     }
 
     public CityResponse getCityById(String id) {

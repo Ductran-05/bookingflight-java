@@ -1,6 +1,7 @@
 package com.bookingflight.app.controller;
 
 import com.bookingflight.app.domain.Account;
+import com.bookingflight.app.dto.ResultPaginationDTO;
 import com.bookingflight.app.dto.request.AccountRequest;
 import com.bookingflight.app.dto.response.APIResponse;
 import com.bookingflight.app.dto.response.AccountResponse;
@@ -14,8 +15,6 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.turkraft.springfilter.boot.Filter;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/accounts")
@@ -35,9 +34,10 @@ public class AccountController {
     }
 
     @GetMapping
-    public ResponseEntity<APIResponse<List<AccountResponse>>> getAllAccounts(@Filter Specification<Account> spec,
+    public ResponseEntity<APIResponse<ResultPaginationDTO>> getAllAccounts(@Filter Specification<Account> spec,
             Pageable pageable) {
-        APIResponse<List<AccountResponse>> apiResponse = APIResponse.<List<AccountResponse>>builder()
+
+        APIResponse<ResultPaginationDTO> apiResponse = APIResponse.<ResultPaginationDTO>builder()
                 .Code(200)
                 .Message("Get all accounts")
                 .data(accountService.getAllAccounts(spec, pageable))
