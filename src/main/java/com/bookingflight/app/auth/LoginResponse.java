@@ -1,4 +1,4 @@
-package com.bookingflight.app.login;
+package com.bookingflight.app.auth;
 
 import lombok.AccessLevel;
 import lombok.Data;

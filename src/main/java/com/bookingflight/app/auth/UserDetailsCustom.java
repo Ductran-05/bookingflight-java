@@ -1,4 +1,4 @@
-package com.bookingflight.app.login;
+package com.bookingflight.app.auth;
 
 import java.util.Collections;
 import org.springframework.security.core.userdetails.User;
@@ -21,12 +21,12 @@ public class UserDetailsCustom implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Account account = accountRepository.findByUsername(username)
+        Account account = accountRepository.findByEmail(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + username));
         return new User(
-                account.getUsername(),
+                account.getEmail(),
                 account.getPassword(),
-                Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER")));
+                Collections.singletonList(new SimpleGrantedAuthority("USER")));
 
     }
 

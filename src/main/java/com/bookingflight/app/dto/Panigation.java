@@ -10,7 +10,7 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class Meta {
+public class Panigation {
     int page;
     int pageSize;
     int pages;

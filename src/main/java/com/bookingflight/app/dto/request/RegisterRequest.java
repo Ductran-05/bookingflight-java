@@ -1,10 +1,11 @@
 package com.bookingflight.app.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -12,7 +13,9 @@ import lombok.experimental.FieldDefaults;
 @Data
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class AccountRequest {
+@Builder
+@AllArgsConstructor
+public class RegisterRequest {
 
     @NotBlank(message = "PASSWORD_IS_REQUIRED")
     @Size(min = 6, max = 50, message = "PASSWORD_INVALID")
@@ -30,6 +33,4 @@ public class AccountRequest {
     @Pattern(regexp = "^(\\+84|0)[0-9]{9}$", message = "PHONE_INVALID")
     String phone;
 
-    @NotNull(message = "ROLE_IS_REQUIRED")
-    String roleId;
 }

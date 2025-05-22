@@ -28,8 +28,10 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-validation")
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
+    implementation("org.springframework.boot:spring-boot-starter-mail")
 	implementation("org.thymeleaf.extras:thymeleaf-extras-springsecurity6")
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
+
 	// runtimeOnly("com.mysql:mysql-connector-j")
 	implementation("mysql:mysql-connector-java:8.0.33")
 	implementation("com.turkraft.springfilter:jpa:3.1.7")

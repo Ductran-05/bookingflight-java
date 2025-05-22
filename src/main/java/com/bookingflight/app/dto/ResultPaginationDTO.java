@@ -11,6 +11,6 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ResultPaginationDTO {
-    Meta meta;
+    Panigation panigation;
     Object result;
 }
