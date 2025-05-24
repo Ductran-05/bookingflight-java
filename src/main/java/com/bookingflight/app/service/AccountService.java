@@ -103,6 +103,24 @@ public class AccountService {
         emailService.send(account.getEmail(), buildEmail(link));
     }
 
+    public AccountResponse uploadAvatar(String accountId, MultipartFile file) {
+        Account account = accountRepository.findById(accountId)
+                .orElseThrow(() -> new AppException(ErrorCode.ACCOUNT_NOT_EXISTED));
+
+        String fileName = fileStorageService.storeFile(file);
+        String avatarUrl = fileStorageService.getFileUrl(fileName);
+        account.setAvatar(avatarUrl);
+        accountRepository.save(account);
+        return accountMapper.toAccountResponse(account);
+    }
+    public void deleteAvatar(String accountId) {
+        Account account = accountRepository.findById(accountId)
+                .orElseThrow(() -> new AppException(ErrorCode.ACCOUNT_NOT_EXISTED));
+        account.setAvatar(null);
+        accountRepository.save(account);
+    }
+    
+
     private String buildEmail(String link) {
         return "Chào bạn,\n\n"
                 + "Cảm ơn bạn đã đăng ký tài khoản. Vui lòng nhấn vào liên kết dưới đây để xác thực email:\n"
