@@ -22,6 +22,7 @@ public class AccountMapper {
                 .phone(request.getPhone())
                 .email(request.getEmail())
                 .password(request.getPassword())
+                .avatar(request.getAvatar())
                 .role(roleRepository.findById(request.getRoleId()).get())
                 .build();
     }
@@ -33,6 +34,7 @@ public class AccountMapper {
                 .email(account.getEmail())
                 .fullName(account.getFullName())
                 .phone(account.getPhone())
+                .avatar(account.getAvatar())
                 .role(roleMapper.toRoleResponse(account.getRole()))
                 .build();
     }
@@ -43,6 +45,7 @@ public class AccountMapper {
         account.setPhone(request.getPhone());
         account.setPassword(request.getPassword());
         account.setEmail(request.getEmail());
+        account.setAvatar(request.getAvatar());
         account.setRole(roleRepository.findById(request.getRoleId()).get());
     }
 

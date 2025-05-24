@@ -17,5 +17,6 @@ public class AccountResponse {
     String email;
     String fullName;
     String phone;
+    String avatar;
     RoleResponse role;
 }

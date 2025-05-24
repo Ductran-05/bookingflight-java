@@ -28,6 +28,7 @@ public class Account {
     String email;
     String fullName;
     String phone;
+    String avatar;
     Boolean enabled = false;
 
     @OneToOne
