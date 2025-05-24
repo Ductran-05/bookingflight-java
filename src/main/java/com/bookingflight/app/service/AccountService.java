@@ -23,6 +23,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @Data
@@ -30,9 +31,8 @@ import org.springframework.stereotype.Service;
 public class AccountService {
 
     private final EmailService emailService;
-
+    private final FileStorageService fileStorageService;
     private final VerificationTokenRepository verificationTokenRepository;
-
     private final ResultPanigationMapper resultPanigationMapper;
     private final AccountMapper accountMapper;
     private final AccountRepository accountRepository;
