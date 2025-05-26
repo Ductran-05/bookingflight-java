@@ -18,8 +18,9 @@ import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.stereotype.Service;
 
-import com.bookingflight.app.auth.LoginResponse;
 import com.bookingflight.app.config.SecurityConfiguration;
+import com.bookingflight.app.domain.Account;
+import com.bookingflight.app.dto.response.AccountResponse;
 
 import lombok.Data;
 
@@ -31,7 +32,7 @@ public class SecurityUtil {
 
     public static final MacAlgorithm JWT_ALGORITHM = MacAlgorithm.HS512;
 
-    public String createAccessToken(String username, LoginResponse.UserLogin userLogin) {
+    public String createAccessToken(String username, AccountResponse account) {
         Instant now = Instant.now();
         Instant validity = now.plus(securityConfig.getAccessTokenExpiration(), ChronoUnit.SECONDS);
 
@@ -43,12 +44,12 @@ public class SecurityUtil {
              .expiresAt(validity)
              .subject(username)
              .claim("permissions", permissions)
-             .claim("user", userLogin)
+             .claim("account", account)
              .build();
         JwsHeader jwsHeader = JwsHeader.with(JWT_ALGORITHM).build();
         return this.jwtEncoder.encode(JwtEncoderParameters.from(jwsHeader, claims)).getTokenValue();
     }
-    public String createRefreshToken(String username,LoginResponse loginResponse) {
+    public String createRefreshToken(String username,AccountResponse account) {
         Instant now = Instant.now();
         Instant validity = now.plus(securityConfig.getRefreshTokenExpiration(), ChronoUnit.SECONDS);
        
@@ -57,7 +58,7 @@ public class SecurityUtil {
             .issuedAt(now)
             .expiresAt(validity)
             .subject(username)
-            .claim("user", loginResponse.getUser())
+            .claim("account", account)
             .build();
         JwsHeader jwsHeader = JwsHeader.with(JWT_ALGORITHM).build();
         return this.jwtEncoder.encode(JwtEncoderParameters.from(jwsHeader, claims)).getTokenValue();

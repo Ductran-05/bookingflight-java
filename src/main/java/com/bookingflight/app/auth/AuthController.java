@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.security.core.Authentication;
 
-import com.bookingflight.app.auth.LoginResponse.UserLogin;
 import com.bookingflight.app.config.SecurityConfiguration;
 import com.bookingflight.app.domain.Account;
 import com.bookingflight.app.domain.VerificationToken;
@@ -27,6 +26,7 @@ import com.bookingflight.app.dto.response.APIResponse;
 import com.bookingflight.app.dto.response.AccountResponse;
 import com.bookingflight.app.exception.AppException;
 import com.bookingflight.app.exception.ErrorCode;
+import com.bookingflight.app.mapper.AccountMapper;
 import com.bookingflight.app.repository.AccountRepository;
 import com.bookingflight.app.repository.VerificationTokenRepository;
 import com.bookingflight.app.service.AccountService;
@@ -41,7 +41,7 @@ import lombok.RequiredArgsConstructor;
 public class AuthController {
 
         final AccountRepository accountRepository;
-
+        final AccountMapper accountMapper;
         final AccountService accountService;
         final SecurityUtil securityUtil;
         final AuthenticationManagerBuilder authenticationManagerBuilder;
@@ -60,20 +60,19 @@ public class AuthController {
                                 .orElseThrow(() -> new AppException(ErrorCode.AUTHENTICATION_FAILED));
                 if (!currAccount.getEnabled())
                         throw new AppException(ErrorCode.ACCOUNT_INACTIVE);
+                // set data cho SecurityContextHolder
                 SecurityContextHolder.getContext().setAuthentication(authentication);
 
+                String accessToken = securityUtil.createAccessToken(request.getUsername(),
+                                accountMapper.toAccountResponse(currAccount));
                 // khởi tạo ResponseLogin
-                UserLogin userLogin = UserLogin.builder()
-                                .id(currAccount.getId())
-                                .name(currAccount.getFullName())
-                                .username(currAccount.getEmail())
-                                .build();
                 LoginResponse loginResponse = LoginResponse.builder()
-                                .accessToken(securityUtil.createAccessToken(request.getUsername(), userLogin))
-                                .user(userLogin)
+                                .accessToken(accessToken)
+                                .account(accountMapper.toAccountResponse(currAccount))
                                 .build();
                 // tao refresh token
-                String refreshToken = securityUtil.createRefreshToken(request.getUsername(), loginResponse);
+                String refreshToken = securityUtil.createRefreshToken(request.getUsername(),
+                                loginResponse.getAccount());
                 // update refresh token cho account
                 accountService.updateAccountRefreshToken(refreshToken, request.getUsername());
                 // set cookie refresh token
@@ -104,17 +103,13 @@ public class AuthController {
                 String email = decodedTokenJwt.getSubject();
                 // kiem tra co ton tai tai khoan dua vao usename va refresh token
                 Account currAccount = accountService.findByEmailAndRefreshToken(email, refreshToken);
-                LoginResponse.UserLogin userLogin = UserLogin.builder()
-                                .id(currAccount.getId())
-                                .name(currAccount.getFullName())
-                                .username(currAccount.getEmail())
-                                .build();
                 LoginResponse loginResponse = LoginResponse.builder()
-                                .accessToken(securityUtil.createAccessToken(email, userLogin))
-                                .user(userLogin)
+                                .accessToken(securityUtil.createAccessToken(email,
+                                                accountMapper.toAccountResponse(currAccount)))
+                                .account(accountMapper.toAccountResponse(currAccount))
                                 .build();
                 // tao refresh token moi
-                String newRefreshToken = securityUtil.createRefreshToken(email, loginResponse);
+                String newRefreshToken = securityUtil.createRefreshToken(email, loginResponse.getAccount());
                 // updateAccount
                 accountService.updateAccountRefreshToken(newRefreshToken, email);
                 // set new cookie
@@ -137,7 +132,7 @@ public class AuthController {
 
         // lay nguoi dung da dang nhap
         @GetMapping("/me")
-        public ResponseEntity<APIResponse<UserLogin>> getUserLogin() {
+        public ResponseEntity<APIResponse<AccountResponse>> getUserLogin() {
                 // lay email hien tai
                 String email = SecurityUtil.getCurrentUserLogin().isPresent()
                                 ? SecurityUtil.getCurrentUserLogin().get()
@@ -145,16 +140,11 @@ public class AuthController {
                 Account currAccount = accountRepository.findByEmail(email)
                                 .orElseThrow(() -> new AppException(ErrorCode.ACCOUNT_NOT_EXISTED));
 
-                LoginResponse.UserLogin userLogin = UserLogin.builder()
-                                .id(currAccount.getId())
-                                .name(currAccount.getFullName())
-                                .username(currAccount.getEmail())
-                                .build();
-
-                APIResponse<UserLogin> response = APIResponse.<UserLogin>builder()
+                // response data
+                APIResponse<AccountResponse> response = APIResponse.<AccountResponse>builder()
                                 .Code(200)
                                 .Message("Success")
-                                .data(userLogin)
+                                .data(accountMapper.toAccountResponse(currAccount))
                                 .build();
                 return ResponseEntity.ok(response);
         }

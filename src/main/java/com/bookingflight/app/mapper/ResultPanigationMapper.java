@@ -3,7 +3,7 @@ package com.bookingflight.app.mapper;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
-import com.bookingflight.app.dto.Panigation;
+import com.bookingflight.app.dto.Pagination;
 import com.bookingflight.app.dto.ResultPaginationDTO;
 
 import lombok.AccessLevel;
@@ -18,7 +18,7 @@ import lombok.experimental.FieldDefaults;
 public class ResultPanigationMapper {
     public ResultPaginationDTO toResultPanigationMapper(Page<?> page) {
         return ResultPaginationDTO.builder()
-                .panigation(Panigation.builder()
+                .pagination(Pagination.builder()
                         .page(page.getNumber() + 1)
                         .pageSize(page.getSize())
                         .pages(page.getTotalPages())
