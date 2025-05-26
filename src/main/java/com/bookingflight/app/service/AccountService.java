@@ -74,7 +74,7 @@ public class AccountService {
         accountRepository.delete(account);
     }
 
-    public void registerUser(RegisterRequest request) {
+    public AccountResponse registerUser(RegisterRequest request) {
         // Kiểm tra email trùng
         // if (accountRepository.findByEmail(request.getEmail()).isPresent()) {
         // throw new AppException(ErrorCode.EXISTED);
@@ -103,6 +103,8 @@ public class AccountService {
         String link = "http://localhost:8080/api/auth/confirm?token=" + token;
         System.out.println(link);
         emailService.send(account.getEmail(), buildEmail(link));
+
+        return accountMapper.toAccountResponse(account);
     }
 
     public AccountResponse uploadAvatar(String accountId, MultipartFile file) {
@@ -115,13 +117,13 @@ public class AccountService {
         accountRepository.save(account);
         return accountMapper.toAccountResponse(account);
     }
+
     public void deleteAvatar(String accountId) {
         Account account = accountRepository.findById(accountId)
                 .orElseThrow(() -> new AppException(ErrorCode.ACCOUNT_NOT_EXISTED));
         account.setAvatar(null);
         accountRepository.save(account);
     }
-    
 
     private String buildEmail(String link) {
         return "Chào bạn,\n\n"
@@ -131,4 +133,11 @@ public class AccountService {
                 + "Trân trọng.";
     }
 
+    public void updateAccountRefreshToken(String refreshToken, String email) {
+        Account currAccount = accountRepository.findByEmail(email).get();
+        if (currAccount != null) {
+            currAccount.setRefreshToken(refreshToken);
+            accountRepository.save(currAccount);
+        }
+    }
 }

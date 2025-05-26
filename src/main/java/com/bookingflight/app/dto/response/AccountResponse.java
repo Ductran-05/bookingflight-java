@@ -19,4 +19,5 @@ public class AccountResponse {
     String phone;
     String avatar;
     RoleResponse role;
+    Boolean enabled;
 }

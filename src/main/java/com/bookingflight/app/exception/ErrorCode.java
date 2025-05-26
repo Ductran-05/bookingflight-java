@@ -49,6 +49,7 @@ public enum ErrorCode {
 
     // Authentication errors
     INCORRECT_PASSWORD(401, "Incorrect password"),
+    AUTHENTICATION_FAILED(401, "Authentication failed"),
 
     // Validation errors (Bad Request)
     USERNAME_IS_REQUIRED(400, "Username is required"),
@@ -105,7 +106,7 @@ public enum ErrorCode {
     NAME_SIZE_INVALID(400, "Name must not exceed 100 characters"),
     NAME_FORMAT_INVALID(400, "Name must contain only letters and spaces"),
     CODE_IS_REQUIRED(400, "Code is required"),
-    
+
     // File upload errors
     FILE_EMPTY(400, "File is empty"),
     FILE_TOO_LARGE(400, "File size exceeds maximum limit of 5MB"),
@@ -113,7 +114,7 @@ public enum ErrorCode {
     INVALID_FILE_TYPE(400, "Invalid file type. Only JPG, JPEG, PNG, GIF are allowed"),
     FILE_UPLOAD_FAILED(500, "File upload failed"),
     AVATAR_URL_TOO_LONG(400, "Avatar URL too long"),
-    
+
     // Server errors
     UNIDENTIFIED_EXCEPTION(500, "Unidentified server error"),;
 

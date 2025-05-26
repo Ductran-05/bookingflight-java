@@ -1,5 +1,6 @@
 package com.bookingflight.app.domain;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -30,6 +31,8 @@ public class Account {
     String fullName;
     String phone;
     String avatar;
+    @Column(columnDefinition = "MEDIUMTEXT")
+    String refreshToken;
 
     @Builder.Default
     Boolean enabled = false;

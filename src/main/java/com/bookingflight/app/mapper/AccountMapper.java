@@ -36,6 +36,7 @@ public class AccountMapper {
                 .phone(account.getPhone())
                 .avatar(account.getAvatar())
                 .role(roleMapper.toRoleResponse(account.getRole()))
+                .enabled(account.getEnabled())
                 .build();
     }
 

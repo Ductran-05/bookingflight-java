@@ -23,11 +23,24 @@ import org.springframework.security.oauth2.server.resource.web.access.BearerToke
 import org.springframework.security.web.SecurityFilterChain;
 import com.nimbusds.jose.jwk.source.ImmutableSecret;
 import com.nimbusds.jose.util.Base64;
+
+import lombok.Data;
+
 import com.bookingflight.app.util.SecurityUtil;
 
+@Data
 @Configuration
 @EnableMethodSecurity(securedEnabled = true)
 public class SecurityConfiguration {
+
+    // biến môi trường
+    @Value("${projectjava.jwt.refresh-token-validity-in-seconds}")
+    private long refreshTokenExpiration;
+    @Value("${projectjava.jwt.access-token-validity-in-seconds}")
+    private long accessTokenExpiration;
+    @Value("${projectjava.jwt.base64-secret}")
+    private String jwtKey;
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -40,9 +53,9 @@ public class SecurityConfiguration {
                 .csrf(csrf -> csrf.disable())
 
                 .authorizeHttpRequests(authz -> authz
-                        .requestMatchers("/", "/login", "/accounts", "/accounts/{id}").permitAll() // Đảm bảo /login
-                        // .anyRequest().authenticated()) // Các route khác yêu cầu xác thực
-                        .anyRequest().permitAll()) // Tạm thời cho phép tất cả các route để kiểm tra
+                        .requestMatchers("/", "/api/auth/login", "/api/auth/confirm", "/api/auth/register").permitAll()
+                        .anyRequest().authenticated()) // Các route khác yêu cầu xác thực
+                // .anyRequest().permitAll()) // Tạm thời cho phép tất cả các route để kiểm tra
                 .oauth2ResourceServer(oauth2 -> oauth2
                         .jwt(Customizer.withDefaults())
                         .authenticationEntryPoint(cusAuthEntryPoint))
@@ -89,12 +102,7 @@ public class SecurityConfiguration {
         return jwtAuthenticationConverter;
     }
 
-    @Value("${projectjava.jwt.token-validity-in-seconds}")
-    private long jwtExpiration;
-    @Value("${projectjava.jwt.base64-secret}")
-    private String jwtKey;
-
-    private SecretKey getSecretKey() {
+    public SecretKey getSecretKey() {
         byte[] keyBytes = Base64.from(jwtKey).decode();
         return new SecretKeySpec(keyBytes, 0, keyBytes.length, SecurityUtil.JWT_ALGORITHM.getName());
     }
