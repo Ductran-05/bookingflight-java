@@ -15,6 +15,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import com.turkraft.springfilter.boot.Filter;
 
 @RestController
@@ -70,6 +71,30 @@ public class AccountController {
                 .Code(200)
                 .Message("Update account by id")
                 .data(accountService.updateAccount(id, request))
+                .build();
+        return ResponseEntity.ok().body(apiResponse);
+    }
+
+    @PostMapping("/{id}/avatar")
+    public ResponseEntity<APIResponse<AccountResponse>> uploadAvatar(
+            @PathVariable("id") String id,
+            @RequestParam("file") MultipartFile file) {
+        
+        APIResponse<AccountResponse> apiResponse = APIResponse.<AccountResponse>builder()
+                .Code(200)
+                .Message("Avatar uploaded successfully")
+                .data(accountService.uploadAvatar(id, file))
+                .build();
+        return ResponseEntity.ok().body(apiResponse);
+    }
+
+    @DeleteMapping("/{id}/avatar")
+    public ResponseEntity<APIResponse<Void>> deleteAvatar(@PathVariable("id") String id) {
+        accountService.deleteAvatar(id);
+        
+        APIResponse<Void> apiResponse = APIResponse.<Void>builder()
+                .Code(200)
+                .Message("Avatar deleted successfully")
                 .build();
         return ResponseEntity.ok().body(apiResponse);
     }

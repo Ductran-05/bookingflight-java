@@ -23,6 +23,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @Data
@@ -30,9 +31,8 @@ import org.springframework.stereotype.Service;
 public class AccountService {
 
     private final EmailService emailService;
-
+    private final FileStorageService fileStorageService;
     private final VerificationTokenRepository verificationTokenRepository;
-
     private final ResultPanigationMapper resultPanigationMapper;
     private final AccountMapper accountMapper;
     private final AccountRepository accountRepository;
@@ -104,6 +104,24 @@ public class AccountService {
         System.out.println(link);
         emailService.send(account.getEmail(), buildEmail(link));
     }
+
+    public AccountResponse uploadAvatar(String accountId, MultipartFile file) {
+        Account account = accountRepository.findById(accountId)
+                .orElseThrow(() -> new AppException(ErrorCode.ACCOUNT_NOT_EXISTED));
+
+        String fileName = fileStorageService.storeFile(file);
+        String avatarUrl = fileStorageService.getFileUrl(fileName);
+        account.setAvatar(avatarUrl);
+        accountRepository.save(account);
+        return accountMapper.toAccountResponse(account);
+    }
+    public void deleteAvatar(String accountId) {
+        Account account = accountRepository.findById(accountId)
+                .orElseThrow(() -> new AppException(ErrorCode.ACCOUNT_NOT_EXISTED));
+        account.setAvatar(null);
+        accountRepository.save(account);
+    }
+    
 
     private String buildEmail(String link) {
         return "Chào bạn,\n\n"

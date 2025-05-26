@@ -34,6 +34,9 @@ public class AccountRequest {
     @Pattern(regexp = "^(\\+84|0)[0-9]{9}$", message = "PHONE_INVALID")
     String phone;
 
+    @Size(max = 255, message = "AVATAR_URL_TOO_LONG")
+    String avatar;
+
     @NotNull(message = "ROLE_IS_REQUIRED")
     String roleId;
 }
