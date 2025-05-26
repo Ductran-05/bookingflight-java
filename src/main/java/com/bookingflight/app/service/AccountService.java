@@ -80,14 +80,16 @@ public class AccountService {
         // throw new AppException(ErrorCode.EXISTED);
         // }
 
-        Account account = Account.builder()
+        AccountRequest accountRequest = AccountRequest.builder()
                 .email(request.getEmail())
                 .fullName(request.getFullName())
                 .phone(request.getPhone())
                 .password(passwordEncoder.encode(request.getPassword()))
+                .roleId(request.getRoleId())
                 .build();
-        accountRepository.save(account);
 
+        Account account = accountMapper.toAccount(accountRequest);
+        accountRepository.save(account);
         // Tạo token
         String token = UUID.randomUUID().toString();
         VerificationToken verificationToken = VerificationToken.builder()
@@ -98,7 +100,7 @@ public class AccountService {
         verificationTokenRepository.save(verificationToken);
 
         // Gửi mail
-        String link = "http://localhost:8080/auth/confirm?token=" + token;
+        String link = "http://localhost:8080/api/auth/confirm?token=" + token;
         System.out.println(link);
         emailService.send(account.getEmail(), buildEmail(link));
     }
