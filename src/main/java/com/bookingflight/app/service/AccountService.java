@@ -12,6 +12,8 @@ import com.bookingflight.app.mapper.AccountMapper;
 import com.bookingflight.app.mapper.ResultPanigationMapper;
 import com.bookingflight.app.repository.AccountRepository;
 import com.bookingflight.app.repository.VerificationTokenRepository;
+
+import jakarta.transaction.Transactional;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
@@ -68,6 +70,7 @@ public class AccountService {
         return accountMapper.toAccountResponse(accountRepository.save(account));
     }
 
+    @Transactional
     public void deleteAccount(String id) {
         Account account = accountRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.ACCOUNT_NOT_EXISTED));
@@ -75,11 +78,17 @@ public class AccountService {
     }
 
     public AccountResponse registerUser(RegisterRequest request) {
-        // Kiểm tra email trùng
-        // if (accountRepository.findByEmail(request.getEmail()).isPresent()) {
-        // throw new AppException(ErrorCode.EXISTED);
-        // }
-
+        // Kiểm tra email đã tạo tài khoản thành công hay chua
+        Account existingAccount = accountRepository.findOneByEmail(request.getEmail()).orElse(null);
+        if (existingAccount != null) {
+            if (existingAccount.getEnabled() == false) {
+                // xoa verification token
+                verificationTokenRepository.deleteByAccount(existingAccount);
+                deleteAccount(existingAccount.getId());
+            } else {
+                throw new AppException(ErrorCode.ACCOUNT_EMAIL_EXISTED);
+            }
+        }
         AccountRequest accountRequest = AccountRequest.builder()
                 .email(request.getEmail())
                 .fullName(request.getFullName())
@@ -139,5 +148,10 @@ public class AccountService {
             currAccount.setRefreshToken(refreshToken);
             accountRepository.save(currAccount);
         }
+    }
+
+    public Account findByEmailAndRefreshToken(String email, String refreshToken) {
+        return accountRepository.findByEmailAndRefreshToken(email, refreshToken)
+                .orElseThrow(() -> new AppException(ErrorCode.REFRESH_TOKEN_INVALID));
     }
 }

@@ -8,6 +8,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -54,9 +56,11 @@ public class AuthController {
                 // xác thực người dùng => cần viết hàm loadUserByUsername
                 Authentication authentication = authenticationManagerBuilder.getObject()
                                 .authenticate(authenticationToken);
-                SecurityContextHolder.getContext().setAuthentication(authentication);
                 Account currAccount = accountRepository.findByEmail(request.getUsername())
                                 .orElseThrow(() -> new AppException(ErrorCode.AUTHENTICATION_FAILED));
+                if (!currAccount.getEnabled())
+                        throw new AppException(ErrorCode.ACCOUNT_INACTIVE);
+                SecurityContextHolder.getContext().setAuthentication(authentication);
 
                 // khởi tạo ResponseLogin
                 UserLogin userLogin = UserLogin.builder()
@@ -91,9 +95,50 @@ public class AuthController {
                                 .body(response);
         }
 
+        // lay nguoi dung da dang nhap tu cookie
+        @GetMapping("/refresh")
+        public ResponseEntity<APIResponse<LoginResponse>> refreshToken(
+                        @CookieValue(name = "refreshToken", defaultValue = "") String refreshToken) {
+                // check valid refresh token
+                Jwt decodedTokenJwt = securityUtil.checkValidRefreshToken(refreshToken);
+                String email = decodedTokenJwt.getSubject();
+                // kiem tra co ton tai tai khoan dua vao usename va refresh token
+                Account currAccount = accountService.findByEmailAndRefreshToken(email, refreshToken);
+                LoginResponse.UserLogin userLogin = UserLogin.builder()
+                                .id(currAccount.getId())
+                                .name(currAccount.getFullName())
+                                .username(currAccount.getEmail())
+                                .build();
+                LoginResponse loginResponse = LoginResponse.builder()
+                                .accessToken(securityUtil.createAccessToken(email, userLogin))
+                                .user(userLogin)
+                                .build();
+                // tao refresh token moi
+                String newRefreshToken = securityUtil.createRefreshToken(email, loginResponse);
+                // updateAccount
+                accountService.updateAccountRefreshToken(newRefreshToken, email);
+                // set new cookie
+                ResponseCookie responseCookie = ResponseCookie.from("refreshToken", newRefreshToken)
+                                .httpOnly(true)
+                                .secure(true)
+                                .path("/")
+                                .maxAge(securityConfig.getRefreshTokenExpiration())
+                                .build();
+                // response data
+                APIResponse<LoginResponse> response = APIResponse.<LoginResponse>builder()
+                                .Code(200)
+                                .Message("Success")
+                                .data(loginResponse)
+                                .build();
+                return ResponseEntity.ok()
+                                .header("Set-Cookie", responseCookie.toString())
+                                .body(response);
+        }
+
         // lay nguoi dung da dang nhap
         @GetMapping("/me")
         public ResponseEntity<APIResponse<UserLogin>> getUserLogin() {
+                // lay email hien tai
                 String email = SecurityUtil.getCurrentUserLogin().isPresent()
                                 ? SecurityUtil.getCurrentUserLogin().get()
                                 : "";
@@ -122,6 +167,31 @@ public class AuthController {
                                 .data(accountService.registerUser(request))
                                 .build();
                 return ResponseEntity.ok().body(apiResponse);
+        }
+
+        @PostMapping("/logout")
+        public ResponseEntity<APIResponse<String>> logout() {
+                String email = SecurityUtil.getCurrentUserLogin().isPresent()
+                                ? SecurityUtil.getCurrentUserLogin().get()
+                                : "";
+                accountService.updateAccountRefreshToken("", email);
+                // set "" cookie refresh token
+                ResponseCookie responseCookie = ResponseCookie.from("refreshToken", "")
+                                .httpOnly(true)
+                                .secure(true)
+                                .path("/")
+                                .maxAge(0)
+                                .build();
+
+                // response data
+                APIResponse<String> response = APIResponse.<String>builder()
+                                .Code(200)
+                                .Message("Logout successfully")
+                                .data(null)
+                                .build();
+                return ResponseEntity.ok()
+                                .header("Set-Cookie", responseCookie.toString())
+                                .body(response);
         }
 
         @GetMapping("/confirm")

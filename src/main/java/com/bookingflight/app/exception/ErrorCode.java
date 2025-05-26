@@ -50,6 +50,8 @@ public enum ErrorCode {
     // Authentication errors
     INCORRECT_PASSWORD(401, "Incorrect password"),
     AUTHENTICATION_FAILED(401, "Authentication failed"),
+    ACCOUNT_INACTIVE(401, "Account is inactive"),
+    REFRESH_TOKEN_INVALID(401, "Refresh token is invalid"),
 
     // Validation errors (Bad Request)
     USERNAME_IS_REQUIRED(400, "Username is required"),
