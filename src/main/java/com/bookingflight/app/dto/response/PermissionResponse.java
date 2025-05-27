@@ -21,8 +21,4 @@ public class PermissionResponse {
     String apiPath;
     String method;
     String model;
-    LocalDateTime createdAt;
-    LocalDateTime updatedAt;
-    Boolean isDeleted;
-    LocalDateTime deletedAt;
 }

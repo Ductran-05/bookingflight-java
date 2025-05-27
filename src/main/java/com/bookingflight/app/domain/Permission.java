@@ -32,17 +32,5 @@ public class Permission {
     String apiPath;
     String method;
     String model;
-    
-    @CreationTimestamp
-    @Column(updatable = false)
-    LocalDateTime createdAt;
-    
-    @UpdateTimestamp
-    LocalDateTime updatedAt;
-    
-    @Builder.Default
-    @Column(nullable = false)
-    Boolean isDeleted = false;
-    
-    LocalDateTime deletedAt;
+
 }
