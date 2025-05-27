@@ -43,7 +43,7 @@ public class PermissionService {
 
     public PermissionResponse createPermission(PermissionRequest permissionRequest) {
 
-        if (permissionRepository.existsByPermissionName(permissionRequest.getPermissionName())) {
+        if (permissionRepository.findByName(permissionRequest.getName())) {
             throw new AppException(ErrorCode.PERMISSION_EXISTED);
         }
 
@@ -53,14 +53,14 @@ public class PermissionService {
 
     public PermissionResponse updatePermission(String id, PermissionRequest permissionRequest) {
 
-        if (permissionRepository.existsByPermissionName(permissionRequest.getPermissionName())) {
+        if (permissionRepository.findByName(permissionRequest.getName())) {
             throw new AppException(ErrorCode.PERMISSION_EXISTED);
         }
 
         Permission permission = permissionRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.PERMISSION_NOT_FOUND));
 
-        permission.setPermissionName(permissionRequest.getPermissionName());
+        permission.setName(permissionRequest.getName());
         permission = permissionRepository.save(permission);
 
         return permissionMapper.toPermissionResponse(permission);

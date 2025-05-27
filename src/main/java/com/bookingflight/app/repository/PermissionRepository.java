@@ -6,6 +6,6 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 public interface PermissionRepository extends JpaRepository<Permission, String>, JpaSpecificationExecutor<Permission> {
 
-    boolean existsByPermissionName(String permissionName);
+    boolean findByName(String name);
 
 }

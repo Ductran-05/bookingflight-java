@@ -13,5 +13,8 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @AllArgsConstructor
 public class PermissionRequest {
-    String permissionName;
+    String name;
+    String apiPath;
+    String method;
+    String model;
 }

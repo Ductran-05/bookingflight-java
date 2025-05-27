@@ -22,5 +22,9 @@ public class Permission {
     @GeneratedValue(strategy = GenerationType.UUID)
     String id;
 
-    String permissionName;
+    String name;
+    String apiPath;
+    String method;
+    String model;
+
 }

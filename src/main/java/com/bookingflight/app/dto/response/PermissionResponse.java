@@ -15,5 +15,9 @@ import lombok.experimental.FieldDefaults;
 public class PermissionResponse {
     String id;
 
-    String permissionName;
+    String name;
+    String apiPath;
+    String method;
+    String model;
+
 }

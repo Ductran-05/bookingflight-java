@@ -21,14 +21,20 @@ public class PermissionMapper {
 
     public Permission toPermission(PermissionRequest permissionRequest) {
         return Permission.builder()
-                .permissionName(permissionRequest.getPermissionName())
+                .apiPath(permissionRequest.getApiPath())
+                .method(permissionRequest.getMethod())
+                .model(permissionRequest.getModel())
+                .name(permissionRequest.getName())
                 .build();
     }
 
     public PermissionResponse toPermissionResponse(Permission permission) {
         return PermissionResponse.builder()
                 .id(permission.getId())
-                .permissionName(permission.getPermissionName())
+                .name(permission.getName())
+                .apiPath(permission.getApiPath())
+                .method(permission.getMethod())
+                .model(permission.getModel())
                 .build();
     }
 }
