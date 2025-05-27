@@ -30,6 +30,12 @@ VALUES
     (UUID(), 'DELETE_ROLE', '/api/roles/*', 'DELETE', 'Role', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, false, NULL);
 ```
 
+#### Get Permission by ID
+```sql
+SELECT * FROM permission WHERE id = '<ID>';
+```
+> replace <ID> by permissionID
+
 #### Delete All Sample Permissions
 ```sql
 DELETE FROM permission WHERE name IN (
