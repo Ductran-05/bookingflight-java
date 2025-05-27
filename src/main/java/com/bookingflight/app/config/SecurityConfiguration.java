@@ -53,7 +53,9 @@ public class SecurityConfiguration {
                 .csrf(csrf -> csrf.disable())
 
                 .authorizeHttpRequests(authz -> authz
-                        .requestMatchers("/", "/api/auth/login", "/api/auth/confirm", "/api/auth/register").permitAll()
+                        .requestMatchers("/", "/api/auth/login", "/api/auth/refresh", "/api/auth/confirm",
+                                "/api/auth/register")
+                        .permitAll()
                         .anyRequest().authenticated()) // Các route khác yêu cầu xác thực
                 // .anyRequest().permitAll()) // Tạm thời cho phép tất cả các route để kiểm tra
                 .oauth2ResourceServer(oauth2 -> oauth2
