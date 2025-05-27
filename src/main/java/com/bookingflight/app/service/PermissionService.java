@@ -70,6 +70,9 @@ public class PermissionService {
         Permission permission = permissionRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.PERMISSION_NOT_FOUND));
 
-        permissionRepository.delete(permission);
+        // Soft delete: set isDeleted to true and deletedAt to current timestamp
+        permission.setIsDeleted(true);
+        permission.setDeletedAt(java.time.LocalDateTime.now());
+        permissionRepository.save(permission);
     }
 }

@@ -1,5 +1,7 @@
 package com.bookingflight.app.dto.response;
 
+import java.time.LocalDateTime;
+
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,5 +21,8 @@ public class PermissionResponse {
     String apiPath;
     String method;
     String model;
-
+    LocalDateTime createdAt;
+    LocalDateTime updatedAt;
+    Boolean isDeleted;
+    LocalDateTime deletedAt;
 }

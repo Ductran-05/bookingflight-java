@@ -35,6 +35,10 @@ public class PermissionMapper {
                 .apiPath(permission.getApiPath())
                 .method(permission.getMethod())
                 .model(permission.getModel())
+                .createdAt(permission.getCreatedAt())
+                .updatedAt(permission.getUpdatedAt())
+                .isDeleted(permission.getIsDeleted())
+                .deletedAt(permission.getDeletedAt())
                 .build();
     }
 }
