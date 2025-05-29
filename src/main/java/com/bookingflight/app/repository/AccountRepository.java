@@ -1,6 +1,7 @@
 package com.bookingflight.app.repository;
 
 import com.bookingflight.app.domain.Account;
+import com.bookingflight.app.domain.Role;
 
 import java.util.Optional;
 
@@ -19,5 +20,7 @@ public interface AccountRepository extends JpaRepository<Account, String>, JpaSp
     Optional<Account> findOneByEmail(String email);
 
     Optional<Account> findByEmailAndRefreshToken(String email, String refreshToken);
+
+    boolean existsByRole(Role role);
 
 }
