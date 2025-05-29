@@ -1,4 +1,4 @@
-# Booking Flight Application
+<!-- # Booking Flight Application
 
 ## Permission Management
 
@@ -45,4 +45,4 @@ DELETE FROM permission WHERE name IN (
     'READ_PERMISSION', 'CREATE_PERMISSION', 'UPDATE_PERMISSION', 'DELETE_PERMISSION',
     'READ_ROLE', 'CREATE_ROLE', 'UPDATE_ROLE', 'DELETE_ROLE'
 );
-``` 
+```  -->
