@@ -52,7 +52,7 @@ public class AccountService {
 
     public AccountResponse createAccount(AccountRequest accountRequest) {
         Account account = accountMapper.toAccount(accountRequest);
-
+        account.setEnabled(true);
         if (accountRepository.existsByEmail(account.getEmail())) {
             throw new AppException(ErrorCode.ACCOUNT_EMAIL_EXISTED);
         } else if (accountRepository.existsByPhone(account.getPhone())) {
@@ -65,6 +65,7 @@ public class AccountService {
     public AccountResponse updateAccount(String id, AccountRequest accountRequest) {
         Account account = accountRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.ACCOUNT_NOT_EXISTED));
+        account.setEnabled(true);
         accountMapper.updateAccount(account, accountRequest);
 
         return accountMapper.toAccountResponse(accountRepository.save(account));
