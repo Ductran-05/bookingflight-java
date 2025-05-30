@@ -24,33 +24,33 @@ public class PaymentController {
             @Valid @RequestBody PaymentRequest request,
             HttpServletRequest httpRequest) {
         PaymentUrlResponse response = paymentService.createPaymentUrl(request, httpRequest);
-        APIResponse<PaymentUrlResponse> apiResponse = new APIResponse<>(
-                200, 
-                "Payment URL created successfully", 
-                response
-        );
+        APIResponse<PaymentUrlResponse> apiResponse = APIResponse.<PaymentUrlResponse>builder()
+                .Code(200)
+                .Message("Payment URL created successfully")
+                .data(response)
+                .build();
         return ResponseEntity.ok(apiResponse);
     }
 
     @GetMapping("/vnpay-return")
     public ResponseEntity<APIResponse<PaymentResponse>> vnpayReturn(@RequestParam Map<String, String> params) {
         PaymentResponse response = paymentService.handlePaymentReturn(params);
-        APIResponse<PaymentResponse> apiResponse = new APIResponse<>(
-                200, 
-                "Payment processed successfully", 
-                response
-        );
+        APIResponse<PaymentResponse> apiResponse = APIResponse.<PaymentResponse>builder()
+                .Code(200)
+                .Message("Payment processed successfully")
+                .data(response)
+                .build();
         return ResponseEntity.ok(apiResponse);
     }
 
     @GetMapping("/status/{txnRef}")
     public ResponseEntity<APIResponse<PaymentResponse>> getPaymentStatus(@PathVariable String txnRef) {
         PaymentResponse response = paymentService.getPaymentByTxnRef(txnRef);
-        APIResponse<PaymentResponse> apiResponse = new APIResponse<>(
-                200, 
-                "Payment status retrieved successfully", 
-                response
-        );
+        APIResponse<PaymentResponse> apiResponse = APIResponse.<PaymentResponse>builder()
+                .Code(200)
+                .Message("Payment status retrieved successfully")
+                .data(response)
+                .build();
         return ResponseEntity.ok(apiResponse);
     }
 } 

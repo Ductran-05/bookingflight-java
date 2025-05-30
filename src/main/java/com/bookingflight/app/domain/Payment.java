@@ -41,7 +41,8 @@ public class Payment {
 
     LocalDateTime paidAt;
 
-    @OneToOne
+    @ManyToOne
+    @JoinColumn(name = "account_id")
     Account account;
 
     public enum PaymentStatus {
