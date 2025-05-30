@@ -3,16 +3,21 @@ package com.bookingflight.app.service;
 import com.bookingflight.app.config.VNPayConfig;
 import com.bookingflight.app.domain.Account;
 import com.bookingflight.app.domain.Payment;
+import com.bookingflight.app.dto.ResultPaginationDTO;
 import com.bookingflight.app.dto.request.PaymentRequest;
 import com.bookingflight.app.dto.response.PaymentResponse;
 import com.bookingflight.app.dto.response.PaymentUrlResponse;
 import com.bookingflight.app.exception.AppException;
 import com.bookingflight.app.exception.ErrorCode;
 import com.bookingflight.app.mapper.PaymentMapper;
+import com.bookingflight.app.mapper.ResultPanigationMapper;
 import com.bookingflight.app.repository.AccountRepository;
 import com.bookingflight.app.repository.PaymentRepository;
 import com.bookingflight.app.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,6 +35,7 @@ public class PaymentService {
     private final PaymentMapper paymentMapper;
     private final AccountRepository accountRepository;
     private final VNPayConfig vnPayConfig;
+    private final ResultPanigationMapper resultPanigationMapper;
 
     @Transactional
     public PaymentUrlResponse createPaymentUrl(PaymentRequest request, HttpServletRequest servletRequest) {
@@ -217,5 +223,11 @@ public class PaymentService {
         Payment payment = paymentRepository.findByTxnRef(txnRef)
                 .orElseThrow(() -> new AppException(ErrorCode.UNIDENTIFIED_EXCEPTION));
         return paymentMapper.toPaymentResponse(payment);
+    }
+
+    public ResultPaginationDTO getAllPayments(Specification<Payment> spec, Pageable pageable) {
+        Page<PaymentResponse> page = paymentRepository.findAll(spec, pageable)
+                .map(paymentMapper::toPaymentResponse);
+        return resultPanigationMapper.toResultPanigationMapper(page);
     }
 } 

@@ -1,13 +1,18 @@
 package com.bookingflight.app.controller;
 
+import com.bookingflight.app.domain.Payment;
+import com.bookingflight.app.dto.ResultPaginationDTO;
 import com.bookingflight.app.dto.request.PaymentRequest;
 import com.bookingflight.app.dto.response.APIResponse;
 import com.bookingflight.app.dto.response.PaymentResponse;
 import com.bookingflight.app.dto.response.PaymentUrlResponse;
 import com.bookingflight.app.service.PaymentService;
+import com.turkraft.springfilter.boot.Filter;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,6 +23,18 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class PaymentController {
     private final PaymentService paymentService;
+
+    @GetMapping("/")
+    public ResponseEntity<APIResponse<ResultPaginationDTO>> getAllPayments(
+            @Filter Specification<Payment> spec, 
+            Pageable pageable) {
+        APIResponse<ResultPaginationDTO> apiResponse = APIResponse.<ResultPaginationDTO>builder()
+                .Code(200)
+                .Message("Get all payments successfully")
+                .data(paymentService.getAllPayments(spec, pageable))
+                .build();
+        return ResponseEntity.ok(apiResponse);
+    }
 
     @PostMapping("/create")
     public ResponseEntity<APIResponse<PaymentUrlResponse>> createPayment(
