@@ -117,6 +117,14 @@ public enum ErrorCode {
     FILE_UPLOAD_FAILED(500, "File upload failed"),
     AVATAR_URL_TOO_LONG(400, "Avatar URL too long"),
 
+    // Payment errors
+    PAYMENT_NOT_FOUND(404, "Payment not found"),
+    PAYMENT_AMOUNT_REQUIRED(400, "Payment amount is required"),
+    PAYMENT_AMOUNT_TOO_SMALL(400, "Payment amount must be at least 1000 VND"),
+    PAYMENT_ORDER_INFO_REQUIRED(400, "Payment order info is required"),
+    PAYMENT_INVALID_SIGNATURE(400, "Invalid payment signature"),
+    PAYMENT_PROCESSING_FAILED(500, "Payment processing failed"),
+
     // Server errors
     UNIDENTIFIED_EXCEPTION(500, "Unidentified server error"),;
 
