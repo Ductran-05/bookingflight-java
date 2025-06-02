@@ -54,7 +54,7 @@ public class SecurityConfiguration {
 
                 .authorizeHttpRequests(authz -> authz
                         .requestMatchers("/", "/api/auth/login", "/api/auth/refresh", "/api/auth/confirm",
-                                "/api/auth/register")
+                                "/api/auth/register", "/api/payment/vnpay-return")
                         .permitAll()
                         .anyRequest().authenticated()) // Các route khác yêu cầu xác thực
                 // .anyRequest().permitAll()) // Tạm thời cho phép tất cả các route để kiểm tra
