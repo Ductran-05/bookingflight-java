@@ -52,7 +52,8 @@ public enum ErrorCode {
     AUTHENTICATION_FAILED(401, "Authentication failed"),
     ACCOUNT_INACTIVE(401, "Account is inactive"),
     REFRESH_TOKEN_INVALID(401, "Refresh token is invalid"),
-
+    UNAUTHORIZED(401, "Unauthorized"),
+    INVALID_OLD_PASSWORD(401, "Invalid old password"),
     // Validation errors (Bad Request)
     USERNAME_IS_REQUIRED(400, "Username is required"),
     USERNAME_INVALID(400, "Username must be between 4 and 20 characters"),

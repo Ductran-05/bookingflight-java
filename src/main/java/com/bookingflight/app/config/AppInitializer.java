@@ -1,37 +1,88 @@
 package com.bookingflight.app.config;
 
 import jakarta.annotation.PostConstruct;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
+import org.springframework.util.AntPathMatcher;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
+import com.bookingflight.app.domain.Account;
 import com.bookingflight.app.domain.Permission;
+import com.bookingflight.app.domain.Permission_Role;
+import com.bookingflight.app.domain.Role;
+import com.bookingflight.app.repository.AccountRepository;
 import com.bookingflight.app.repository.PermissionRepository;
+import com.bookingflight.app.repository.Permission_RoleRepostiory;
+import com.bookingflight.app.repository.RoleRepository;
 
 import java.util.*;
 
 @Component
-public class PermissionInitializer {
+public class AppInitializer {
 
-    private final RequestMappingHandlerMapping handlerMapping;
+    private final RoleRepository roleRepository;
+    private final AccountRepository accountRepository;
+    private final PasswordEncoder passwordEncoder;
     private final PermissionRepository permissionRepository;
+    private final RequestMappingHandlerMapping handlerMapping;
+    private final Permission_RoleRepostiory permission_RoleRepostiory;
 
-    public PermissionInitializer(
+    public AppInitializer(RoleRepository roleRepository, AccountRepository accountRepository,
+            PasswordEncoder passwordEncoder, PermissionRepository permissionRepository,
             @Qualifier("requestMappingHandlerMapping") RequestMappingHandlerMapping handlerMapping,
-            PermissionRepository permissionRepository) {
-        this.handlerMapping = handlerMapping;
+            Permission_RoleRepostiory permission_RoleRepostiory) {
+        this.roleRepository = roleRepository;
+        this.accountRepository = accountRepository;
+        this.passwordEncoder = passwordEncoder;
         this.permissionRepository = permissionRepository;
+        this.handlerMapping = handlerMapping;
+        this.permission_RoleRepostiory = permission_RoleRepostiory;
+
     }
 
-    // Danh sách các URL không cần phân quyền (bỏ qua)
-    private static final List<String> WHITE_LIST_PREFIXES = List.of(
-            "/auth", "/error");
+    private static final List<String> WHITE_LIST_PATTERNS = List.of(
+            "/auth/**", "/error", "/api/permissions/**");
+
+    private final AntPathMatcher pathMatcher = new AntPathMatcher();
 
     @PostConstruct
-    public void initializePages() {
+    public void init() {
+        // 1. Khởi tạo permission từ các route trong hệ thống
+        initPermissions();
+
+        // 2. Tạo role ADMIN nếu chưa có
+        Role adminRole = roleRepository.findByRoleName("ADMIN").orElseGet(() -> {
+            Role role = Role.builder()
+                    .roleName("ADMIN")
+                    .build();
+            return roleRepository.save(role);
+        });
+
+        // 3. Gán tất cả permission cho ADMIN nếu chưa gán
+        for (Permission permission : permissionRepository.findAll()) {
+            permission_RoleRepostiory.save(Permission_Role.builder()
+                    .permission(permission)
+                    .role(adminRole)
+                    .build());
+        }
+        // 4. Tạo account admin nếu chưa có
+        if (!accountRepository.existsByRole(adminRole)) {
+            Account account = Account.builder()
+                    .email("admin")
+                    .password(passwordEncoder.encode("admin"))
+                    .role(adminRole)
+                    .enabled(true)
+                    .build();
+            accountRepository.save(account);
+        }
+    }
+
+    private void initPermissions() {
         Map<RequestMappingInfo, HandlerMethod> handlerMethods = handlerMapping.getHandlerMethods();
 
         for (Map.Entry<RequestMappingInfo, HandlerMethod> entry : handlerMethods.entrySet()) {
@@ -40,8 +91,8 @@ public class PermissionInitializer {
             Set<RequestMethod> methods = mappingInfo.getMethodsCondition().getMethods();
 
             for (String url : urlPatterns) {
-                // Bỏ qua URL trong danh sách trắng
-                // if (isWhiteListed(url)) continue;
+                if (isWhiteListed(url))
+                    continue;
 
                 for (RequestMethod method : methods) {
                     boolean exists = permissionRepository.existsByApiPathAndMethod(url, method.name());
@@ -70,8 +121,9 @@ public class PermissionInitializer {
         return patterns;
     }
 
+    // Kiểm tra xem URL có thuộc white list không, hỗ trợ ** bằng AntPathMatcher
     private boolean isWhiteListed(String path) {
-        return WHITE_LIST_PREFIXES.stream().anyMatch(path::startsWith);
+        return WHITE_LIST_PATTERNS.stream().anyMatch(pattern -> pathMatcher.match(pattern, path));
     }
 
     private String generateName(String path, String method) {

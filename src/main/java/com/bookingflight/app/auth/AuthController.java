@@ -130,25 +130,6 @@ public class AuthController {
                                 .body(response);
         }
 
-        // lay nguoi dung da dang nhap
-        @GetMapping("/me")
-        public ResponseEntity<APIResponse<AccountResponse>> getUserLogin() {
-                // lay email hien tai
-                String email = SecurityUtil.getCurrentUserLogin().isPresent()
-                                ? SecurityUtil.getCurrentUserLogin().get()
-                                : "";
-                Account currAccount = accountRepository.findByEmail(email)
-                                .orElseThrow(() -> new AppException(ErrorCode.ACCOUNT_NOT_EXISTED));
-
-                // response data
-                APIResponse<AccountResponse> response = APIResponse.<AccountResponse>builder()
-                                .Code(200)
-                                .Message("Success")
-                                .data(accountMapper.toAccountResponse(currAccount))
-                                .build();
-                return ResponseEntity.ok(response);
-        }
-
         @PostMapping("/register")
         public ResponseEntity<APIResponse<AccountResponse>> register(@Valid @RequestBody RegisterRequest request) {
                 APIResponse<AccountResponse> apiResponse = APIResponse.<AccountResponse>builder()

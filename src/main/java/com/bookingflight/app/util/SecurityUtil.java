@@ -2,7 +2,6 @@ package com.bookingflight.app.util;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.security.core.Authentication;
@@ -19,7 +18,6 @@ import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.stereotype.Service;
 
 import com.bookingflight.app.config.SecurityConfiguration;
-import com.bookingflight.app.domain.Account;
 import com.bookingflight.app.dto.response.AccountResponse;
 
 import lombok.Data;
@@ -36,15 +34,11 @@ public class SecurityUtil {
         Instant now = Instant.now();
         Instant validity = now.plus(securityConfig.getAccessTokenExpiration(), ChronoUnit.SECONDS);
 
-        // hardcode permissions
-        List<String> permissions = List.of("ROLE_USER_READ", "ROLE_USER_WRITE");
         // @formatter:off
         JwtClaimsSet claims = JwtClaimsSet.builder()
              .issuedAt(now)
              .expiresAt(validity)
              .subject(username)
-             .claim("permissions", permissions)
-             .claim("account", account)
              .build();
         JwsHeader jwsHeader = JwsHeader.with(JWT_ALGORITHM).build();
         return this.jwtEncoder.encode(JwtEncoderParameters.from(jwsHeader, claims)).getTokenValue();
@@ -58,7 +52,6 @@ public class SecurityUtil {
             .issuedAt(now)
             .expiresAt(validity)
             .subject(username)
-            .claim("account", account)
             .build();
         JwsHeader jwsHeader = JwsHeader.with(JWT_ALGORITHM).build();
         return this.jwtEncoder.encode(JwtEncoderParameters.from(jwsHeader, claims)).getTokenValue();
