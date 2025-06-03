@@ -1,7 +1,6 @@
 package com.bookingflight.app.config;
 
 import jakarta.annotation.PostConstruct;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -46,32 +45,63 @@ public class AppInitializer {
     }
 
     private static final List<String> WHITE_LIST_PATTERNS = List.of(
-            "/auth/**", "/error", "/api/permissions/**");
+            "/api/auth/**", "/error", "/api/permissions/**");
 
     private final AntPathMatcher pathMatcher = new AntPathMatcher();
 
     @PostConstruct
     public void init() {
-        // 1. Khởi tạo permission từ các route trong hệ thống
-        initPermissions();
+        initializePermissions();
+        initializeAdmin();
+    }
 
-        // 2. Tạo role ADMIN nếu chưa có
+    private void initializePermissions() {
+        Map<RequestMappingInfo, HandlerMethod> handlerMethods = handlerMapping.getHandlerMethods();
+
+        for (Map.Entry<RequestMappingInfo, HandlerMethod> entry : handlerMethods.entrySet()) {
+            RequestMappingInfo mappingInfo = entry.getKey();
+
+            Set<String> urlPatterns = resolvePatterns(mappingInfo);
+            Set<RequestMethod> methods = mappingInfo.getMethodsCondition().getMethods();
+            for (String rawUrl : urlPatterns) {
+                String url = normalizePath(rawUrl);
+                if (isWhiteListed(url))
+                    continue;
+                for (RequestMethod method : methods) {
+                    // Nếu đã tồn tại thì bỏ qua
+                    if (permissionRepository.existsByApiPathAndMethod(url, method.name()))
+                        continue;
+                    Permission permission = Permission.builder()
+                            .apiPath(url)
+                            .method(method.name())
+                            .name(generateName(url, method.name()))
+                            .model(extractModel(url))
+                            .build();
+                    permissionRepository.save(permission);
+                }
+            }
+        }
+    }
+
+    private void initializeAdmin() {
         Role adminRole = roleRepository.findByRoleName("ADMIN").orElseGet(() -> {
-            Role role = Role.builder()
+            Role newRole = Role.builder()
                     .roleName("ADMIN")
                     .build();
-            return roleRepository.save(role);
+            return roleRepository.save(newRole);
         });
-
-        // 3. Gán tất cả permission cho ADMIN nếu chưa gán
-        for (Permission permission : permissionRepository.findAll()) {
-            permission_RoleRepostiory.save(Permission_Role.builder()
+        // gán quyen cho admin
+        List<Permission> permissions = permissionRepository.findAll();
+        for (Permission permission : permissions) {
+            Permission_Role permission_Role = Permission_Role.builder()
                     .permission(permission)
                     .role(adminRole)
-                    .build());
+                    .build();
+            permission_RoleRepostiory.save(permission_Role);
         }
-        // 4. Tạo account admin nếu chưa có
-        if (!accountRepository.existsByRole(adminRole)) {
+        // tạo tài khoản admin
+        boolean existsAdmin = accountRepository.existsByRole(adminRole);
+        if (!existsAdmin) {
             Account account = Account.builder()
                     .email("admin")
                     .password(passwordEncoder.encode("admin"))
@@ -79,34 +109,6 @@ public class AppInitializer {
                     .enabled(true)
                     .build();
             accountRepository.save(account);
-        }
-    }
-
-    private void initPermissions() {
-        Map<RequestMappingInfo, HandlerMethod> handlerMethods = handlerMapping.getHandlerMethods();
-
-        for (Map.Entry<RequestMappingInfo, HandlerMethod> entry : handlerMethods.entrySet()) {
-            RequestMappingInfo mappingInfo = entry.getKey();
-            Set<String> urlPatterns = resolvePatterns(mappingInfo);
-            Set<RequestMethod> methods = mappingInfo.getMethodsCondition().getMethods();
-
-            for (String url : urlPatterns) {
-                if (isWhiteListed(url))
-                    continue;
-
-                for (RequestMethod method : methods) {
-                    boolean exists = permissionRepository.existsByApiPathAndMethod(url, method.name());
-                    if (!exists) {
-                        permissionRepository.save(
-                                Permission.builder()
-                                        .name(generateName(url, method.name()))
-                                        .apiPath(url)
-                                        .method(method.name())
-                                        .model(extractModule(url))
-                                        .build());
-                    }
-                }
-            }
         }
     }
 
@@ -121,7 +123,20 @@ public class AppInitializer {
         return patterns;
     }
 
-    // Kiểm tra xem URL có thuộc white list không, hỗ trợ ** bằng AntPathMatcher
+    private String normalizePath(String path) {
+        // Thay {id}, {abc}... bằng **
+        path = path.replaceAll("\\{[^/]+}", "**");
+
+        // Nếu path không kết thúc bằng '/**' và không có phần mở rộng sau tiền tố (ví
+        // dụ: /accounts), thêm '/**'
+        if (!path.endsWith("/**")) {
+            path = path.replaceAll("/$", ""); // xóa dấu "/" cuối nếu có
+            path += "/**";
+        }
+
+        return path;
+    }
+
     private boolean isWhiteListed(String path) {
         return WHITE_LIST_PATTERNS.stream().anyMatch(pattern -> pathMatcher.match(pattern, path));
     }
@@ -130,7 +145,7 @@ public class AppInitializer {
         return method + " " + path;
     }
 
-    private String extractModule(String path) {
+    private String extractModel(String path) {
         String[] parts = path.split("/");
         for (String part : parts) {
             if (!part.isBlank() && !part.equalsIgnoreCase("api") && !part.matches("v[0-9]+")) {
@@ -145,4 +160,5 @@ public class AppInitializer {
             return s;
         return s.substring(0, 1).toUpperCase() + s.substring(1).toLowerCase();
     }
+
 }
