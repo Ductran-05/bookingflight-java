@@ -29,88 +29,126 @@ public class AppInitializer {
     private final PasswordEncoder passwordEncoder;
     private final PermissionRepository permissionRepository;
     private final RequestMappingHandlerMapping handlerMapping;
-    private final Permission_RoleRepostiory permission_RoleRepostiory;
+    private final Permission_RoleRepostiory permissionRoleRepository;
+    private final AntPathMatcher pathMatcher = new AntPathMatcher();
 
     public AppInitializer(RoleRepository roleRepository, AccountRepository accountRepository,
             PasswordEncoder passwordEncoder, PermissionRepository permissionRepository,
             @Qualifier("requestMappingHandlerMapping") RequestMappingHandlerMapping handlerMapping,
-            Permission_RoleRepostiory permission_RoleRepostiory) {
+            Permission_RoleRepostiory permissionRoleRepository) {
         this.roleRepository = roleRepository;
         this.accountRepository = accountRepository;
         this.passwordEncoder = passwordEncoder;
         this.permissionRepository = permissionRepository;
         this.handlerMapping = handlerMapping;
-        this.permission_RoleRepostiory = permission_RoleRepostiory;
-
+        this.permissionRoleRepository = permissionRoleRepository;
     }
-
-    private static final List<String> WHITE_LIST_PATTERNS = List.of(
-            "/api/auth/**", "/error", "/api/permissions/**");
-
-    private final AntPathMatcher pathMatcher = new AntPathMatcher();
 
     @PostConstruct
     public void init() {
         initializePermissions();
         initializeAdmin();
+        initializeUser();
     }
 
+    /**
+     * Tạo mới các quyền (Permission) dựa trên các endpoint đã khai báo trong
+     * controller,
+     * bỏ qua các endpoint public theo định nghĩa ở PublicEndpoints.
+     */
     private void initializePermissions() {
         Map<RequestMappingInfo, HandlerMethod> handlerMethods = handlerMapping.getHandlerMethods();
 
-        for (Map.Entry<RequestMappingInfo, HandlerMethod> entry : handlerMethods.entrySet()) {
+        for (var entry : handlerMethods.entrySet()) {
             RequestMappingInfo mappingInfo = entry.getKey();
-
             Set<String> urlPatterns = resolvePatterns(mappingInfo);
             Set<RequestMethod> methods = mappingInfo.getMethodsCondition().getMethods();
+
             for (String rawUrl : urlPatterns) {
-                String url = normalizePath(rawUrl);
-                if (isWhiteListed(url))
-                    continue;
                 for (RequestMethod method : methods) {
-                    // Nếu đã tồn tại thì bỏ qua
-                    if (permissionRepository.existsByApiPathAndMethod(url, method.name()))
+                    String methodName = method.name();
+
+                    // Bỏ qua các endpoint public không cần tạo quyền
+                    if (PublicEndpoints.isPublic(rawUrl, methodName))
                         continue;
+
+                    String normalizedUrl = normalizePath(rawUrl);
+
+                    if (permissionRepository.existsByApiPathAndMethod(normalizedUrl, methodName))
+                        continue;
+
                     Permission permission = Permission.builder()
-                            .apiPath(url)
-                            .method(method.name())
-                            .name(generateName(url, method.name()))
-                            .model(extractModel(url))
+                            .apiPath(normalizedUrl)
+                            .method(methodName)
+                            .name(generatePermissionName(extractModelFromPath(normalizedUrl), methodName))
+                            .model(extractModelFromPath(normalizedUrl))
                             .build();
+
                     permissionRepository.save(permission);
                 }
             }
         }
     }
 
+    /**
+     * Tạo role ADMIN nếu chưa có, gán tất cả quyền cho ADMIN,
+     * và tạo tài khoản admin mặc định nếu chưa tồn tại.
+     */
     private void initializeAdmin() {
-        Role adminRole = roleRepository.findByRoleName("ADMIN").orElseGet(() -> {
-            Role newRole = Role.builder()
-                    .roleName("ADMIN")
-                    .build();
-            return roleRepository.save(newRole);
-        });
-        // gán quyen cho admin
-        List<Permission> permissions = permissionRepository.findAll();
-        for (Permission permission : permissions) {
-            Permission_Role permission_Role = Permission_Role.builder()
+        Role adminRole = roleRepository.findByRoleName("ADMIN")
+                .orElseGet(() -> roleRepository.save(Role.builder().roleName("ADMIN").build()));
+
+        // Gán tất cả quyền cho ADMIN
+        List<Permission> allPermissions = permissionRepository.findAll();
+        for (Permission permission : allPermissions) {
+            Permission_Role permissionRole = Permission_Role.builder()
                     .permission(permission)
                     .role(adminRole)
                     .build();
-            permission_RoleRepostiory.save(permission_Role);
+            permissionRoleRepository.save(permissionRole);
         }
-        // tạo tài khoản admin
+
+        // Tạo tài khoản admin mặc định nếu chưa có
         boolean existsAdmin = accountRepository.existsByRole(adminRole);
         if (!existsAdmin) {
-            Account account = Account.builder()
+            Account adminAccount = Account.builder()
                     .email("admin")
                     .password(passwordEncoder.encode("admin"))
                     .role(adminRole)
                     .enabled(true)
                     .build();
-            accountRepository.save(account);
+            accountRepository.save(adminAccount);
         }
     }
+
+    /**
+     * Tạo role user mặc định nếu chưa có, gán quyền về /my-profile cho
+     * role user
+     */
+    private void initializeUser() {
+        Role userRole = roleRepository.findByRoleName("USER").orElseGet(() -> {
+            Role newRole = Role.builder()
+                    .roleName("USER")
+                    .build();
+            return roleRepository.save(newRole);
+        });
+        // Lấy danh sách các API cho phép user access (ví dụ GET các API public)
+        List<String> allowedPaths = List.of("/my-profile");
+        List<Permission> allowedPermissionsForUser = permissionRepository.findAll().stream()
+                .filter(permission -> permission.getMethod().equalsIgnoreCase("GET") &&
+                        allowedPaths.stream().anyMatch(pattern -> pathMatcher.match(pattern, permission.getApiPath())))
+                .toList();
+        for (Permission permission : allowedPermissionsForUser) {
+            if (!permissionRoleRepository.existsById(permission.getId())) {
+                Permission_Role permissionRole = Permission_Role.builder()
+                        .permission(permission)
+                        .role(userRole)
+                        .build();
+                permissionRoleRepository.save(permissionRole);
+            }
+        }
+    }
+    // ------------------- Hỗ trợ các hàm riêng -------------------
 
     private Set<String> resolvePatterns(RequestMappingInfo info) {
         Set<String> patterns = new HashSet<>();
@@ -123,29 +161,28 @@ public class AppInitializer {
         return patterns;
     }
 
+    /**
+     * Chuẩn hóa đường dẫn:
+     * - Thay các tham số path {id} thành **
+     * - Nếu chưa kết thúc bằng /** thì thêm vào để đại diện cho mọi sub-path
+     */
     private String normalizePath(String path) {
-        // Thay {id}, {abc}... bằng **
         path = path.replaceAll("\\{[^/]+}", "**");
-
-        // Nếu path không kết thúc bằng '/**' và không có phần mở rộng sau tiền tố (ví
-        // dụ: /accounts), thêm '/**'
         if (!path.endsWith("/**")) {
-            path = path.replaceAll("/$", ""); // xóa dấu "/" cuối nếu có
+            path = path.replaceAll("/$", "");
             path += "/**";
         }
-
         return path;
     }
 
-    private boolean isWhiteListed(String path) {
-        return WHITE_LIST_PATTERNS.stream().anyMatch(pattern -> pathMatcher.match(pattern, path));
+    private String generatePermissionName(String model, String method) {
+        return method + " " + model;
     }
 
-    private String generateName(String path, String method) {
-        return method + " " + path;
-    }
-
-    private String extractModel(String path) {
+    /**
+     * Trích xuất model từ path, ví dụ "/api/accounts/**" => "Accounts"
+     */
+    private String extractModelFromPath(String path) {
         String[] parts = path.split("/");
         for (String part : parts) {
             if (!part.isBlank() && !part.equalsIgnoreCase("api") && !part.matches("v[0-9]+")) {
@@ -160,5 +197,4 @@ public class AppInitializer {
             return s;
         return s.substring(0, 1).toUpperCase() + s.substring(1).toLowerCase();
     }
-
 }

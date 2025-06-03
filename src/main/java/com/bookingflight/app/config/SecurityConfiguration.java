@@ -1,5 +1,7 @@
 package com.bookingflight.app.config;
 
+import java.util.List;
+
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 
@@ -42,6 +44,16 @@ public class SecurityConfiguration {
     @Value("${projectjava.jwt.base64-secret}")
     private String jwtKey;
 
+    public static final List<String> GET_METHODS = List.of(
+            "/api/airports/**",
+            "/api/permissions/**",
+            "/api/cities/**",
+            "/api/airlines/**",
+            "/api/flights/**",
+            "/api/flights/seats/**",
+            "/api/files/**",
+            "/api/payment/**");
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -54,20 +66,12 @@ public class SecurityConfiguration {
                 .csrf(csrf -> csrf.disable())
 
                 .authorizeHttpRequests(authz -> authz
-                        .requestMatchers("/", "/api/auth/login", "/api/auth/refresh", "/api/auth/confirm",
-                                "/api/auth/register", "/api/payment/vnpay-return")
+                        .requestMatchers(PublicEndpoints.ALL_METHODS.toArray(new String[0]))
                         .permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/airports/**",
-                                "/api/permissions/**",
-                                "/api/cities/**",
-                                "/api/airlines/**",
-                                "/api/flights/**",
-                                "/api/flights/seats/**",
-                                "/api/files/**",
-                                "/api/payment/**")
+                        .requestMatchers(HttpMethod.GET, PublicEndpoints.GET_METHODS.toArray(new String[0]))
                         .permitAll()
-                        .anyRequest().authenticated()) // Các route khác yêu cầu xác thực
-                // .anyRequest().permitAll()) // Tạm thời cho phép tất cả các route để kiểm tra
+                        .anyRequest().authenticated())
+                // .anyRequest().permitAll())
                 .oauth2ResourceServer(oauth2 -> oauth2
                         .jwt(Customizer.withDefaults())
                         .authenticationEntryPoint(cusAuthEntryPoint))

@@ -7,6 +7,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 public class PermissionInterceptorConfiguration implements WebMvcConfigurer {
+
     @Bean
     PermissionInterceptor getPermissionInterceptor() {
         return new PermissionInterceptor();
@@ -14,10 +15,6 @@ public class PermissionInterceptorConfiguration implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        String[] whiteList = {
-                "/", "/api/auth/**", "/storage/**", "api/permissions/**",
-        };
-        registry.addInterceptor(getPermissionInterceptor())
-                .excludePathPatterns(whiteList);
+        registry.addInterceptor(getPermissionInterceptor());
     }
 }
