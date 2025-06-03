@@ -114,6 +114,7 @@ public class AppInitializer {
             Account adminAccount = Account.builder()
                     .email("admin")
                     .password(passwordEncoder.encode("admin"))
+                    .fullName("Admin")
                     .role(adminRole)
                     .enabled(true)
                     .build();
@@ -176,7 +177,7 @@ public class AppInitializer {
     }
 
     private String generatePermissionName(String model, String method) {
-        return method + " " + model;
+        return method + "_" + model;
     }
 
     /**
@@ -195,6 +196,7 @@ public class AppInitializer {
     private String capitalize(String s) {
         if (s == null || s.isEmpty())
             return s;
-        return s.substring(0, 1).toUpperCase() + s.substring(1).toLowerCase();
+        // return s.substring(0, 1).toUpperCase() + s.substring(1).toLowerCase();
+        return s.substring(0).toUpperCase();
     }
 }
