@@ -2,6 +2,7 @@ package com.bookingflight.app.config;
 
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.AntPathMatcher;
@@ -30,7 +31,7 @@ public class AppInitializer {
     private final PermissionRepository permissionRepository;
     private final RequestMappingHandlerMapping handlerMapping;
     private final Permission_RoleRepostiory permissionRoleRepository;
-    private final AntPathMatcher pathMatcher = new AntPathMatcher();
+    private final AntPathMatcher antPathMatcher = new AntPathMatcher();
 
     public AppInitializer(RoleRepository roleRepository, AccountRepository accountRepository,
             PasswordEncoder passwordEncoder, PermissionRepository permissionRepository,
@@ -69,7 +70,7 @@ public class AppInitializer {
                     String methodName = method.name();
 
                     // Bỏ qua các endpoint public không cần tạo quyền
-                    if (PublicEndpoints.isPublic(rawUrl, methodName))
+                    if (PublicEndpoints.isPublic(rawUrl, HttpMethod.valueOf(methodName)))
                         continue;
 
                     String normalizedUrl = normalizePath(rawUrl);
@@ -101,6 +102,9 @@ public class AppInitializer {
         // Gán tất cả quyền cho ADMIN
         List<Permission> allPermissions = permissionRepository.findAll();
         for (Permission permission : allPermissions) {
+            // Bỏ qua nếu đã tồn tại quan hệ
+            if (permissionRoleRepository.existsByPermissionAndRole(permission, adminRole))
+                continue;
             Permission_Role permissionRole = Permission_Role.builder()
                     .permission(permission)
                     .role(adminRole)
@@ -127,20 +131,17 @@ public class AppInitializer {
      * role user
      */
     private void initializeUser() {
-        Role userRole = roleRepository.findByRoleName("USER").orElseGet(() -> {
-            Role newRole = Role.builder()
-                    .roleName("USER")
-                    .build();
-            return roleRepository.save(newRole);
-        });
-        // Lấy danh sách các API cho phép user access (ví dụ GET các API public)
-        List<String> allowedPaths = List.of("/my-profile");
-        List<Permission> allowedPermissionsForUser = permissionRepository.findAll().stream()
-                .filter(permission -> permission.getMethod().equalsIgnoreCase("GET") &&
-                        allowedPaths.stream().anyMatch(pattern -> pathMatcher.match(pattern, permission.getApiPath())))
-                .toList();
-        for (Permission permission : allowedPermissionsForUser) {
-            if (!permissionRoleRepository.existsById(permission.getId())) {
+        Role userRole = roleRepository.findByRoleName("USER")
+                .orElseGet(() -> roleRepository.save(Role.builder()
+                        .roleName("USER")
+                        .build()));
+
+        // Gán các quyền antMatcher /my-profile/** cho role user nếu chưa có
+        for (Permission permission : permissionRepository.findAll()) {
+            if (antPathMatcher.match("/api/my-profile/**", permission.getApiPath())) {
+                // Bỏ qua nếu đã tồn tại quan hệ
+                if (permissionRoleRepository.existsByPermissionAndRole(permission, userRole))
+                    continue;
                 Permission_Role permissionRole = Permission_Role.builder()
                         .permission(permission)
                         .role(userRole)

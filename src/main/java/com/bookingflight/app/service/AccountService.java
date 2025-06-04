@@ -1,6 +1,7 @@
 package com.bookingflight.app.service;
 
 import com.bookingflight.app.domain.Account;
+import com.bookingflight.app.domain.Role;
 import com.bookingflight.app.domain.VerificationToken;
 import com.bookingflight.app.dto.ResultPaginationDTO;
 import com.bookingflight.app.dto.request.AccountRequest;
@@ -11,6 +12,7 @@ import com.bookingflight.app.exception.ErrorCode;
 import com.bookingflight.app.mapper.AccountMapper;
 import com.bookingflight.app.mapper.ResultPanigationMapper;
 import com.bookingflight.app.repository.AccountRepository;
+import com.bookingflight.app.repository.RoleRepository;
 import com.bookingflight.app.repository.VerificationTokenRepository;
 
 import jakarta.transaction.Transactional;
@@ -39,6 +41,7 @@ public class AccountService {
     private final AccountMapper accountMapper;
     private final AccountRepository accountRepository;
     private final PasswordEncoder passwordEncoder;
+    private final RoleRepository roleRepository;
 
     public AccountResponse getAccountByID(String id) {
         return accountMapper.toAccountResponse(accountRepository.findById(id)
@@ -90,12 +93,15 @@ public class AccountService {
                 throw new AppException(ErrorCode.ACCOUNT_EMAIL_EXISTED);
             }
         }
+        // Role USER
+        Role userRole = roleRepository.findByRoleName("USER")
+                .orElseThrow(() -> new AppException(ErrorCode.ROLE_NOT_FOUND));
         AccountRequest accountRequest = AccountRequest.builder()
                 .email(request.getEmail())
                 .fullName(request.getFullName())
                 .phone(request.getPhone())
                 .password(passwordEncoder.encode(request.getPassword()))
-                .roleId(request.getRoleId())
+                .roleId(userRole.getId())
                 .build();
 
         Account account = accountMapper.toAccount(accountRequest);

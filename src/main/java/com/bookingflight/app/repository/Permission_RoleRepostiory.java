@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import com.bookingflight.app.domain.Permission;
 import com.bookingflight.app.domain.Permission_Role;
 import com.bookingflight.app.domain.Role;
 
@@ -15,5 +16,7 @@ public interface Permission_RoleRepostiory extends JpaRepository<Permission_Role
     void deleteAllByRole(Role role);
 
     List<Permission_Role> findAllByRole(Role role);
+
+    boolean existsByPermissionAndRole(Permission permission, Role adminRole);
 
 }
