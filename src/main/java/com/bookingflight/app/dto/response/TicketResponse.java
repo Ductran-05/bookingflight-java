@@ -1,5 +1,7 @@
 package com.bookingflight.app.dto.response;
 
+import com.bookingflight.app.domain.Flight;
+
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,8 +16,6 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class TicketResponse {
     String id;
-    String flightId;
-    String flightCode;
     String seatId;
     String seatName;
     String passengerName;
@@ -23,5 +23,5 @@ public class TicketResponse {
     String passengerIDCard;
     String passengerEmail;
     Boolean haveBaggage;
-
+    Flight flight;
 }

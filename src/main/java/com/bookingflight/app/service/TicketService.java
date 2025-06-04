@@ -1,5 +1,7 @@
 package com.bookingflight.app.service;
 
+import com.bookingflight.app.domain.Account;
+import com.bookingflight.app.domain.Flight;
 import com.bookingflight.app.domain.Ticket;
 import com.bookingflight.app.dto.ResultPaginationDTO;
 import com.bookingflight.app.dto.request.TicketRequest;
@@ -12,6 +14,8 @@ import com.bookingflight.app.repository.FlightRepository;
 import com.bookingflight.app.repository.SeatRepository;
 import com.bookingflight.app.repository.TicketRepository;
 import lombok.RequiredArgsConstructor;
+
+import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -68,6 +72,7 @@ public class TicketService {
 
         ticketRepository.delete(ticket);
     }
+
 }
 
 // @Transactional

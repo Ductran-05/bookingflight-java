@@ -19,6 +19,9 @@ public class TicketRequest {
     @NotBlank(message = "SEAT_ID_IS_REQUIRED")
     String seatId;
 
+    @NotBlank(message = "ACCOUNT_ID_IS_REQUIRED")
+    String accountId;
+
     @NotBlank(message = "PASSENGER_NAME_IS_REQUIRED")
     @Size(max = 100, message = "PASSENGER_NAME_INVALID")
     String passengerName;

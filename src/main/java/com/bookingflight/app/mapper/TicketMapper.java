@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import com.bookingflight.app.domain.Ticket;
 import com.bookingflight.app.dto.request.TicketRequest;
 import com.bookingflight.app.dto.response.TicketResponse;
+import com.bookingflight.app.repository.AccountRepository;
 import com.bookingflight.app.repository.FlightRepository;
 import com.bookingflight.app.repository.SeatRepository;
 
@@ -18,9 +19,11 @@ import com.bookingflight.app.repository.SeatRepository;
 public class TicketMapper {
     final FlightRepository flightRepository;
     final SeatRepository seatRepository;
+    final AccountRepository accountRepository;
 
     public Ticket toTicket(TicketRequest request) {
         Ticket ticket = Ticket.builder()
+                .account(accountRepository.findById(request.getAccountId()).get())
                 .flight(flightRepository.findById(request.getFlightId()).get())
                 .seat(seatRepository.findById(request.getSeatId()).get())
                 .passengerName(request.getPassengerName())
@@ -35,8 +38,7 @@ public class TicketMapper {
     public TicketResponse toTicketResponse(Ticket ticket) {
         return TicketResponse.builder()
                 .id(ticket.getId())
-                .flightId(ticket.getFlight().getId())
-                .flightCode(ticket.getFlight().getFlightCode())
+                .flight(ticket.getFlight())
                 .seatId(ticket.getSeat().getId())
                 .seatName(ticket.getSeat().getSeatName())
                 .passengerName(ticket.getPassengerName())

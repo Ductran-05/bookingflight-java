@@ -72,6 +72,8 @@ public class FlightService {
                                 Flight_Seat flight_Seat = flight_SeatMapper.toFlight_Seat(flight_SeatRequest, flight);
                                 flight_SeatRepository.save(flight_Seat);
                         }
+                        // Tạo các vé trống cho chuyến bay
+
                 }
 
                 return flightMapper.toFlightResponse(flight);
@@ -121,4 +123,5 @@ public class FlightService {
                                 .map(flight_Seat -> seatMapper.toSeatResponse(flight_Seat.getSeat()))
                                 .toList();
         }
+
 }

@@ -32,6 +32,10 @@ public class Ticket {
     @ManyToOne
     @JoinColumn(name = "seatId")
     Seat seat;
+    @ManyToOne
+    @JoinColumn(name = "accountId")
+    Account account;
+
     String passengerName;
     String passengerPhone;
     String passengerIDCard;
