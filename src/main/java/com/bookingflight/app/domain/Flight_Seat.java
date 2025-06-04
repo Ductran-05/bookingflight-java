@@ -19,7 +19,7 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @Entity
 @Builder
-@Table(name = "Fight_Seat")
+@Table(name = "Flight_Seat")
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Flight_Seat {
     @Id
