@@ -47,11 +47,7 @@ public class FlightRequest {
     @Min(value = 0, message = "Origin price must be zero or positive")
     Number originPrice;
 
-    @Valid
-    @NotEmpty(message = "Flight airport list cannot be empty")
     List<Flight_AirportRequest> listFlight_Airport;
 
-    @Valid
-    @NotEmpty(message = "Flight seat list cannot be empty")
     List<Flight_SeatRequest> listFlight_Seat;
 }

@@ -31,6 +31,5 @@ public class Flight_Seat {
     @ManyToOne
     @JoinColumn(name = "seatId")
     Seat seat;
-    Number remainingQuantity;
     Number quantity;
 }

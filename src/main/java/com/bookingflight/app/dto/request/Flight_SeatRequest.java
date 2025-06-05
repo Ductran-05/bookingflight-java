@@ -19,10 +19,6 @@ public class Flight_SeatRequest {
     @NotBlank(message = "Seat ID is required")
     String seatId;
 
-    @NotNull(message = "Remaining quantity is required")
-    @Min(value = 1, message = "Remaining quantity must be at least 1")
-    Number remainingQuantity;
-
     @NotNull(message = "Quantity is required")
     @Min(value = 1, message = "Quantity must be at least 1")
     Number quantity;
