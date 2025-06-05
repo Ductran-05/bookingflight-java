@@ -5,16 +5,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Component;
 
-import com.bookingflight.app.domain.Account;
 import com.bookingflight.app.domain.Payment;
 import com.bookingflight.app.dto.response.PaymentResponse;
-import com.bookingflight.app.repository.AccountRepository;
 
 @Component
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class PaymentMapper {
-    final AccountRepository accountRepository;
 
     public PaymentResponse toPaymentResponse(Payment payment) {
         return new PaymentResponse(
@@ -28,7 +25,6 @@ public class PaymentMapper {
                 payment.getCardType(),
                 payment.getCreatedAt(),
                 payment.getPaidAt(),
-                payment.getAccount() != null ? payment.getAccount().getId() : null
-        );
+                payment.getAccount() != null ? payment.getAccount().getId() : null);
     }
-} 
+}

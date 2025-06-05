@@ -18,5 +18,6 @@ public class Flight_SeatResponse {
     String seatId;
     String seatName;
     Number price;
+    Number remainingQuantity;
     Number quantity;
 }

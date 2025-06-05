@@ -23,6 +23,7 @@ public class Flight_SeatMapper {
                                 .flight(flight)
                                 .seat(seatRepository.findById(request.getSeatId()).get())
                                 .quantity(request.getQuantity())
+                                .remainingQuantity(request.getRemainingQuantity())
                                 .build();
                 return flight_Seat;
         }
@@ -35,6 +36,7 @@ public class Flight_SeatMapper {
                                 .seatName(flight_Seat.getSeat().getSeatName())
                                 .price(flight_Seat.getSeat().getPrice())
                                 .quantity(flight_Seat.getQuantity())
+                                .remainingQuantity(flight_Seat.getRemainingQuantity())
                                 .build();
         }
 
