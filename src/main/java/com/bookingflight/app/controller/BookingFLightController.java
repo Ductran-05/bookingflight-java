@@ -30,7 +30,7 @@ public class BookingFLightController {
     private final TicketRepository ticketRepository;
     private final TicketMapper ticketMapper;
 
-    @PostMapping("/booking-flight")
+    @PostMapping("/api/booking-flight")
     public ResponseEntity<APIResponse<List<TicketResponse>>> bookingFlight(@RequestBody ListTicketRequest request) {
         List<TicketResponse> ticketResponses = new java.util.ArrayList<>();
         for (ListTicketRequest.Passenger passenger : request.getPassengers()) {

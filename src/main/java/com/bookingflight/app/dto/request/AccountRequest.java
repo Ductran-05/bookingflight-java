@@ -18,25 +18,24 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class AccountRequest {
 
-    @NotBlank(message = "PASSWORD_IS_REQUIRED")
-    @Size(min = 6, max = 50, message = "PASSWORD_INVALID")
+    @NotBlank(message = "Password is required")
+    @Size(min = 6, max = 50, message = "Password must be between 6 and 50 characters")
     String password;
 
-    @NotBlank(message = "EMAIL_IS_REQUIRED")
-    @Pattern(regexp = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$", message = "EMAIL_INVALID")
+    @NotBlank(message = "Email is required")
+    @Pattern(regexp = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$", message = "Email is invalid")
     String email;
 
-    @NotBlank(message = "FULL_NAME_IS_REQUIRED")
-    @Size(max = 50, message = "FULL_NAME_INVALID")
+    @NotBlank(message = "Full name is required")
     String fullName;
 
-    @NotBlank(message = "PHONE_IS_REQUIRED")
-    @Pattern(regexp = "^(\\+84|0)[0-9]{9}$", message = "PHONE_INVALID")
+    @NotBlank(message = "Phone is required")
+    @Pattern(regexp = "^(\\+84|0)[0-9]{9}$", message = "Phone is invalid")
     String phone;
 
-    @Size(max = 255, message = "AVATAR_URL_TOO_LONG")
+    @Size(max = 255, message = "Avatar is too long")
     String avatar;
 
-    @NotNull(message = "ROLE_IS_REQUIRED")
+    @NotNull(message = "Role is required")
     String roleId;
 }

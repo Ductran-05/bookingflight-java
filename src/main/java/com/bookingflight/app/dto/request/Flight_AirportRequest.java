@@ -16,21 +16,22 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Flight_AirportRequest {
-//    @NotBlank(message = "FLIGHT_ID_IS_REQUIRED")
+
+    // Nếu cần bắt buộc có flightId thì mở @NotBlank ra
+    // @NotBlank(message = "Flight ID is required")
     String flightId;
 
-    @NotBlank(message = "AIRPORT_ID_IS_REQUIRED")
+    @NotBlank(message = "Airport ID is required")
     String airportId;
 
-    @NotNull(message = "DEPARTURE_TIME_IS_REQUIRED")
+    @NotNull(message = "Departure time is required")
     @JsonFormat(pattern = "HH:mm dd/MM/yyyy")
     LocalDateTime departureTime;
 
-    @NotNull(message = "ARRIVAL_TIME_IS_REQUIRED")
+    @NotNull(message = "Arrival time is required")
     @JsonFormat(pattern = "HH:mm dd/MM/yyyy")
     LocalDateTime arrivalTime;
 
-    @Size(max = 200, message = "NOTE_TOO_LONG")
+    @Size(max = 200, message = "Note must not exceed 200 characters")
     String note;
-
 }

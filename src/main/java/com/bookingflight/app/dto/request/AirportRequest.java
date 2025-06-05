@@ -12,14 +12,16 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class AirportRequest {
-    @NotBlank(message = "CODE_IS_REQUIRED")
-    @Pattern(regexp = "^[A-Z]{3}$", message = "AIRPORT_CODE_INVALID")
+
+    @NotBlank(message = "Airport code is required")
+    @Pattern(regexp = "^[A-Z0-9]{2,10}$", message = "Airport code must be 2–10 uppercase letters or numbers")
     String airportCode;
 
-    @NotBlank(message = "AIRPORT_NAME_IS_REQUIRED")
-    @Size(max = 50, message = "AIRPORT_NAME_INVALID")
+    @NotBlank(message = "Airport name is required")
+    @Size(max = 50, message = "Airport name must be at most 50 characters long")
+    @Pattern(regexp = "^[A-Za-z0-9\\s.,&'\\-]{2,50}$", message = "Airport name can only contain letters, numbers, spaces, and . , & ' -")
     String airportName;
 
-    @NotBlank(message = "CITY_ID_IS_REQUIRED")
+    @NotBlank(message = "City ID is required")
     String cityId;
 }

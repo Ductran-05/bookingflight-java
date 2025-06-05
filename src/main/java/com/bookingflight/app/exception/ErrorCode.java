@@ -69,9 +69,13 @@ public enum ErrorCode {
     PHONE_INVALID(400, "Invalid phone number format"),
     ROLE_IS_REQUIRED(400, "Role must not be null"),
     ROLE_INVALID(400, "Role must be a positive number"),
+    CODE_INVALID(400, "Code must be 2–10 characters and uppercase"),
+    CODE_IS_REQUIRED(400, "Code is required"),
+    NAME_IS_REQUIRED(400, "Name is required"),
+
     CITY_IS_REQUIRED(400, "City code is required"),
     AIRLINE_CODE_IS_REQUIRED(400, "Airline code is required"),
-    AIRLINE_CODE_INVALID(400, "Airline code must be 2–3 characters"),
+    AIRLINE_CODE_INVALID(400, "Airline code must be 2–10 characters"),
     AIRLINE_NAME_IS_REQUIRED(400, "Airline name is required"),
     AIRLINE_NAME_INVALID(400, "Airline name must be at most 30 characters"),
     PLANE_CODE_IS_REQUIRED(400, "Plane code is required"),
@@ -105,12 +109,6 @@ public enum ErrorCode {
     DEPARTURE_TIME_INVALID(400, "Departure time is required and must match format"),
     ARRIVAL_TIME_INVALID(400, "Arrival time is required and must match format"),
     ORIGIN_PRICE_INVALID(400, "Origin price must be provided and >= 0"),
-    CODE_SIZE_INVALID(400, "Code must be between 2 and 10 characters"),
-    CODE_FORMAT_INVALID(400, "Code must be uppercase letters and/or digits"),
-    NAME_IS_REQUIRED(400, "Name is required"),
-    NAME_SIZE_INVALID(400, "Name must not exceed 100 characters"),
-    NAME_FORMAT_INVALID(400, "Name must contain only letters and spaces"),
-    CODE_IS_REQUIRED(400, "Code is required"),
 
     // File upload errors
     FILE_EMPTY(400, "File is empty"),

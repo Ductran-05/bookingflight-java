@@ -12,14 +12,18 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Flight_SeatRequest {
-    // @NotBlank(message = "FLIGHT_ID_IS_REQUIRED")
+
+    @NotBlank(message = "Flight ID is required")
     String flightId;
 
-    @NotBlank(message = "SEAT_ID_IS_REQUIRED")
+    @NotBlank(message = "Seat ID is required")
     String seatId;
 
-    @NotNull(message = "QUANTITY_IS_REQUIRED")
-    @Min(value = 1, message = "QUANTITY_MUST_BE_AT_LEAST_1")
+    @NotNull(message = "Remaining quantity is required")
+    @Min(value = 1, message = "Remaining quantity must be at least 1")
     Number remainingQuantity;
+
+    @NotNull(message = "Quantity is required")
+    @Min(value = 1, message = "Quantity must be at least 1")
     Number quantity;
 }

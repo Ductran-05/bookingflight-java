@@ -8,8 +8,10 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,34 +21,37 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class FlightRequest {
-    @NotBlank(message = "FLIGHT_CODE_IS_REQUIRED")
-    @Size(max = 10, message = "FLIGHT_CODE_INVALID")
+
+    @NotBlank(message = "Flight code is required")
+    @Size(max = 10, message = "Flight code must be at most 10 characters")
     String flightCode;
 
-    @NotBlank(message = "PLANE_ID_IS_REQUIRED")
+    @NotBlank(message = "Plane ID is required")
     String planeId;
 
-    @NotBlank(message = "DEPARTURE_AIRPORT_ID_IS_REQUIRED")
+    @NotBlank(message = "Departure airport ID is required")
     String departureAirportId;
 
-    @NotBlank(message = "ARRIVAL_AIRPORT_ID_IS_REQUIRED")
+    @NotBlank(message = "Arrival airport ID is required")
     String arrivalAirportId;
 
-    @NotNull(message = "DEPARTURE_TIME_IS_REQUIRED")
+    @NotNull(message = "Departure time is required")
     @JsonFormat(pattern = "HH:mm dd/MM/yyyy")
     LocalDateTime departureTime;
 
-    @NotNull(message = "ARRIVAL_TIME_IS_REQUIRED")
+    @NotNull(message = "Arrival time is required")
     @JsonFormat(pattern = "HH:mm dd/MM/yyyy")
     LocalDateTime arrivalTime;
 
-    @NotNull(message = "ORIGIN_PRICE_IS_REQUIRED")
-    @Min(value = 0, message = "ORIGIN_PRICE_MUST_BE_POSITIVE")
+    @NotNull(message = "Origin price is required")
+    @Min(value = 0, message = "Origin price must be zero or positive")
     Number originPrice;
 
     @Valid
-    List<@NotNull Flight_AirportRequest> listFlight_Airport;
+    @NotEmpty(message = "Flight airport list cannot be empty")
+    List<Flight_AirportRequest> listFlight_Airport;
 
     @Valid
-    List<@NotNull Flight_SeatRequest> listFlight_Seat;
+    @NotEmpty(message = "Flight seat list cannot be empty")
+    List<Flight_SeatRequest> listFlight_Seat;
 }

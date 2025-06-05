@@ -45,11 +45,11 @@ public class GlobalException {
     @ResponseStatus(HttpStatus.BAD_REQUEST) // Nếu validate fail thì trả về 400
     public ResponseEntity<APIResponse<String>> handleBindException(BindException e) {
         // Trả về message của lỗi đầu tiên
-        String enumName = e.getBindingResult().getAllErrors().get(0).getDefaultMessage();
-        ErrorCode errorCode = ErrorCode.valueOf(enumName);
+        String message = e.getBindingResult().getAllErrors().get(0).getDefaultMessage();
+
         APIResponse<String> response = new APIResponse<>();
-        response.setMessage(errorCode.getMessage());
-        response.setCode(errorCode.getCode());
+        response.setMessage(message);
+        response.setCode(400);
         return ResponseEntity.badRequest().body(response);
     }
 

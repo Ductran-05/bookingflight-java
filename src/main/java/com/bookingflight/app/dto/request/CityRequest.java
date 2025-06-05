@@ -13,13 +13,13 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CityRequest {
 
-    @NotBlank(message = "CITY_IS_REQUIRED")
-    @Size(min = 2, max = 10, message = "CODE_SIZE_INVALID")
-    @Pattern(regexp = "^[A-Z0-9]+$", message = "CODE_FORMAT_INVALID")
+    @NotBlank(message = "City code is required")
+    @Size(min = 2, max = 10, message = "City code must be between 2 and 10 characters")
+    @Pattern(regexp = "^[A-Z0-9]+$", message = "City code must contain only uppercase letters and digits")
     String cityCode;
 
-    @NotBlank(message = "NAME_IS_REQUIRED")
-    @Size(max = 100, message = "NAME_SIZE_INVALID")
-    @Pattern(regexp = "^[a-zA-Z\\s]+$", message = "NAME_FORMAT_INVALID")
+    @NotBlank(message = "City name is required")
+    @Size(max = 100, message = "City name must not exceed 100 characters")
+    @Pattern(regexp = "^[a-zA-ZÀ-ỹ\\s'\\-]+$", message = "City name must contain only letters, spaces, apostrophes, and hyphens")
     String cityName;
 }

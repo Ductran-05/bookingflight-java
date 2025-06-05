@@ -13,12 +13,12 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class AirlineRequest {
 
-    @NotBlank(message = "CODE_IS_REQUIRED")
-    @Pattern(regexp = "^[A-Z]{3}$", message = "CODE_INVALID")
+    @NotBlank(message = "Airline code is required")
+    @Pattern(regexp = "^[A-Z0-9]{2,10}$", message = "Airline code must be between 2 and 10 characters and uppercase")
     String airlineCode;
 
-    @NotBlank(message = "AIRLINE_NAME_IS_REQUIRED")
-    @Size(max = 30, message = "AIRLINE_NAME_INVALID")
-    @Pattern(regexp = "^[A-Za-z0-9\\s.,&'-]+$", message = "AIRLINE_NAME_INVALID")
+    @NotBlank(message = "Airline name is required")
+    @Size(max = 30, message = "Airline name must be at most 30 characters long")
+    @Pattern(regexp = "^[A-Za-z0-9\\s.,&'\\-]{2,30}$", message = "Airline name can only contain letters, numbers, spaces, and characters . , & ' -")
     String airlineName;
 }
