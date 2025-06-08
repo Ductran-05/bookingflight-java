@@ -21,10 +21,6 @@ public class PaymentRequest {
     @NotBlank(message = "Order info is required")
     String orderInfo;
 
-    // Bank code có thể thêm pattern nếu bạn biết định dạng chuẩn của bankCode
-    // ví dụ chỉ gồm chữ hoa và số, từ 2-10 ký tự
-    @Pattern(regexp = "^[A-Z0-9]{2,10}$", message = "Bank code is invalid")
-    String bankCode;
 
     // Ngôn ngữ mặc định "vn", bạn có thể validate nếu cần chỉ nhận "vn", "en", ...
     @Pattern(regexp = "^(vn|en)?$", message = "Language must be 'vn' or 'en'")
