@@ -40,5 +40,9 @@ public class Ticket {
     String passengerPhone;
     String passengerIDCard;
     String passengerEmail;
-    Boolean haveBaggage;
+    @Builder.Default
+    Boolean haveBaggage = false;
+    @Builder.Default
+    Boolean isBooked = false;
+    int seatNumber;
 }

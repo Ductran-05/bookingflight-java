@@ -24,4 +24,5 @@ public class TicketResponse {
     String passengerEmail;
     Boolean haveBaggage;
     Flight flight;
+    int seatNumber;
 }

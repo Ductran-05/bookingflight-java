@@ -46,6 +46,7 @@ public class TicketMapper {
                 .passengerIDCard(ticket.getPassengerIDCard())
                 .passengerEmail(ticket.getPassengerEmail())
                 .haveBaggage(ticket.getHaveBaggage())
+                .seatNumber(ticket.getSeatNumber())
                 .build();
     }
 

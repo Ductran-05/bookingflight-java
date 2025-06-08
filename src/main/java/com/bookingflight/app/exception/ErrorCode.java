@@ -10,6 +10,7 @@ package com.bookingflight.app.exception;
  * 500 - Internal Server Error (server-side issues)
  */
 public enum ErrorCode {
+    NOT_ENOUGH_SEATS(400, "Not enough seats"),
     // Conflict errors (resource already exists)
     USER_EXISTED(409, "User already exists"),
     AIRPORT_EXISTED(409, "Airport already exists"),

@@ -13,6 +13,8 @@ import com.bookingflight.app.domain.Ticket;
 import com.bookingflight.app.dto.request.ListTicketRequest;
 import com.bookingflight.app.dto.response.APIResponse;
 import com.bookingflight.app.dto.response.TicketResponse;
+import com.bookingflight.app.exception.AppException;
+import com.bookingflight.app.exception.ErrorCode;
 import com.bookingflight.app.mapper.TicketMapper;
 import com.bookingflight.app.repository.AccountRepository;
 import com.bookingflight.app.repository.FlightRepository;
@@ -33,19 +35,25 @@ public class BookingFLightController {
     @PostMapping("/api/booking-flight")
     public ResponseEntity<APIResponse<List<TicketResponse>>> bookingFlight(@RequestBody ListTicketRequest request) {
         List<TicketResponse> ticketResponses = new java.util.ArrayList<>();
+        int remainingSeat = ticketRepository.countByFlightIdAndSeatIdAndIsBookedFalse(request.getFlightId(),
+                request.getSeatId());
+        if (remainingSeat < request.getPassengers().size()) {
+            throw new AppException(ErrorCode.NOT_ENOUGH_SEATS);
+        }
         for (ListTicketRequest.Passenger passenger : request.getPassengers()) {
-            Ticket ticket = Ticket.builder()
-                    .flight(flightRepository.findById(request.getFlightId()).get())
-                    .account(accountRepository.findById(request.getAccountId()).get())
-                    .seat(seatRepository.findById(request.getSeatId()).get())
-                    .passengerName(passenger.getPassengerName())
-                    .passengerPhone(passenger.getPassengerPhone())
-                    .passengerIDCard(passenger.getPassengerIDCard())
-                    .passengerEmail(passenger.getPassengerEmail())
-                    .haveBaggage(passenger.getHaveBaggage())
-                    .build();
-
-            ticketRepository.save(ticket);
+            Ticket unusedTicket = ticketRepository.findFirstByFlightIdAndSeatIdAndIsBookedFalse(request.getFlightId(),
+                    request.getSeatId());
+            if (unusedTicket == null) {
+                throw new AppException(ErrorCode.NOT_ENOUGH_SEATS);
+            }
+            unusedTicket.setAccount(accountRepository.findById(request.getAccountId()).get());
+            unusedTicket.setPassengerName(passenger.getPassengerName());
+            unusedTicket.setPassengerPhone(passenger.getPassengerPhone());
+            unusedTicket.setPassengerIDCard(passenger.getPassengerIDCard());
+            unusedTicket.setPassengerEmail(passenger.getPassengerEmail());
+            unusedTicket.setHaveBaggage(passenger.getHaveBaggage());
+            unusedTicket.setIsBooked(true);
+            Ticket ticket = ticketRepository.save(unusedTicket);
             ticketResponses.add(ticketMapper.toTicketResponse(ticket));
         }
         APIResponse<List<TicketResponse>> apiResponse = APIResponse.<List<TicketResponse>>builder()

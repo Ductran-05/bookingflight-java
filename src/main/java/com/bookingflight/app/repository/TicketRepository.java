@@ -15,4 +15,8 @@ import org.springframework.stereotype.Repository;
 public interface TicketRepository extends JpaRepository<Ticket, String>, JpaSpecificationExecutor<Ticket> {
 
     Page<Ticket> findAllByAccount(Account currAccount, Specification<Flight> spec, Pageable pageable);
+
+    int countByFlightIdAndSeatIdAndIsBookedFalse(String flightId, String seatId);
+
+    Ticket findFirstByFlightIdAndSeatIdAndIsBookedFalse(String flightId, String seatId);
 }

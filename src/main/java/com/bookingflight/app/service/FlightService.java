@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.bookingflight.app.domain.Flight;
 import com.bookingflight.app.domain.Flight_Airport;
 import com.bookingflight.app.domain.Flight_Seat;
+import com.bookingflight.app.domain.Ticket;
 import com.bookingflight.app.dto.ResultPaginationDTO;
 import com.bookingflight.app.dto.request.FlightRequest;
 import com.bookingflight.app.dto.request.Flight_AirportRequest;
@@ -23,6 +24,7 @@ import com.bookingflight.app.mapper.Flight_AirportMapper;
 import com.bookingflight.app.mapper.Flight_SeatMapper;
 import com.bookingflight.app.mapper.ResultPanigationMapper;
 import com.bookingflight.app.mapper.SeatMapper;
+import com.bookingflight.app.mapper.TicketMapper;
 import com.bookingflight.app.repository.*;
 
 import jakarta.transaction.Transactional;
@@ -44,6 +46,9 @@ public class FlightService {
         final Flight_SeatRepository flight_SeatRepository;
         final Flight_SeatMapper flight_SeatMapper;
         final SeatMapper seatMapper;
+        final SeatRepository seatRepository;
+        final TicketRepository ticketRepository;
+        final TicketMapper ticketMapper;
 
         public ResultPaginationDTO getAllFlights(Specification<Flight> spec, Pageable pageable) {
                 Page<FlightResponse> page = flightRepository.findAll(spec, pageable)
@@ -73,6 +78,22 @@ public class FlightService {
                                 flight_SeatRepository.save(flight_Seat);
                         }
                         // Tạo các vé trống cho chuyến bay
+                        for (Flight_Seat flight_seat : flight_SeatRepository.findAllByFlightId(flight.getId())) {
+                                int quantity = flight_seat.getQuantity().intValue();
+                                for (int i = 0; i < quantity; i++) {
+                                        Ticket ticket = Ticket.builder()
+                                                        .flight(flight)
+                                                        .seat(flight_seat.getSeat())
+                                                        .passengerName("")
+                                                        .passengerPhone("")
+                                                        .passengerIDCard("")
+                                                        .passengerEmail("")
+                                                        .haveBaggage(false)
+                                                        .seatNumber(i + 1)
+                                                        .build();
+                                        ticketRepository.save(ticket);
+                                }
+                        }
 
                 }
 
