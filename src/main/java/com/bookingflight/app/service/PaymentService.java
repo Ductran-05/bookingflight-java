@@ -77,7 +77,7 @@ public class PaymentService {
             String vnp_TmnCode = vnPayConfig.vnp_TmnCode;
             String vnp_IpAddr = vnPayConfig.getIpAddress(servletRequest);
             
-            int amount = request.getAmount() * 100; // Convert to VND cents
+            int amount = request.getAmount() * 100;
             
             Map<String, String> vnp_Params = new HashMap<>();
             vnp_Params.put("vnp_Version", vnp_Version);
