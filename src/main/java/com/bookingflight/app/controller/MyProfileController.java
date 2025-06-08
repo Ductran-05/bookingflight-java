@@ -12,12 +12,14 @@ import org.springframework.web.bind.annotation.RestController;
 import com.bookingflight.app.domain.Flight;
 import com.bookingflight.app.domain.Ticket;
 import com.bookingflight.app.dto.ResultPaginationDTO;
+import com.bookingflight.app.dto.request.UpdateAccountRequest;
 import com.bookingflight.app.dto.request.UpdatePasswordRequest;
 import com.bookingflight.app.dto.response.APIResponse;
 import com.bookingflight.app.dto.response.AccountResponse;
 import com.bookingflight.app.mapper.AccountMapper;
 import com.bookingflight.app.repository.AccountRepository;
 import com.bookingflight.app.service.MyProfileService;
+import com.mysql.cj.x.protobuf.MysqlxCrud.Update;
 import com.turkraft.springfilter.boot.Filter;
 
 import lombok.AllArgsConstructor;
@@ -42,6 +44,11 @@ public class MyProfileController {
     @PutMapping("/update-password")
     public ResponseEntity<APIResponse<Void>> updatePassword(@RequestBody UpdatePasswordRequest request) {
         return myProfileService.updatePassword(request);
+    }
+
+    @PutMapping("/update-account")
+    public ResponseEntity<APIResponse<AccountResponse>> updateAccount(@RequestBody UpdateAccountRequest request) {
+        return myProfileService.updateAccount(request);
     }
 
     @GetMapping("/tickets")

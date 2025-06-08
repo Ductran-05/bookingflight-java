@@ -13,6 +13,7 @@ import com.bookingflight.app.domain.Account;
 import com.bookingflight.app.domain.Flight;
 import com.bookingflight.app.domain.Ticket;
 import com.bookingflight.app.dto.ResultPaginationDTO;
+import com.bookingflight.app.dto.request.UpdateAccountRequest;
 import com.bookingflight.app.dto.request.UpdatePasswordRequest;
 import com.bookingflight.app.dto.response.APIResponse;
 import com.bookingflight.app.dto.response.AccountResponse;
@@ -93,6 +94,24 @@ public class MyProfileService {
                                 .map(ticketMapper::toTicketResponse);
 
                 return resultPanigationMapper.toResultPanigationMapper(tickets);
+        }
+
+        public ResponseEntity<APIResponse<AccountResponse>> updateAccount(UpdateAccountRequest request) {
+                String email = securityUtil.getCurrentUserLogin()
+                                .orElseThrow(() -> new AppException(ErrorCode.UNAUTHORIZED));
+                Account account = accountRepository.findByEmail(email)
+                                .orElseThrow(() -> new AppException(ErrorCode.ACCOUNT_NOT_EXISTED));
+                account.setFullName(request.getFullName());
+                account.setPhone(request.getPhone());
+                account.setEmail(request.getEmail());
+                account.setAvatar(request.getAvatar());
+                accountRepository.save(account);
+                return ResponseEntity.ok(
+                                APIResponse.<AccountResponse>builder()
+                                                .Code(200)
+                                                .Message("Update account successfully")
+                                                .data(accountMapper.toAccountResponse(account))
+                                                .build());
         }
 
 }
