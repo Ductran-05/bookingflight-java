@@ -44,16 +44,6 @@ public class SecurityConfiguration {
     @Value("${projectjava.jwt.base64-secret}")
     private String jwtKey;
 
-    public static final List<String> GET_METHODS = List.of(
-            "/api/airports/**",
-            "/api/permissions/**",
-            "/api/cities/**",
-            "/api/airlines/**",
-            "/api/flights/**",
-            "/api/flights/seats/**",
-            "/api/files/**",
-            "/api/payment/**");
-
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();

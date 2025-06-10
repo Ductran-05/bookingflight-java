@@ -1,8 +1,11 @@
 package com.bookingflight.app.config;
 
+import java.lang.reflect.Method;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.actuate.autoconfigure.observation.ObservationProperties.Http;
+import org.springframework.http.HttpMethod;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.web.servlet.HandlerInterceptor;
 
@@ -34,8 +37,12 @@ public class PermissionInterceptor implements HandlerInterceptor {
             throws Exception {
 
         String requestURI = request.getRequestURI();
-        String httpMethod = request.getMethod();
+        HttpMethod httpMethod = HttpMethod.valueOf(request.getMethod());
         String normalizedPath = normalizePath(requestURI);
+
+        if (PublicEndpoints.isPublic(normalizedPath, httpMethod)) {
+            return true;
+        }
         // Danh sách public GET
         if (httpMethod.equals("GET")) {
             if (PublicEndpoints.GET_METHODS.contains(normalizedPath)) {
@@ -64,7 +71,7 @@ public class PermissionInterceptor implements HandlerInterceptor {
 
             for (Permission permission : permissions) {
                 String normalizedApiPath = normalizePath(permission.getApiPath());
-                if (permission.getMethod().equalsIgnoreCase(httpMethod) &&
+                if (permission.getMethod().equals(httpMethod.name()) &&
                         matcher.match(normalizedApiPath, normalizedRequestURI)) {
                     return true;
                 }

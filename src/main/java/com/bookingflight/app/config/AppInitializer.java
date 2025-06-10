@@ -138,8 +138,7 @@ public class AppInitializer {
 
         // Gán các quyền antMatcher /my-profile/** cho role user nếu chưa có
         for (Permission permission : permissionRepository.findAll()) {
-            if (antPathMatcher.match("/api/my-profile/**", permission.getApiPath())
-                    || antPathMatcher.match("/api/booking-flight/**", permission.getApiPath())) {
+            if (antPathMatcher.match("/api/my-profile/**", permission.getApiPath())) {
                 // Bỏ qua nếu đã tồn tại quan hệ
                 if (permissionRoleRepository.existsByPermissionAndRole(permission, userRole))
                     continue;

@@ -10,11 +10,9 @@ public class PublicEndpoints {
         private static final AntPathMatcher pathMatcher = new AntPathMatcher();
 
         public static final List<String> ALL_METHODS = List.of(
-                        "/api/auth/login",
-                        "/api/auth/refresh",
-                        "/api/auth/confirm",
-                        "/api/auth/register",
-                        "/api/payment/vnpay-return");
+                        "/api/auth/**",
+                        "/api/payment/**",
+                        "/api/booking-flight/**");
 
         public static final List<String> GET_METHODS = List.of(
                         "/api/airports/**",
