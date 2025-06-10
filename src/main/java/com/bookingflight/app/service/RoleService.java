@@ -82,10 +82,6 @@ public class RoleService {
     @Transactional
     public RoleResponse updateRole(String id, RoleRequest roleRequest) {
 
-        if (roleRepository.existsByRoleName(roleRequest.getRoleName())) {
-            throw new AppException(ErrorCode.ROLE_ALREADY_EXISTS);
-        }
-
         permission_RoleRepostiory.deleteAllByRole(
                 roleRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.ROLE_NOT_FOUND)));
 
