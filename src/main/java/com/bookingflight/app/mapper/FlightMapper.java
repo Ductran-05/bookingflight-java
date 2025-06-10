@@ -1,17 +1,19 @@
 package com.bookingflight.app.mapper;
 
+import java.sql.Date;
+import java.time.LocalDateTime;
+import java.util.List;
+
 import org.springframework.stereotype.Component;
 
 import com.bookingflight.app.domain.Flight;
+import com.bookingflight.app.domain.FlightStatus;
+import com.bookingflight.app.domain.Ticket;
 import com.bookingflight.app.dto.request.FlightRequest;
 import com.bookingflight.app.dto.response.FlightResponse;
 import com.bookingflight.app.exception.AppException;
 import com.bookingflight.app.exception.ErrorCode;
-import com.bookingflight.app.repository.AirportRepository;
-import com.bookingflight.app.repository.Flight_AirportRepository;
-import com.bookingflight.app.repository.Flight_SeatRepository;
-import com.bookingflight.app.repository.PlaneRepository;
-
+import com.bookingflight.app.repository.*;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -20,6 +22,8 @@ import lombok.experimental.FieldDefaults;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class FlightMapper {
+
+        final TicketRepository ticketRepository;
 
         final Flight_AirportRepository flight_AirportRepository;
         final Flight_SeatRepository flight_SeatRepository;
@@ -44,6 +48,24 @@ public class FlightMapper {
         }
 
         public FlightResponse toFlightResponse(Flight flight) {
+                FlightStatus flightStatus = FlightStatus.AVAILABLE;
+                // kiểm tra thời gian đến có trước thời điểm hiện tại không
+                if (flight.getArrivalTime().isBefore(LocalDateTime.now())) {
+                        flightStatus = FlightStatus.COMPLETED;
+                }
+
+                // kiểm tra nếu hết vé thì flightStatus = SOLD_OUT
+                List<Ticket> tickets = ticketRepository.findAllByFlightId(flight.getId());
+                boolean isSoldOut = tickets.stream().anyMatch(ticket -> {
+                        if (ticket.getIsBooked() == false) {
+                                return false;
+                        }
+                        return true;
+                });
+                if (isSoldOut) {
+                        flightStatus = FlightStatus.SOLD_OUT;
+                }
+
                 return FlightResponse.builder()
                                 .id(flight.getId())
                                 .flightCode(flight.getFlightCode())
@@ -56,6 +78,7 @@ public class FlightMapper {
                                 .departureTime(flight.getDepartureTime())
                                 .arrivalTime(flight.getArrivalTime())
                                 .originPrice(flight.getOriginPrice())
+                                .flightStatus(flightStatus)
                                 .listFlight_Airport(flight_AirportRepository.findAllByFlightId(flight.getId())
                                                 .stream()
                                                 .map(flight_Airport -> flight_AirportMapper

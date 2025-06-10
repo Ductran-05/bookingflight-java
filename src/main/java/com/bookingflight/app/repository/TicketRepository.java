@@ -4,6 +4,8 @@ import com.bookingflight.app.domain.Account;
 import com.bookingflight.app.domain.Flight;
 import com.bookingflight.app.domain.Ticket;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -19,4 +21,6 @@ public interface TicketRepository extends JpaRepository<Ticket, String>, JpaSpec
     int countByFlightIdAndSeatIdAndIsBookedFalse(String flightId, String seatId);
 
     Ticket findFirstByFlightIdAndSeatIdAndIsBookedFalse(String flightId, String seatId);
+
+    List<Ticket> findAllByFlightId(String id);
 }
