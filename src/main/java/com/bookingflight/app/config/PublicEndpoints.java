@@ -21,6 +21,8 @@ public class PublicEndpoints {
                         "/api/airlines/**",
                         "/api/flights/**",
                         "/api/flights/seats/**",
+                        "/api/tickets/**",
+                        "/api/seats/**",
                         "/api/files/**",
                         "/api/payment/**");
 
