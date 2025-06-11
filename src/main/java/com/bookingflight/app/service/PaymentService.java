@@ -86,10 +86,7 @@ public class PaymentService {
             vnp_Params.put("vnp_Amount", String.valueOf(amount));
             vnp_Params.put("vnp_CurrCode", "VND");
             
-            if (request.getBankCode() != null && !request.getBankCode().isEmpty()) {
-                vnp_Params.put("vnp_BankCode", request.getBankCode());
-            }
-            
+
             vnp_Params.put("vnp_TxnRef", txnRef);
             vnp_Params.put("vnp_OrderInfo", request.getOrderInfo());
             vnp_Params.put("vnp_OrderType", "other");
