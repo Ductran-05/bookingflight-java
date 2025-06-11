@@ -33,7 +33,7 @@ public class Ticket {
     @JoinColumn(name = "seatId")
     Seat seat;
     @ManyToOne
-    @JoinColumn(name = "accountId")
+    @JoinColumn(name = "accountId", nullable = true)
     Account account;
 
     String passengerName;

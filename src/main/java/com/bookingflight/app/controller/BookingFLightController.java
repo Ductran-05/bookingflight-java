@@ -46,7 +46,8 @@ public class BookingFLightController {
             if (unusedTicket == null) {
                 throw new AppException(ErrorCode.NOT_ENOUGH_SEATS);
             }
-            unusedTicket.setAccount(accountRepository.findById(request.getAccountId()).get());
+            unusedTicket.setAccount(
+                    request.getAccountId() == null ? null : accountRepository.findById(request.getAccountId()).get());
             unusedTicket.setPassengerName(passenger.getPassengerName());
             unusedTicket.setPassengerPhone(passenger.getPassengerPhone());
             unusedTicket.setPassengerIDCard(passenger.getPassengerIDCard());
