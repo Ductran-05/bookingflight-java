@@ -15,6 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.view.RedirectView;
 
 import java.util.Map;
 
@@ -50,14 +51,13 @@ public class PaymentController {
     }
 
     @GetMapping("/vnpay-return")
-    public ResponseEntity<APIResponse<PaymentResponse>> vnpayReturn(@RequestParam Map<String, String> params) {
+    public RedirectView vnpayReturn(@RequestParam Map<String, String> params) {
         PaymentResponse response = paymentService.handlePaymentReturn(params);
-        APIResponse<PaymentResponse> apiResponse = APIResponse.<PaymentResponse>builder()
-                .Code(200)
-                .Message("Payment processed successfully")
-                .data(response)
-                .build();
-        return ResponseEntity.ok(apiResponse);
+        String redirectUrl = response.getStatus() == Payment.PaymentStatus.SUCCESS
+                ? "http://localhost:5173/payment/success?tmxRef=" + response.getTxnRef()
+                : "http://localhost:5173/payment/fail";
+
+        return new RedirectView(redirectUrl);
     }
 
     @GetMapping("/status/{txnRef}")
