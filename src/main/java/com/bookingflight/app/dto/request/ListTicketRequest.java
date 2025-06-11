@@ -20,7 +20,6 @@ public class ListTicketRequest {
     @NotBlank(message = "Flight ID is required")
     String flightId;
 
-    @NotBlank(message = "Account ID is required")
     String accountId;
 
     @NotBlank(message = "Seat ID is required")
