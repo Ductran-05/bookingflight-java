@@ -23,4 +23,6 @@ public interface TicketRepository extends JpaRepository<Ticket, String>, JpaSpec
     Ticket findFirstByFlightIdAndSeatIdAndIsBookedFalse(String flightId, String seatId);
 
     List<Ticket> findAllByFlightId(String id);
+
+    Number countByFlightIdAndSeatIdAndIsBookedTrue(String id, String id2);
 }

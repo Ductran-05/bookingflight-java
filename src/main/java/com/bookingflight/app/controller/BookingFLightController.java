@@ -63,4 +63,18 @@ public class BookingFLightController {
                 .build();
         return ResponseEntity.ok(apiResponse);
     }
+
+    @PostMapping("/api/booking-flight/cancel")
+    public ResponseEntity<APIResponse<String>> cancelTicket(@RequestBody List<String> ticketIds) {
+        for (String ticketId : ticketIds) {
+            Ticket ticket = ticketRepository.findById(ticketId).get();
+            ticket.setIsBooked(false);
+            ticketRepository.save(ticket);
+        }
+        APIResponse<String> apiResponse = APIResponse.<String>builder()
+                .Code(HttpStatus.OK.value())
+                .Message("Cancel ticket successfully")
+                .build();
+        return ResponseEntity.ok(apiResponse);
+    }
 }
