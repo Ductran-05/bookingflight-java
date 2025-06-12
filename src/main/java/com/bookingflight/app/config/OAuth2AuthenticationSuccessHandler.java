@@ -79,7 +79,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         response.addHeader("Set-Cookie", responseCookie.toString());
 
 
-        String redirectUrl = UriComponentsBuilder.fromUriString("http://localhost:5713/callback")
+        String redirectUrl = UriComponentsBuilder.fromUriString("http://localhost:5173/callback")
                 .queryParam("token", accessToken)
                 .build().toUriString();
 
