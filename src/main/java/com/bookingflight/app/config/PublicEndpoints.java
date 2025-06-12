@@ -13,7 +13,8 @@ public class PublicEndpoints {
                         "/api/auth/**",
                         "/api/payment/**",
                         "/api/booking-flight/**",
-                        "/api/payment/**");
+                        "/api/payment/**",
+                        "/api/my-profile/**");
 
         public static final List<String> GET_METHODS = List.of(
                         "/api/airports/**",
@@ -47,6 +48,15 @@ public class PublicEndpoints {
                         }
                 }
 
+                return false;
+        }
+
+        public static boolean isPublicAllMethods(String rawUrl) {
+                for (String publicPath : ALL_METHODS) {
+                        if (pathMatcher.match(publicPath, rawUrl)) {
+                                return true;
+                        }
+                }
                 return false;
         }
 }

@@ -70,7 +70,10 @@ public class AppInitializer {
                     String methodName = method.name();
 
                     // Bỏ qua các endpoint public không cần tạo quyền
-                    if (PublicEndpoints.isPublic(rawUrl, HttpMethod.valueOf(methodName)))
+                    // if (PublicEndpoints.isPublic(rawUrl, HttpMethod.valueOf(methodName)))
+                    // continue;
+                    // bỏ qua các endpoint public all methods
+                    if (PublicEndpoints.isPublicAllMethods(rawUrl))
                         continue;
 
                     String normalizedUrl = normalizePath(rawUrl);
