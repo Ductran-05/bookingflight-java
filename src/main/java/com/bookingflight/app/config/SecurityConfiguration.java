@@ -51,7 +51,8 @@ public class SecurityConfiguration {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http,
-            CustomAuthenticationEntryPoint cusAuthEntryPoint) throws Exception {
+            CustomAuthenticationEntryPoint cusAuthEntryPoint,
+            OAuth2AuthenticationSuccessHandler oAuth2SuccessHandler) throws Exception {
         http
                 .csrf(csrf -> csrf.disable())
 
@@ -60,12 +61,18 @@ public class SecurityConfiguration {
                         .permitAll()
                         .requestMatchers(HttpMethod.GET, PublicEndpoints.GET_METHODS.toArray(new String[0]))
                         .permitAll()
+                        .requestMatchers("/login/oauth2/**", "/oauth2/**")
+                        .permitAll()
                         .anyRequest().authenticated())
                 // .anyRequest().permitAll())
                 .oauth2ResourceServer(oauth2 -> oauth2
                         .jwt(jwt -> jwt
                                 .jwtAuthenticationConverter(new CustomJwtAuthenticationConverter()))
                         .authenticationEntryPoint(cusAuthEntryPoint))
+                
+                .oauth2Login(oauth2 -> oauth2
+                        .successHandler(oAuth2SuccessHandler)
+                        .failureUrl("http://localhost:5713/auth/"))
 
                 .exceptionHandling(exceptions -> exceptions
                         .authenticationEntryPoint(new BearerTokenAuthenticationEntryPoint()) // 401
