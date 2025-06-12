@@ -24,5 +24,5 @@ public interface TicketRepository extends JpaRepository<Ticket, String>, JpaSpec
 
     List<Ticket> findAllByFlightId(String id);
 
-    Number countByFlightIdAndSeatIdAndIsBookedTrue(String id, String id2);
+    Integer countByFlightIdAndSeatIdAndIsBookedTrue(String id, String id2);
 }

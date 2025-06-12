@@ -1,5 +1,7 @@
 package com.bookingflight.app.dto.response;
 
+import java.math.BigDecimal;
+
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,8 +19,8 @@ public class Flight_SeatResponse {
     String flightId;
     String seatId;
     String seatName;
-    Number price;
-    Number quantityBooked;
-    Number quantityAvailable;
-    Number quantity;
+    BigDecimal price;
+    Integer quantityBooked;
+    Integer quantityAvailable;
+    Integer quantity;
 }

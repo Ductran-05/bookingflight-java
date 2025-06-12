@@ -1,5 +1,7 @@
 package com.bookingflight.app.domain;
 
+import java.math.BigDecimal;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -31,5 +33,5 @@ public class Flight_Seat {
     @ManyToOne
     @JoinColumn(name = "seatId")
     Seat seat;
-    Number quantity;
+    Integer quantity;
 }

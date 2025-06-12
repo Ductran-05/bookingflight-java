@@ -1,5 +1,7 @@
 package com.bookingflight.app.dto.request;
 
+import java.math.BigDecimal;
+
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -23,7 +25,7 @@ public class SeatRequest {
 
     @NotNull(message = "PRICE_IS_REQUIRED")
     @Min(value = 0, message = "PRICE_MUST_BE_POSITIVE")
-    Number price;
+    BigDecimal price;
 
     @Size(max = 200, message = "DESCRIPTION_TOO_LONG")
     String description;

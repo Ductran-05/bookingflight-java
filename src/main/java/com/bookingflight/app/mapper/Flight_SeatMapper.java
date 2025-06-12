@@ -1,5 +1,7 @@
 package com.bookingflight.app.mapper;
 
+import java.math.BigDecimal;
+
 import org.springframework.stereotype.Component;
 
 import com.bookingflight.app.domain.Flight;
@@ -30,9 +32,9 @@ public class Flight_SeatMapper {
         }
 
         public Flight_SeatResponse toFlight_SeatResponse(Flight_Seat flight_Seat) {
-                Number quantityBooked = ticketRepository.countByFlightIdAndSeatIdAndIsBookedTrue(
+                Integer quantityBooked = ticketRepository.countByFlightIdAndSeatIdAndIsBookedTrue(
                                 flight_Seat.getFlight().getId(), flight_Seat.getSeat().getId());
-                Number quantityAvailable = flight_Seat.getQuantity().intValue() - quantityBooked.intValue();
+                Integer quantityAvailable = flight_Seat.getQuantity().intValue() - quantityBooked.intValue();
                 return Flight_SeatResponse.builder()
                                 .id(flight_Seat.getId())
                                 .flightId(flight_Seat.getFlight().getId())

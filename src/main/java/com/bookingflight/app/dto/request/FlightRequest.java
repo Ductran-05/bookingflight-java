@@ -1,5 +1,6 @@
 package com.bookingflight.app.dto.request;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -45,7 +46,7 @@ public class FlightRequest {
 
     @NotNull(message = "Origin price is required")
     @Min(value = 0, message = "Origin price must be zero or positive")
-    Number originPrice;
+    BigDecimal originPrice;
 
     List<Flight_AirportRequest> listFlight_Airport;
 

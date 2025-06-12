@@ -110,6 +110,6 @@ INSERT INTO flight_airport (id, flight_id, airport_id, arrival_time, departure_t
 (UUID(), 
     (SELECT id FROM flight WHERE flight_code = 'FL001'), 
     (SELECT id FROM airport WHERE airport_code = 'HND'), 
-    DATE_ADD(NOW(), INTERVAL 1 DAY + INTERVAL 6 HOUR),
-    DATE_ADD(NOW(), INTERVAL 1 DAY + INTERVAL 7 HOUR)
+DATE_ADD(DATE_ADD(NOW(), INTERVAL 1 DAY), INTERVAL 6 HOUR),
+    DATE_ADD(DATE_ADD(NOW(), INTERVAL 1 DAY), INTERVAL 7 HOUR)
 );

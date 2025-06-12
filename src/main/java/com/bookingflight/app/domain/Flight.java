@@ -1,9 +1,11 @@
 package com.bookingflight.app.domain;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -50,5 +52,6 @@ public class Flight {
     @JsonFormat(pattern = "HH:mm dd/MM/yyyy")
     LocalDateTime arrivalTime;
 
-    Number originPrice;
+    @Column(precision = 10, scale = 2) // DECIMAL(10,2)
+    BigDecimal originPrice;
 }

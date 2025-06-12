@@ -1,5 +1,6 @@
 package com.bookingflight.app.dto.response;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -35,7 +36,7 @@ public class FlightResponse {
     @JsonFormat(pattern = "HH:mm dd/MM/yyyy")
     LocalDateTime arrivalTime;
 
-    Number originPrice;
+    BigDecimal originPrice;
 
     List<Flight_AirportResponse> listFlight_Airport;
     List<Flight_SeatResponse> listFlight_Seat;

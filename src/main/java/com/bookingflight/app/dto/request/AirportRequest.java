@@ -14,7 +14,7 @@ import lombok.experimental.FieldDefaults;
 public class AirportRequest {
 
     @NotBlank(message = "Airport code is required")
-    @Pattern(regexp = "^[A-Z0-9]{2,10}$", message = "Airport code must be 2–10 uppercase letters or numbers")
+    @Pattern(regexp = "^[A-Z0-9]{2,10}$", message = "Airport code must be 2–10 uppercase letters or BigDecimal s")
     String airportCode;
 
     @NotBlank(message = "Airport name is required")

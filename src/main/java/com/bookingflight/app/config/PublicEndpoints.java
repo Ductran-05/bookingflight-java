@@ -12,7 +12,8 @@ public class PublicEndpoints {
         public static final List<String> ALL_METHODS = List.of(
                         "/api/auth/**",
                         "/api/payment/**",
-                        "/api/booking-flight/**");
+                        "/api/booking-flight/**",
+                        "/api/payment/**");
 
         public static final List<String> GET_METHODS = List.of(
                         "/api/airports/**",
@@ -23,8 +24,7 @@ public class PublicEndpoints {
                         "/api/flights/seats/**",
                         "/api/tickets/**",
                         "/api/seats/**",
-                        "/api/files/**",
-                        "/api/payment/**");
+                        "/api/files/**");
 
         /* 
         
