@@ -36,21 +36,9 @@ out/
 ### VS Code ###
 .vscode/
 
-# Bỏ qua file cấu hình database
-# src/main/resources/application.properties
-# Cấu hình MySQL
-spring.datasource.url=jdbc:mysql://localhost:3306/bookingflight-java
-spring.datasource.username=root
-spring.datasource.password=123456
-spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+### Application Properties ###
+# Ignore application properties with sensitive data (OAuth2, DB credentials, JWT secrets)
+application.properties
 
-# Hibernate
-spring.jpa.database-platform=org.hibernate.dialect.MySQL8Dialect
-spring.jpa.hibernate.ddl-auto=update
-# spring.jpa.show-sql=true
-
-###jwt config
-projectjava.jwt.base64-secret=qoAEABDke07+AVLepXB4aCMtsT0wMAqR5x2VFyldsnx6e75YQkJH2UcZKTjEyoNgG71SBCXfq5N6NVZxWOfsHQ==
-#expiration time in seconds
-projectjava.jwt.token-validity-in-seconds=86400
-###
+### Logs ###
+*.log
