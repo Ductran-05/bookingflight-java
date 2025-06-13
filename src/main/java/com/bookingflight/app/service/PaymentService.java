@@ -62,7 +62,7 @@ public class PaymentService {
             // Create payment record
             Payment payment = Payment.builder()
                     .amount(request.getAmount())
-                    .orderInfo(request.getOrderInfo())
+                    .orderInfo(paymentMapper.joinOrderInfo(request.getOrderInfo()))
                     .txnRef(txnRef)
                     .status(Payment.PaymentStatus.PENDING)
                     .createdAt(LocalDateTime.now())
@@ -88,7 +88,7 @@ public class PaymentService {
             
 
             vnp_Params.put("vnp_TxnRef", txnRef);
-            vnp_Params.put("vnp_OrderInfo", request.getOrderInfo());
+            vnp_Params.put("vnp_OrderInfo", paymentMapper.joinOrderInfo(request.getOrderInfo()));
             vnp_Params.put("vnp_OrderType", "other");
             
             if (request.getLanguage() != null && !request.getLanguage().isEmpty()) {
@@ -162,6 +162,7 @@ public class PaymentService {
         String vnp_BankCode = params.get("vnp_BankCode");
         String vnp_CardType = params.get("vnp_CardType");
         String vnp_SecureHash = params.get("vnp_SecureHash");
+        String vnp_OrderInfo = params.get("vnp_OrderInfo");
 
         // Verify signature
         Map<String, String> fields = new HashMap<>(params);
