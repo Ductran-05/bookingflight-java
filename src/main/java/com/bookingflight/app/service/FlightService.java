@@ -11,6 +11,7 @@ import com.bookingflight.app.domain.Flight;
 import com.bookingflight.app.domain.Flight_Airport;
 import com.bookingflight.app.domain.Flight_Seat;
 import com.bookingflight.app.domain.Ticket;
+import com.bookingflight.app.domain.TicketStatus;
 import com.bookingflight.app.dto.ResultPaginationDTO;
 import com.bookingflight.app.dto.request.FlightRequest;
 import com.bookingflight.app.dto.request.Flight_AirportRequest;
@@ -89,6 +90,7 @@ public class FlightService {
                                                         .passengerIDCard("")
                                                         .passengerEmail("")
                                                         .haveBaggage(false)
+                                                        .ticketStatus(TicketStatus.AVAILABLE)
                                                         .seatNumber(i + 1)
                                                         .build();
                                         ticketRepository.save(ticket);

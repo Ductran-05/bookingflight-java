@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import com.bookingflight.app.domain.Ticket;
+import com.bookingflight.app.domain.TicketStatus;
 import com.bookingflight.app.dto.request.ListTicketRequest;
 import com.bookingflight.app.dto.response.APIResponse;
 import com.bookingflight.app.dto.response.TicketResponse;
@@ -50,6 +51,7 @@ public class BookingFLightController {
             unusedTicket.setPassengerEmail(passenger.getPassengerEmail());
             unusedTicket.setHaveBaggage(passenger.getHaveBaggage());
             unusedTicket.setUrlImage(passenger.getUrlImage());
+            unusedTicket.setTicketStatus(TicketStatus.BOOKED);
             unusedTicket.setIsBooked(true);
             Ticket ticket = ticketRepository.save(unusedTicket);
             ticketResponses.add(ticketMapper.toTicketResponse(ticket));
@@ -75,6 +77,7 @@ public class BookingFLightController {
         for (String ticketId : ticketIds) {
             Ticket ticket = ticketRepository.findById(ticketId).get();
             ticket.setIsBooked(false);
+            ticket.setTicketStatus(TicketStatus.CANCELLED);
             ticketRepository.save(ticket);
         }
         APIResponse<String> apiResponse = APIResponse.<String>builder()

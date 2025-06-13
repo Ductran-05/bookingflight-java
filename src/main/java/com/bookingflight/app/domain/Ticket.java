@@ -46,4 +46,5 @@ public class Ticket {
     Boolean isBooked = false;
     int seatNumber;
     String urlImage;
+    TicketStatus ticketStatus;
 }

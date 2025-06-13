@@ -4,9 +4,13 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 import org.springframework.stereotype.Component;
 
 import com.bookingflight.app.domain.Ticket;
+import com.bookingflight.app.domain.TicketStatus;
 import com.bookingflight.app.dto.request.TicketRequest;
 import com.bookingflight.app.dto.response.TicketResponse;
 import com.bookingflight.app.repository.AccountRepository;
@@ -37,6 +41,17 @@ public class TicketMapper {
     }
 
     public TicketResponse toTicketResponse(Ticket ticket) {
+        TicketStatus ticketStatus = ticket.getTicketStatus();
+        if (!ticketStatus.equals(TicketStatus.CANCELLED)) {
+            // nếu thời gian hiện tại > thời gian bay + 2 giờ và bé hơn thời gian
+            // tới thì đặt là boarding
+            if (ticket.getFlight().getDepartureTime().isBefore(LocalDateTime.now().plusHours(2))) {
+                if (ticket.getFlight().getArrivalTime().isAfter(LocalDateTime.now())) {
+                    ticket.setTicketStatus(TicketStatus.BOARDING);
+                }
+                ticket.setTicketStatus(TicketStatus.USED);
+            }
+        }
         return TicketResponse.builder()
                 .id(ticket.getId())
                 .flight(ticket.getFlight())

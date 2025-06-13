@@ -1,6 +1,7 @@
 package com.bookingflight.app.dto.response;
 
 import com.bookingflight.app.domain.Flight;
+import com.bookingflight.app.domain.TicketStatus;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -24,5 +25,6 @@ public class TicketResponse {
     String passengerEmail;
     Boolean haveBaggage;
     Flight flight;
+    TicketStatus ticketStatus;
     int seatNumber;
 }
