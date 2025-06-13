@@ -6,5 +6,5 @@ public enum FlightStatus {
     // hết vé
     SOLD_OUT,
     // đã hoàn thành
-    COMPLETED
+    FLOWN
 }

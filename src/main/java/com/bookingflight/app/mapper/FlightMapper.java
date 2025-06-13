@@ -51,17 +51,13 @@ public class FlightMapper {
                 FlightStatus flightStatus = FlightStatus.AVAILABLE;
                 // kiểm tra thời gian đến có trước thời điểm hiện tại không
                 if (flight.getArrivalTime().isBefore(LocalDateTime.now())) {
-                        flightStatus = FlightStatus.COMPLETED;
+                        flightStatus = FlightStatus.FLOWN;
                 }
 
                 // kiểm tra nếu hết vé thì flightStatus = SOLD_OUT
                 List<Ticket> tickets = ticketRepository.findAllByFlightId(flight.getId());
-                boolean isSoldOut = tickets.stream().anyMatch(ticket -> {
-                        if (ticket.getIsBooked() == false) {
-                                return false;
-                        }
-                        return true;
-                });
+                boolean isSoldOut = tickets.stream().allMatch(Ticket::getIsBooked);
+
                 if (isSoldOut) {
                         flightStatus = FlightStatus.SOLD_OUT;
                 }
