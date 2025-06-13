@@ -165,6 +165,23 @@ public class AuthController {
                                 .body(response);
         }
 
+        @GetMapping("/me")
+        public ResponseEntity<APIResponse<AccountResponse>> getCurrentUser() {
+                String email = SecurityUtil.getCurrentUserLogin().orElseThrow(
+                                () -> new AppException(ErrorCode.AUTHENTICATION_FAILED));
+
+                Account account = accountRepository.findByEmail(email)
+                                .orElseThrow(() -> new AppException(ErrorCode.ACCOUNT_NOT_EXISTED));
+
+                APIResponse<AccountResponse> response = APIResponse.<AccountResponse>builder()
+                                .Code(200)
+                                .Message("Get current user information")
+                                .data(accountMapper.toAccountResponse(account))
+                                .build();
+
+                return ResponseEntity.ok(response);
+        }
+
         // @GetMapping("/confirm")
         // public String confirm(@RequestParam("token") String token) {
         // Optional<VerificationToken> optionalToken =

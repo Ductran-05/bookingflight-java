@@ -14,7 +14,9 @@ public class PublicEndpoints {
                         "/api/payment/**",
                         "/api/booking-flight/**",
                         "/api/payment/**",
-                        "/api/my-profile/**");
+                        "/api/my-profile/**",
+                        "/login/oauth2/**",
+                        "/oauth2/**");
 
         public static final List<String> GET_METHODS = List.of(
                         "/api/airports/**",
