@@ -9,6 +9,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
+import java.util.List;
+
 @Data
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
@@ -18,8 +20,8 @@ public class PaymentRequest {
     @Min(value = 1000, message = "Amount must be at least 1000")
     Integer amount;
 
-    @NotBlank(message = "Order info is required")
-    String orderInfo;
+    @NotNull(message = "Order info is required")
+    List<String> orderInfo;
 
 
     // Ngôn ngữ mặc định "vn", bạn có thể validate nếu cần chỉ nhận "vn", "en", ...

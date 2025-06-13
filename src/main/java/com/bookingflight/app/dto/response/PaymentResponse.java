@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -16,7 +17,7 @@ import java.time.LocalDateTime;
 public class PaymentResponse {
     String id;
     int amount;
-    String orderInfo;
+    List<String> orderInfo;
     String txnRef;
     Payment.PaymentStatus status;
     String vnpTransactionNo;

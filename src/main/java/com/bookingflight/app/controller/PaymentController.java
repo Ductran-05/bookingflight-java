@@ -7,6 +7,7 @@ import com.bookingflight.app.dto.response.APIResponse;
 import com.bookingflight.app.dto.response.PaymentResponse;
 import com.bookingflight.app.dto.response.PaymentUrlResponse;
 import com.bookingflight.app.service.PaymentService;
+import com.bookingflight.app.service.TicketService;
 import com.turkraft.springfilter.boot.Filter;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -17,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -24,6 +26,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class PaymentController {
     private final PaymentService paymentService;
+    private final TicketService ticketService;
 
     @GetMapping("/")
     public ResponseEntity<APIResponse<ResultPaginationDTO>> getAllPayments(
@@ -53,10 +56,26 @@ public class PaymentController {
     @GetMapping("/vnpay-return")
     public RedirectView vnpayReturn(@RequestParam Map<String, String> params) {
         PaymentResponse response = paymentService.handlePaymentReturn(params);
-        String redirectUrl = response.getStatus() == Payment.PaymentStatus.SUCCESS
-                ? "http://localhost:5173/payment/success?tmxRef=" + response.getTxnRef()
-                : "http://localhost:5173/payment/fail";
-
+        String redirectUrl;
+        
+        if(response.getStatus() == Payment.PaymentStatus.SUCCESS){
+            redirectUrl = "http://localhost:5173/payment/success?tmxRef=" + response.getTxnRef();
+        }
+        else{
+            redirectUrl = "http://localhost:5173/payment/fail";
+            List<String> orders = response.getOrderInfo();
+            
+            // Delete tickets for each failed order
+            if (orders != null && !orders.isEmpty()) {
+                for (String ticketId : orders) {
+                    try {
+                        ticketService.deleteTicket(ticketId);
+                    } catch (Exception e) {
+                        System.err.println("Failed to delete ticket with ID: " + ticketId + ", Error: " + e.getMessage());
+                    }
+                }
+            }
+        }
         return new RedirectView(redirectUrl);
     }
 
@@ -70,4 +89,4 @@ public class PaymentController {
                 .build();
         return ResponseEntity.ok(apiResponse);
     }
-} 
+}
