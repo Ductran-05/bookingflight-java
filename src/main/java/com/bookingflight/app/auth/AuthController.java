@@ -165,24 +165,78 @@ public class AuthController {
                                 .body(response);
         }
 
+        // @GetMapping("/confirm")
+        // public String confirm(@RequestParam("token") String token) {
+        // Optional<VerificationToken> optionalToken =
+        // verificationTokenRepository.findByToken(token);
+
+        // if (optionalToken.isEmpty())
+        // return "Invalid token";
+
+        // VerificationToken verificationToken = optionalToken.get();
+
+        // if (verificationToken.getExpiryDate().isBefore(LocalDateTime.now())) {
+        // return "Token expired";
+        // }
+
+        // Account account = verificationToken.getAccount();
+        // account.setEnabled(true);
+        // accountRepository.save(account);
+
+        // verificationTokenRepository.delete(verificationToken); // Optionally remove
+        // token
+        // return "Email confirmed. Account activated.";
+        // }
         @GetMapping("/confirm")
-        public String confirm(@RequestParam("token") String token) {
+        public ResponseEntity<String> confirm(@RequestParam("token") String token) {
                 Optional<VerificationToken> optionalToken = verificationTokenRepository.findByToken(token);
 
-                if (optionalToken.isEmpty())
-                        return "Invalid token";
-
-                VerificationToken verificationToken = optionalToken.get();
-
-                if (verificationToken.getExpiryDate().isBefore(LocalDateTime.now())) {
-                        return "Token expired";
+                String htmlTemplate;
+                if (optionalToken.isEmpty()) {
+                        htmlTemplate = generateHtml("Token không hợp lệ ❌",
+                                        "Mã xác thực không đúng hoặc không tồn tại.");
+                } else {
+                        VerificationToken verificationToken = optionalToken.get();
+                        if (verificationToken.getExpiryDate().isBefore(LocalDateTime.now())) {
+                                htmlTemplate = generateHtml("Token hết hạn ⚠️",
+                                                "Vui lòng yêu cầu lại liên kết xác thực.");
+                        } else {
+                                Account account = verificationToken.getAccount();
+                                account.setEnabled(true);
+                                accountRepository.save(account);
+                                verificationTokenRepository.delete(verificationToken);
+                                htmlTemplate = generateHtml("Xác thực thành công ✅",
+                                                "Tài khoản của bạn đã được kích hoạt.");
+                        }
                 }
 
-                Account account = verificationToken.getAccount();
-                account.setEnabled(true);
-                accountRepository.save(account);
-
-                verificationTokenRepository.delete(verificationToken); // Optionally remove token
-                return "Email confirmed. Account activated.";
+                return ResponseEntity.ok()
+                                .header("Content-Type", "text/html")
+                                .body(htmlTemplate);
         }
+
+        private String generateHtml(String title, String message) {
+                return "<!DOCTYPE html>" +
+                                "<html>" +
+                                "<head>" +
+                                "<meta charset='UTF-8'>" +
+                                "<title>" + title + "</title>" +
+                                "<style>" +
+                                "body { font-family: Arial, sans-serif; text-align: center; padding: 50px; background: #f5f5f5; }"
+                                +
+                                ".box { background: white; padding: 40px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); display: inline-block; }"
+                                +
+                                "h1 { color: #4CAF50; }" +
+                                "p { font-size: 18px; }" +
+                                "</style>" +
+                                "</head>" +
+                                "<body>" +
+                                "<div class='box'>" +
+                                "<h1>" + title + "</h1>" +
+                                "<p>" + message + "</p>" +
+                                "</div>" +
+                                "</body>" +
+                                "</html>";
+        }
+
 }

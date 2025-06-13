@@ -6,6 +6,7 @@ import com.bookingflight.app.domain.VerificationToken;
 import com.bookingflight.app.dto.ResultPaginationDTO;
 import com.bookingflight.app.dto.request.AccountRequest;
 import com.bookingflight.app.dto.request.RegisterRequest;
+import com.bookingflight.app.dto.request.UpdateAccountRequest;
 import com.bookingflight.app.dto.response.AccountResponse;
 import com.bookingflight.app.exception.AppException;
 import com.bookingflight.app.exception.ErrorCode;
@@ -65,11 +66,11 @@ public class AccountService {
         return accountMapper.toAccountResponse(accountRepository.save(account));
     }
 
-    public AccountResponse updateAccount(String id, AccountRequest accountRequest) {
+    public AccountResponse updateAccount(String id, UpdateAccountRequest request) {
         Account account = accountRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.ACCOUNT_NOT_EXISTED));
         account.setEnabled(true);
-        accountMapper.updateAccount(account, accountRequest);
+        accountMapper.updateAccount(account, request);
 
         return accountMapper.toAccountResponse(accountRepository.save(account));
     }

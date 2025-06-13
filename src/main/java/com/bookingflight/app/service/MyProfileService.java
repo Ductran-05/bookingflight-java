@@ -24,6 +24,7 @@ import com.bookingflight.app.mapper.AccountMapper;
 import com.bookingflight.app.mapper.ResultPanigationMapper;
 import com.bookingflight.app.mapper.TicketMapper;
 import com.bookingflight.app.repository.AccountRepository;
+import com.bookingflight.app.repository.RoleRepository;
 import com.bookingflight.app.repository.TicketRepository;
 import com.bookingflight.app.util.SecurityUtil;
 
@@ -43,6 +44,7 @@ public class MyProfileService {
         final TicketRepository ticketRepository;
         final TicketMapper ticketMapper;
         final ResultPanigationMapper resultPanigationMapper;
+        final RoleRepository roleRepository;
 
         public ResponseEntity<APIResponse<Void>> updatePassword(UpdatePasswordRequest request) {
                 String email = securityUtil.getCurrentUserLogin()
@@ -105,6 +107,7 @@ public class MyProfileService {
                 account.setPhone(request.getPhone());
                 account.setEmail(request.getEmail());
                 account.setAvatar(request.getAvatar());
+                account.setRole(roleRepository.findById(request.getRoleId()).get());
                 accountRepository.save(account);
                 return ResponseEntity.ok(
                                 APIResponse.<AccountResponse>builder()
