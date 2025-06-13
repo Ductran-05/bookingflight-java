@@ -8,6 +8,8 @@ import com.bookingflight.app.domain.Flight;
 import com.bookingflight.app.domain.Flight_Seat;
 import com.bookingflight.app.dto.request.Flight_SeatRequest;
 import com.bookingflight.app.dto.response.Flight_SeatResponse;
+import com.bookingflight.app.exception.AppException;
+import com.bookingflight.app.exception.ErrorCode;
 import com.bookingflight.app.repository.SeatRepository;
 import com.bookingflight.app.repository.TicketRepository;
 import lombok.AccessLevel;
@@ -25,7 +27,8 @@ public class Flight_SeatMapper {
         public Flight_Seat toFlight_Seat(Flight_SeatRequest request, Flight flight) {
                 Flight_Seat flight_Seat = Flight_Seat.builder()
                                 .flight(flight)
-                                .seat(seatRepository.findById(request.getSeatId()).get())
+                                .seat(seatRepository.findById(request.getSeatId())
+                                                .orElseThrow(() -> new AppException(ErrorCode.SEAT_NOT_EXISTED)))
                                 .quantity(request.getQuantity())
                                 .build();
                 return flight_Seat;

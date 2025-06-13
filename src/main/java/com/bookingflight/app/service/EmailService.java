@@ -14,7 +14,7 @@ public class EmailService {
 
     final JavaMailSender mailSender;
 
-    void send(String to, String content) {
+    public void send(String to, String content) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(to);
         message.setSubject("Confirm your email");

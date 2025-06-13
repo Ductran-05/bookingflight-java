@@ -37,6 +37,7 @@ public class TicketRequest {
     @NotBlank(message = "PASSENGER_EMAIL_IS_REQUIRED")
     @Pattern(regexp = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$", message = "PASSENGER_EMAIL_INVALID")
     String passengerEmail;
+    String urlImage;
 
     @NotNull(message = "BAGGAGE_STATUS_IS_REQUIRED")
     Boolean haveBaggage;

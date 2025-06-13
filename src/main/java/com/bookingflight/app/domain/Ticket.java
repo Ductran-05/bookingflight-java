@@ -45,4 +45,5 @@ public class Ticket {
     @Builder.Default
     Boolean isBooked = false;
     int seatNumber;
+    String urlImage;
 }

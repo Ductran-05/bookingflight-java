@@ -128,7 +128,8 @@ public enum ErrorCode {
     PAYMENT_PROCESSING_FAILED(500, "Payment processing failed"),
 
     // Server errors
-    UNIDENTIFIED_EXCEPTION(500, "Unidentified server error"),;
+    UNIDENTIFIED_EXCEPTION(500, "Unidentified server error"), TOKEN_INVALID(401, "Token is invalid"),
+    TOKEN_EXPIRED(401, "Token is expired"),;
 
     private int code;
     private String message;

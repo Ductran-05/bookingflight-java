@@ -50,7 +50,7 @@ public class ListTicketRequest {
         // Email regex cơ bản
         @Pattern(regexp = "^[\\w.-]+@[\\w.-]+\\.\\w{2,}$", message = "Passenger email is invalid")
         String passengerEmail;
-
+        String urlImage;
         // Có thể null, nên không bắt buộc
         Boolean haveBaggage;
     }

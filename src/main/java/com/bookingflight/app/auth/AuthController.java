@@ -22,6 +22,7 @@ import com.bookingflight.app.config.SecurityConfiguration;
 import com.bookingflight.app.domain.Account;
 import com.bookingflight.app.domain.VerificationToken;
 import com.bookingflight.app.dto.request.RegisterRequest;
+import com.bookingflight.app.dto.request.ResetPasswordRequest;
 import com.bookingflight.app.dto.response.APIResponse;
 import com.bookingflight.app.dto.response.AccountResponse;
 import com.bookingflight.app.exception.AppException;
@@ -30,6 +31,7 @@ import com.bookingflight.app.mapper.AccountMapper;
 import com.bookingflight.app.repository.AccountRepository;
 import com.bookingflight.app.repository.VerificationTokenRepository;
 import com.bookingflight.app.service.AccountService;
+import com.bookingflight.app.service.ForgotPasswordService;
 import com.bookingflight.app.util.SecurityUtil;
 
 import jakarta.validation.Valid;
@@ -47,6 +49,7 @@ public class AuthController {
         final AuthenticationManagerBuilder authenticationManagerBuilder;
         final VerificationTokenRepository verificationTokenRepository;
         final SecurityConfiguration securityConfig;
+        final ForgotPasswordService forgotPasswordService;
 
         @PostMapping("/login")
         public ResponseEntity<APIResponse<LoginResponse>> login(@Valid @RequestBody LoginRequest request) {
@@ -180,6 +183,26 @@ public class AuthController {
                                 .build();
 
                 return ResponseEntity.ok(response);
+        }
+
+        @PostMapping("/forgot-password")
+        public ResponseEntity<APIResponse<Void>> forgotPassword(@RequestBody String email) {
+                forgotPasswordService.processForgotPassword(email);
+                return ResponseEntity.ok(
+                                APIResponse.<Void>builder()
+                                                .Code(200)
+                                                .Message("Reset link sent to your email")
+                                                .build());
+        }
+
+        @PostMapping("/reset-password")
+        public ResponseEntity<APIResponse<Void>> resetPassword(@Valid @RequestBody ResetPasswordRequest request) {
+                forgotPasswordService.resetPassword(request.getToken(), request.getNewPassword());
+                return ResponseEntity.ok(
+                                APIResponse.<Void>builder()
+                                                .Code(200)
+                                                .Message("Password reset successfully")
+                                                .build());
         }
 
         // @GetMapping("/confirm")

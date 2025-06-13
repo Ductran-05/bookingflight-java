@@ -30,6 +30,7 @@ public class TicketMapper {
                 .passengerPhone(request.getPassengerPhone())
                 .passengerIDCard(request.getPassengerIDCard())
                 .passengerEmail(request.getPassengerEmail())
+                .urlImage(request.getUrlImage())
                 .haveBaggage(request.getHaveBaggage())
                 .build();
         return ticket;
