@@ -1,5 +1,7 @@
 package com.bookingflight.app.domain;
 
+import java.time.LocalDateTime;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -47,4 +49,5 @@ public class Ticket {
     int seatNumber;
     String urlImage;
     TicketStatus ticketStatus;
+    LocalDateTime pickupAt;
 }

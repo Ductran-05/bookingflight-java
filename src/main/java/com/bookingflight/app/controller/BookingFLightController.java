@@ -32,17 +32,9 @@ public class BookingFLightController {
     @PostMapping("/api/booking-flight")
     public ResponseEntity<APIResponse<List<TicketResponse>>> bookingFlight(@RequestBody ListTicketRequest request) {
         List<TicketResponse> ticketResponses = new java.util.ArrayList<>();
-        int remainingSeat = ticketRepository.countByFlightIdAndSeatIdAndIsBookedFalse(request.getFlightId(),
-                request.getSeatId());
-        if (remainingSeat < request.getPassengers().size()) {
-            throw new AppException(ErrorCode.NOT_ENOUGH_SEATS);
-        }
+
         for (ListTicketRequest.Passenger passenger : request.getPassengers()) {
-            Ticket unusedTicket = ticketRepository.findFirstByFlightIdAndSeatIdAndIsBookedFalse(request.getFlightId(),
-                    request.getSeatId());
-            if (unusedTicket == null) {
-                throw new AppException(ErrorCode.NOT_ENOUGH_SEATS);
-            }
+            Ticket unusedTicket = ticketRepository.findById(passenger.getTicketid()).get();
             unusedTicket.setAccount(
                     request.getAccountId() == null ? null : accountRepository.findById(request.getAccountId()).get());
             unusedTicket.setPassengerName(passenger.getPassengerName());

@@ -4,6 +4,7 @@ import com.bookingflight.app.domain.Account;
 import com.bookingflight.app.domain.Flight;
 import com.bookingflight.app.domain.Ticket;
 import com.bookingflight.app.dto.ResultPaginationDTO;
+import com.bookingflight.app.dto.request.ListTicketRequest;
 import com.bookingflight.app.dto.request.TicketRequest;
 import com.bookingflight.app.dto.response.TicketResponse;
 import com.bookingflight.app.exception.AppException;
@@ -13,8 +14,12 @@ import com.bookingflight.app.mapper.TicketMapper;
 import com.bookingflight.app.repository.FlightRepository;
 import com.bookingflight.app.repository.SeatRepository;
 import com.bookingflight.app.repository.TicketRepository;
+
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
@@ -71,6 +76,16 @@ public class TicketService {
                 .orElseThrow(() -> new AppException(ErrorCode.TICKET_NOT_FOUND));
 
         ticketRepository.delete(ticket);
+    }
+
+    public TicketResponse pickUpTicket(List<String> listId) {
+        for (String id : listId) {
+            Ticket ticket = ticketRepository.findById(id)
+                    .orElseThrow(() -> new AppException(ErrorCode.TICKET_NOT_FOUND));
+            ticket.setPickupAt(LocalDateTime.now());
+            ticketRepository.save(ticket);
+        }
+        return null;
     }
 
 }

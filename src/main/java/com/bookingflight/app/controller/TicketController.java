@@ -2,6 +2,7 @@ package com.bookingflight.app.controller;
 
 import com.bookingflight.app.domain.Ticket;
 import com.bookingflight.app.dto.ResultPaginationDTO;
+import com.bookingflight.app.dto.request.ListTicketRequest;
 import com.bookingflight.app.dto.request.TicketRequest;
 import com.bookingflight.app.dto.response.APIResponse;
 import com.bookingflight.app.dto.response.TicketResponse;
@@ -10,6 +11,8 @@ import com.turkraft.springfilter.boot.Filter;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+
+import java.util.List;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -33,6 +36,17 @@ public class TicketController {
                 .build();
         return ResponseEntity.ok(apiResponse);
 
+    }
+
+    @PostMapping("/pickup")
+    public ResponseEntity<APIResponse<TicketResponse>> pickUpTicket(@RequestBody @Valid List<String> listId) {
+        TicketResponse ticket = ticketService.pickUpTicket(listId);
+        APIResponse<TicketResponse> apiResponse = APIResponse.<TicketResponse>builder()
+                .Code(HttpStatus.OK.value())
+                .Message("Pick up ticket successfully")
+                .data(ticket)
+                .build();
+        return ResponseEntity.ok(apiResponse);
     }
 
     @GetMapping("/{id}")

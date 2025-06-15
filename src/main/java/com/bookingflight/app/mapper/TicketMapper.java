@@ -51,7 +51,15 @@ public class TicketMapper {
                 }
                 ticket.setTicketStatus(TicketStatus.USED);
             }
+
         }
+        LocalDateTime pickupAt = ticket.getPickupAt();
+        if (pickupAt != null) {
+            if (pickupAt.isBefore(LocalDateTime.now().minusMinutes(5))) {
+                pickupAt = null;
+            }
+        }
+        Boolean canBook = ticket.getTicketStatus().equals(TicketStatus.AVAILABLE) && ticket.getPickupAt() == null;
         return TicketResponse.builder()
                 .id(ticket.getId())
                 .flight(ticket.getFlight())
@@ -63,6 +71,7 @@ public class TicketMapper {
                 .passengerEmail(ticket.getPassengerEmail())
                 .haveBaggage(ticket.getHaveBaggage())
                 .seatNumber(ticket.getSeatNumber())
+                .canBook(canBook)
                 .build();
     }
 
