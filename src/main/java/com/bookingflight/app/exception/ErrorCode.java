@@ -129,7 +129,7 @@ public enum ErrorCode {
 
     // Server errors
     UNIDENTIFIED_EXCEPTION(500, "Unidentified server error"), TOKEN_INVALID(401, "Token is invalid"),
-    TOKEN_EXPIRED(401, "Token is expired"),;
+    TOKEN_EXPIRED(401, "Token is expired"), TICKET_ALREADY_PICKED_UP(400, "Ticket already picked up");
 
     private int code;
     private String message;
