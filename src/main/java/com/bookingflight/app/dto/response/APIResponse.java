@@ -8,7 +8,6 @@ import lombok.Builder;
 @lombok.NoArgsConstructor
 @lombok.ToString
 @Builder
-
 public class APIResponse<T> {
     private int Code;
     private String Message;

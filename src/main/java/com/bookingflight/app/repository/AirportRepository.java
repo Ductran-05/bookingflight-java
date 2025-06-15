@@ -1,6 +1,8 @@
 package com.bookingflight.app.repository;
 
 import com.bookingflight.app.domain.Airport;
+import com.bookingflight.app.domain.City;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
@@ -8,4 +10,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface AirportRepository extends JpaRepository<Airport, String>, JpaSpecificationExecutor<Airport> {
     boolean existsByAirportCode(String airportCode);
+
+    Airport[] findAllByCity(City city);
 }

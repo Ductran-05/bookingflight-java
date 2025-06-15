@@ -4,6 +4,7 @@ import com.bookingflight.app.domain.Airline;
 import com.bookingflight.app.dto.ResultPaginationDTO;
 import com.bookingflight.app.dto.request.AirlineRequest;
 import com.bookingflight.app.dto.response.APIResponse;
+import com.bookingflight.app.dto.response.AirlinePopularityResponse;
 import com.bookingflight.app.dto.response.AirlineResponse;
 import com.bookingflight.app.service.AirlineService;
 import com.turkraft.springfilter.boot.Filter;
@@ -75,5 +76,10 @@ public class AirlineController {
                                 .Message("Success")
                                 .build();
                 return ResponseEntity.ok().body(response);
+        }
+
+        @GetMapping("/flights/airline-popular")
+        public ResponseEntity<APIResponse<AirlinePopularityResponse>> getAirlinePopularity() {
+                return airlineService.getAirlinePopularity();
         }
 }

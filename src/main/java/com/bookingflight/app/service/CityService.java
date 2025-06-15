@@ -1,5 +1,6 @@
 package com.bookingflight.app.service;
 
+import com.bookingflight.app.domain.Airport;
 import com.bookingflight.app.domain.City;
 import com.bookingflight.app.dto.ResultPaginationDTO;
 import com.bookingflight.app.dto.request.CityRequest;
@@ -8,6 +9,7 @@ import com.bookingflight.app.exception.AppException;
 import com.bookingflight.app.exception.ErrorCode;
 import com.bookingflight.app.mapper.CityMapper;
 import com.bookingflight.app.mapper.ResultPanigationMapper;
+import com.bookingflight.app.repository.AirportRepository;
 import com.bookingflight.app.repository.CityRepository;
 import lombok.RequiredArgsConstructor;
 
@@ -22,6 +24,7 @@ public class CityService {
     private final CityMapper cityMapper;
     private final CityRepository cityRepository;
     private final ResultPanigationMapper resultPanigationMapper;
+    private final AirportRepository airportRepository;
 
     public ResultPaginationDTO getAllCities(Specification<City> spec, Pageable pageable) {
         Page<CityResponse> page = cityRepository.findAll(spec, pageable).map(cityMapper::toCityResponse);
@@ -49,8 +52,12 @@ public class CityService {
     }
 
     public void deleteCity(String id) {
+
         City city = cityRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.CITY_NOT_EXISTED));
+        for (Airport airport : airportRepository.findAllByCity(city)) {
+            airport.setCity(null);
+        }
         cityRepository.delete(city);
     }
 }
