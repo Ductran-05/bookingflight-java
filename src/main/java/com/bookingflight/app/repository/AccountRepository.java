@@ -23,4 +23,6 @@ public interface AccountRepository extends JpaRepository<Account, String>, JpaSp
 
     boolean existsByRole(Role role);
 
+    void deleteAllByRole(Role role);
+
 }

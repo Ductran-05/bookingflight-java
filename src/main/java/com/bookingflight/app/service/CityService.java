@@ -25,6 +25,7 @@ public class CityService {
     private final CityRepository cityRepository;
     private final ResultPanigationMapper resultPanigationMapper;
     private final AirportRepository airportRepository;
+    private final AirportService airportService;
 
     public ResultPaginationDTO getAllCities(Specification<City> spec, Pageable pageable) {
         Page<CityResponse> page = cityRepository.findAll(spec, pageable).map(cityMapper::toCityResponse);
@@ -56,7 +57,7 @@ public class CityService {
         City city = cityRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.CITY_NOT_EXISTED));
         for (Airport airport : airportRepository.findAllByCity(city)) {
-            airport.setCity(null);
+            airportService.deleteAirport(airport.getId());
         }
         cityRepository.delete(city);
     }

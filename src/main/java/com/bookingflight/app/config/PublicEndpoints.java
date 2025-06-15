@@ -11,10 +11,12 @@ public class PublicEndpoints {
 
         public static final List<String> ALL_METHODS = List.of(
                         "/api/auth/**",
+                        "/api/dashboard/**",
                         "/api/payment/**",
                         "/api/booking-flight/**",
                         "/api/payment/**",
                         "/api/my-profile/**",
+                        "/api/airlines/flights/airline-popular/**",
                         "/login/oauth2/**",
                         "/oauth2/**");
 

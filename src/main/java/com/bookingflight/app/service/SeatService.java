@@ -50,6 +50,7 @@ public class SeatService {
     }
 
     public void deleteSeat(String id) {
+
         seatRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.SEAT_NOT_EXISTED));
         seatRepository.deleteById(id);

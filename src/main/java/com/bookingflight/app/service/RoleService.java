@@ -15,6 +15,7 @@ import com.bookingflight.app.exception.AppException;
 import com.bookingflight.app.exception.ErrorCode;
 import com.bookingflight.app.mapper.ResultPanigationMapper;
 import com.bookingflight.app.mapper.RoleMapper;
+import com.bookingflight.app.repository.AccountRepository;
 import com.bookingflight.app.repository.PermissionRepository;
 import com.bookingflight.app.repository.Permission_RoleRepostiory;
 import com.bookingflight.app.repository.RoleRepository;
@@ -36,6 +37,7 @@ public class RoleService {
     final PermissionService permissionService;
     final PermissionRepository permissionRepository;
     private final ResultPanigationMapper resultPanigationMapper;
+    final AccountRepository accountRepository;
 
     public ResultPaginationDTO getAllRoles(Specification<Role> spec, Pageable pageable) {
         Page<RoleResponse> page = roleRepository.findAll(spec, pageable)
@@ -75,6 +77,7 @@ public class RoleService {
         Role role = roleRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.ROLE_NOT_FOUND));
 
         permission_RoleRepostiory.deleteAllByRole(role);
+        accountRepository.deleteAllByRole(role);
 
         roleRepository.delete(role);
     }

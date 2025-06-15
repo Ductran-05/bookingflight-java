@@ -12,7 +12,7 @@ import com.bookingflight.app.dto.response.YearlyTicketResponse;
 import com.bookingflight.app.service.DashboardReportService;
 
 @RestController
-@RequestMapping("/dashboard")
+@RequestMapping("/api/dashboard")
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class DashboardReportController {
