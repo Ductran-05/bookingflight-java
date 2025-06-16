@@ -42,7 +42,8 @@ public class ForgotPasswordService {
     }
 
     private void sendResetEmail(String toEmail, String token) {
-        String resetLink = "http://localhost:8080/reset-password/changePasword?token=" + token;
+        String resetLink = "\r\n" + //
+                "http://localhost:5173/resetPassword/changePassword?token=" + token;
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(toEmail);
         message.setSubject("Reset your password");
