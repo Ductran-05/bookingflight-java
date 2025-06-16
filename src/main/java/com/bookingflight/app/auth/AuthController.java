@@ -21,6 +21,7 @@ import org.springframework.security.core.Authentication;
 import com.bookingflight.app.config.SecurityConfiguration;
 import com.bookingflight.app.domain.Account;
 import com.bookingflight.app.domain.VerificationToken;
+import com.bookingflight.app.dto.request.ForgotPasswordRequest;
 import com.bookingflight.app.dto.request.RegisterRequest;
 import com.bookingflight.app.dto.request.ResetPasswordRequest;
 import com.bookingflight.app.dto.response.APIResponse;
@@ -186,8 +187,8 @@ public class AuthController {
         }
 
         @PostMapping("/forgot-password")
-        public ResponseEntity<APIResponse<Void>> forgotPassword(@RequestBody String email) {
-                forgotPasswordService.processForgotPassword(email);
+        public ResponseEntity<APIResponse<Void>> forgotPassword(@RequestBody ForgotPasswordRequest request) {
+                forgotPasswordService.processForgotPassword(request.getEmail());
                 return ResponseEntity.ok(
                                 APIResponse.<Void>builder()
                                                 .Code(200)
