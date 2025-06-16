@@ -34,7 +34,7 @@ public class BookingFLightController {
         List<TicketResponse> ticketResponses = new java.util.ArrayList<>();
 
         for (ListTicketRequest.Passenger passenger : request.getPassengers()) {
-            Ticket unusedTicket = ticketRepository.findById(passenger.getTicketid()).get();
+            Ticket unusedTicket = ticketRepository.findById(passenger.getTicketId()).get();
             unusedTicket.setAccount(
                     request.getAccountId() == null ? null : accountRepository.findById(request.getAccountId()).get());
             unusedTicket.setPassengerName(passenger.getPassengerName());
@@ -47,7 +47,8 @@ public class BookingFLightController {
             unusedTicket.setIsBooked(true);
             Ticket ticket = ticketRepository.save(unusedTicket);
             ticketResponses.add(ticketMapper.toTicketResponse(ticket));
-            emailService.send(passenger.getPassengerEmail(), buildEmail(ticket.getUrlImage()));
+            // emailService.send(passenger.getPassengerEmail(),
+            // buildEmail(ticket.getUrlImage()));
         }
         APIResponse<List<TicketResponse>> apiResponse = APIResponse.<List<TicketResponse>>builder()
                 .Code(HttpStatus.OK.value())

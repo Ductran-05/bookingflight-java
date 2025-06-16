@@ -32,7 +32,8 @@ public class ListTicketRequest {
     @Data
     @NoArgsConstructor
     public static class Passenger {
-        String ticketid;
+        String ticketId;
+        Long seatNumber;
 
         @NotBlank(message = "Passenger name is required")
         @Size(max = 50, message = "Passenger name must be at most 50 characters")

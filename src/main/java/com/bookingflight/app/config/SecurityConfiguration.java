@@ -45,6 +45,7 @@ public class SecurityConfiguration {
     private long accessTokenExpiration;
     @Value("${projectjava.jwt.base64-secret}")
     private String jwtKey;
+    private final CorsConfig corsConfig;
 
     // private final JwtBypassFilter jwtBypassFilter;
 
@@ -58,6 +59,8 @@ public class SecurityConfiguration {
             CustomAuthenticationEntryPoint cusAuthEntryPoint,
             OAuth2AuthenticationSuccessHandler oAuth2SuccessHandler) throws Exception {
         http
+                .cors(cors -> cors
+                        .configurationSource(corsConfig.corsConfigurationSource()))
                 .csrf(csrf -> csrf.disable())
 
                 .authorizeHttpRequests(authz -> authz

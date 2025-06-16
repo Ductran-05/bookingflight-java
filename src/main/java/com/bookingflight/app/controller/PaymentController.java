@@ -6,6 +6,7 @@ import com.bookingflight.app.dto.request.PaymentRequest;
 import com.bookingflight.app.dto.response.APIResponse;
 import com.bookingflight.app.dto.response.PaymentResponse;
 import com.bookingflight.app.dto.response.PaymentUrlResponse;
+import com.bookingflight.app.service.EmailService;
 import com.bookingflight.app.service.PaymentService;
 import com.bookingflight.app.service.TicketService;
 import com.turkraft.springfilter.boot.Filter;
@@ -27,10 +28,11 @@ import java.util.Map;
 public class PaymentController {
     private final PaymentService paymentService;
     private final TicketService ticketService;
+    private final EmailService emailService;
 
     @GetMapping("/")
     public ResponseEntity<APIResponse<ResultPaginationDTO>> getAllPayments(
-            @Filter Specification<Payment> spec, 
+            @Filter Specification<Payment> spec,
             Pageable pageable) {
         APIResponse<ResultPaginationDTO> apiResponse = APIResponse.<ResultPaginationDTO>builder()
                 .Code(200)
@@ -57,21 +59,22 @@ public class PaymentController {
     public RedirectView vnpayReturn(@RequestParam Map<String, String> params) {
         PaymentResponse response = paymentService.handlePaymentReturn(params);
         String redirectUrl;
-        
-        if(response.getStatus() == Payment.PaymentStatus.SUCCESS){
+        if (response.getStatus() == Payment.PaymentStatus.SUCCESS) {
+            // emailService.send(passenger.getPassengerEmail(),
+            // buildEmail(ticket.getUrlImage()));
             redirectUrl = "http://localhost:5173/payment/success?tmxRef=" + response.getTxnRef();
-        }
-        else{
+        } else {
             redirectUrl = "http://localhost:5173/payment/fail";
             List<String> orders = response.getOrderInfo();
-            
+
             // Delete tickets for each failed order
             if (orders != null && !orders.isEmpty()) {
                 for (String ticketId : orders) {
                     try {
                         ticketService.deleteTicket(ticketId);
                     } catch (Exception e) {
-                        System.err.println("Failed to delete ticket with ID: " + ticketId + ", Error: " + e.getMessage());
+                        System.err
+                                .println("Failed to delete ticket with ID: " + ticketId + ", Error: " + e.getMessage());
                     }
                 }
             }
