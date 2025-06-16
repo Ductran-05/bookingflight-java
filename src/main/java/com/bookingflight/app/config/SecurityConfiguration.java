@@ -24,6 +24,8 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtGra
 import org.springframework.security.oauth2.server.resource.web.BearerTokenAuthenticationEntryPoint;
 import org.springframework.security.oauth2.server.resource.web.access.BearerTokenAccessDeniedHandler;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
 import com.nimbusds.jose.jwk.source.ImmutableSecret;
 import com.nimbusds.jose.util.Base64;
 
@@ -43,6 +45,8 @@ public class SecurityConfiguration {
     private long accessTokenExpiration;
     @Value("${projectjava.jwt.base64-secret}")
     private String jwtKey;
+
+    // private final JwtBypassFilter jwtBypassFilter;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -65,11 +69,13 @@ public class SecurityConfiguration {
                         .permitAll()
                         .anyRequest().authenticated())
                 // .anyRequest().permitAll())
+                // .addFilterBefore(jwtBypassFilter, UsernamePasswordAuthenticationFilter.class)
+
                 .oauth2ResourceServer(oauth2 -> oauth2
                         .jwt(jwt -> jwt
                                 .jwtAuthenticationConverter(new CustomJwtAuthenticationConverter()))
                         .authenticationEntryPoint(cusAuthEntryPoint))
-                
+
                 .oauth2Login(oauth2 -> oauth2
                         .successHandler(oAuth2SuccessHandler)
                         .failureUrl("http://localhost:5713/auth/"))
