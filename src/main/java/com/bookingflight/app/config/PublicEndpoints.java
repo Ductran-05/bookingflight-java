@@ -25,7 +25,7 @@ public class PublicEndpoints {
         public static final List<String> GET_METHODS = List.of(
                         "/api/airports/**",
                         "/api/cities/**",
-                        "/api/permissions",
+                        "/api/permissions/**",
                         "/api/airlines/**",
                         "/api/flights/**",
                         "/api/flights/seats/**",

@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.actuate.autoconfigure.observation.ObservationProperties.Http;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.web.servlet.HandlerInterceptor;
 
@@ -50,9 +51,10 @@ public class PermissionInterceptor implements HandlerInterceptor {
             }
         }
 
-        String email = SecurityUtil.getCurrentUserLogin().orElse("");
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
         if (!email.isEmpty()) {
-            Account account = accountRepository.findByEmail(email).orElse(null);
+            Account account = accountRepository.findByEmail(email)
+                    .orElseThrow(() -> new AppException(ErrorCode.ACCOUNT_NOT_EXISTED));
 
             if (account == null || account.getRole() == null) {
                 throw new AppException(ErrorCode.ROLE_NOT_FOUND);
