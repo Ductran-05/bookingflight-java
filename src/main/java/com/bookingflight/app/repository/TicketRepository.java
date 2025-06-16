@@ -25,4 +25,6 @@ public interface TicketRepository extends JpaRepository<Ticket, String>, JpaSpec
     List<Ticket> findAllByFlightId(String id);
 
     Integer countByFlightIdAndSeatIdAndIsBookedTrue(String id, String id2);
+
+    void deleteAllByFlightId(String id);
 }

@@ -136,6 +136,7 @@ public class FlightService {
 
                 Flight flight = flightRepository.findById(id)
                                 .orElseThrow(() -> new AppException(ErrorCode.FLIGHT_NOT_FOUND));
+                ticketRepository.deleteAllByFlightId(id);
                 flight_SeatRepository.deleteAllByFlightId(id);
                 flight_AirportRepository.deleteAllByFlightId(id);
                 flightRepository.delete(flight);
