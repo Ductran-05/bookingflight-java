@@ -74,7 +74,9 @@ public class FlightMapper {
                                 .departureTime(flight.getDepartureTime())
                                 .arrivalTime(flight.getArrivalTime())
                                 .originPrice(flight.getOriginPrice())
+
                                 .flightStatus(flightStatus)
+
                                 .listFlight_Airport(flight_AirportRepository.findAllByFlightId(flight.getId())
                                                 .stream()
                                                 .map(flight_Airport -> flight_AirportMapper

@@ -82,7 +82,7 @@ public class TicketService {
         for (String id : listId) {
             Ticket ticket = ticketRepository.findById(id)
                     .orElseThrow(() -> new AppException(ErrorCode.TICKET_NOT_FOUND));
-            if (ticket.getPickupAt() != null) {
+            if (!ticket.getPickupAt().isBefore(LocalDateTime.now().minusSeconds(10))) {
                 throw new AppException(ErrorCode.TICKET_ALREADY_PICKED_UP);
             }
             ticket.setPickupAt(LocalDateTime.now());

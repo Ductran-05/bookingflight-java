@@ -4,7 +4,6 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import org.springframework.stereotype.Component;
@@ -21,15 +20,16 @@ import com.bookingflight.app.repository.SeatRepository;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class TicketMapper {
+
     final FlightRepository flightRepository;
     final SeatRepository seatRepository;
     final AccountRepository accountRepository;
 
     public Ticket toTicket(TicketRequest request) {
-        Ticket ticket = Ticket.builder()
-                .account(accountRepository.findById(request.getAccountId()).get())
-                .flight(flightRepository.findById(request.getFlightId()).get())
-                .seat(seatRepository.findById(request.getSeatId()).get())
+        return Ticket.builder()
+                .account(accountRepository.findById(request.getAccountId()).orElse(null))
+                .flight(flightRepository.findById(request.getFlightId()).orElse(null))
+                .seat(seatRepository.findById(request.getSeatId()).orElse(null))
                 .passengerName(request.getPassengerName())
                 .passengerPhone(request.getPassengerPhone())
                 .passengerIDCard(request.getPassengerIDCard())
@@ -37,29 +37,33 @@ public class TicketMapper {
                 .urlImage(request.getUrlImage())
                 .haveBaggage(request.getHaveBaggage())
                 .build();
-        return ticket;
     }
 
     public TicketResponse toTicketResponse(Ticket ticket) {
-        TicketStatus ticketStatus = ticket.getTicketStatus();
-        if (!ticketStatus.equals(TicketStatus.CANCELLED)) {
-            // nếu thời gian hiện tại > thời gian bay + 2 giờ và bé hơn thời gian
-            // tới thì đặt là boarding
-            if (ticket.getFlight().getDepartureTime().isBefore(LocalDateTime.now().plusHours(2))) {
-                if (ticket.getFlight().getArrivalTime().isAfter(LocalDateTime.now())) {
-                    ticket.setTicketStatus(TicketStatus.BOARDING);
-                }
-                ticket.setTicketStatus(TicketStatus.USED);
-            }
+        LocalDateTime now = LocalDateTime.now();
 
-        }
-        LocalDateTime pickupAt = ticket.getPickupAt();
-        if (pickupAt != null) {
-            if (pickupAt.isBefore(LocalDateTime.now().minusMinutes(5))) {
-                pickupAt = null;
+        // Cập nhật trạng thái nếu chưa bị CANCELLED
+        if (!ticket.getTicketStatus().equals(TicketStatus.CANCELLED)) {
+            LocalDateTime departureTime = ticket.getFlight().getDepartureTime();
+            LocalDateTime arrivalTime = ticket.getFlight().getArrivalTime();
+
+            if (departureTime != null && arrivalTime != null) {
+                if (now.isAfter(departureTime.minusHours(2)) && now.isBefore(arrivalTime)) {
+                    ticket.setTicketStatus(TicketStatus.BOARDING);
+                } else if (now.isAfter(arrivalTime)) {
+                    ticket.setTicketStatus(TicketStatus.USED);
+                }
             }
         }
-        Boolean canBook = ticket.getTicketStatus().equals(TicketStatus.AVAILABLE) && ticket.getPickupAt() == null;
+
+        // Kiểm tra có thể đặt không (vé chưa nhận và đang boarding)
+        LocalDateTime pickupAt = ticket.getPickupAt();
+        if (pickupAt != null && pickupAt.isBefore(now.minusSeconds(10))) {
+            pickupAt = null;
+        }
+
+        boolean canBook = pickupAt == null && ticket.getTicketStatus().equals(TicketStatus.AVAILABLE);
+
         return TicketResponse.builder()
                 .id(ticket.getId())
                 .flight(ticket.getFlight())
@@ -76,8 +80,8 @@ public class TicketMapper {
     }
 
     public void updateTicket(TicketRequest request, Ticket ticket) {
-        ticket.setFlight(flightRepository.findById(request.getFlightId()).get());
-        ticket.setSeat(seatRepository.findById(request.getSeatId()).get());
+        ticket.setFlight(flightRepository.findById(request.getFlightId()).orElse(null));
+        ticket.setSeat(seatRepository.findById(request.getSeatId()).orElse(null));
         ticket.setPassengerName(request.getPassengerName());
         ticket.setPassengerPhone(request.getPassengerPhone());
         ticket.setPassengerIDCard(request.getPassengerIDCard());
