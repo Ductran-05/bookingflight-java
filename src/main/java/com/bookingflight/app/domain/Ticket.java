@@ -2,6 +2,7 @@ package com.bookingflight.app.domain;
 
 import java.time.LocalDateTime;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -49,6 +50,8 @@ public class Ticket {
     @Builder.Default
     Boolean isBooked = false;
     int seatNumber;
+
+    @Column(columnDefinition = "MEDIUMTEXT")
     String urlImage;
 
     @Enumerated(EnumType.STRING)
