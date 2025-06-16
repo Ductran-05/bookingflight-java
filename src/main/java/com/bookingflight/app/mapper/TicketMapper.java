@@ -75,6 +75,8 @@ public class TicketMapper {
                 .passengerEmail(ticket.getPassengerEmail())
                 .haveBaggage(ticket.getHaveBaggage())
                 .seatNumber(ticket.getSeatNumber())
+                .ticketStatus(ticket.getTicketStatus())
+                .urlImage(ticket.getUrlImage())
                 .canBook(canBook)
                 .build();
     }

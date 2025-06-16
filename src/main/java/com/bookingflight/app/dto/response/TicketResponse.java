@@ -27,6 +27,7 @@ public class TicketResponse {
     Flight flight;
     Boolean canBook;
     TicketStatus ticketStatus;
+    String urlImage;
 
     int seatNumber;
 }
