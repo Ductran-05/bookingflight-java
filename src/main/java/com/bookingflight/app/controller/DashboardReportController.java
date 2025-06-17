@@ -24,7 +24,7 @@ public class DashboardReportController {
     }
 
     @GetMapping("/{year}")
-    public ResponseEntity<APIResponse<YearlyTicketResponse>> getYearlyTicketReport(@PathVariable int year) {
+    public ResponseEntity<APIResponse<YearlyTicketResponse>> getYearlyTicketReport(@PathVariable("year") int year) {
         return dashboardReportService.getYearlyTicketReport(year);
     }
 }

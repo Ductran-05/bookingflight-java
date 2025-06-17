@@ -3,6 +3,7 @@ package com.bookingflight.app.repository;
 import com.bookingflight.app.domain.Account;
 import com.bookingflight.app.domain.Flight;
 import com.bookingflight.app.domain.Ticket;
+import com.bookingflight.app.domain.TicketStatus;
 
 import java.util.List;
 
@@ -27,4 +28,8 @@ public interface TicketRepository extends JpaRepository<Ticket, String>, JpaSpec
     Integer countByFlightIdAndSeatIdAndIsBookedTrue(String id, String id2);
 
     void deleteAllByFlightId(String id);
+
+    boolean existsByFlightId(String id);
+
+    int countByFlightIdAndTicketStatus(String id, TicketStatus available);
 }

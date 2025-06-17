@@ -136,10 +136,17 @@ public class FlightService {
 
                 Flight flight = flightRepository.findById(id)
                                 .orElseThrow(() -> new AppException(ErrorCode.FLIGHT_NOT_FOUND));
+
+                if (!canDeleteFlight(id))
+                        throw new AppException(ErrorCode.FLIGHT_HAVE_TICKET);
                 ticketRepository.deleteAllByFlightId(id);
                 flight_SeatRepository.deleteAllByFlightId(id);
                 flight_AirportRepository.deleteAllByFlightId(id);
                 flightRepository.delete(flight);
+        }
+
+        private boolean canDeleteFlight(String id) {
+                return ticketRepository.countByFlightIdAndTicketStatus(id, TicketStatus.AVAILABLE) == 0;
         }
 
         public List<SeatResponse> getSeatsByFlightId(String id) {
