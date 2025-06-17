@@ -84,7 +84,7 @@ public class SecurityConfiguration {
                         .failureUrl("http://localhost:5713/auth/"))
 
                 .exceptionHandling(exceptions -> exceptions
-                        .authenticationEntryPoint(new BearerTokenAuthenticationEntryPoint()) // 401
+                        .authenticationEntryPoint(cusAuthEntryPoint)
                         .accessDeniedHandler(new BearerTokenAccessDeniedHandler())) // 403
 
                 .formLogin(f -> f.disable())

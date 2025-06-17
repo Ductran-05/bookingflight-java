@@ -44,7 +44,7 @@ public class PaymentService {
             String currentUserEmail = SecurityUtil.getCurrentUserLogin().isPresent()
                     ? SecurityUtil.getCurrentUserLogin().get()
                     : "";
-            
+
             Account account = accountRepository.findByEmail(currentUserEmail)
                     .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
@@ -76,42 +76,41 @@ public class PaymentService {
             String vnp_Command = "pay";
             String vnp_TmnCode = vnPayConfig.vnp_TmnCode;
             String vnp_IpAddr = vnPayConfig.getIpAddress(servletRequest);
-            
+
             int amount = request.getAmount() * 100;
-            
+
             Map<String, String> vnp_Params = new HashMap<>();
             vnp_Params.put("vnp_Version", vnp_Version);
             vnp_Params.put("vnp_Command", vnp_Command);
             vnp_Params.put("vnp_TmnCode", vnp_TmnCode);
             vnp_Params.put("vnp_Amount", String.valueOf(amount));
             vnp_Params.put("vnp_CurrCode", "VND");
-            
 
             vnp_Params.put("vnp_TxnRef", txnRef);
             vnp_Params.put("vnp_OrderInfo", paymentMapper.joinOrderInfo(request.getOrderInfo()));
             vnp_Params.put("vnp_OrderType", "other");
-            
+
             if (request.getLanguage() != null && !request.getLanguage().isEmpty()) {
                 vnp_Params.put("vnp_Locale", request.getLanguage());
             } else {
                 vnp_Params.put("vnp_Locale", "vn");
             }
-            
+
             vnp_Params.put("vnp_ReturnUrl", vnPayConfig.vnp_ReturnUrl);
             vnp_Params.put("vnp_IpAddr", vnp_IpAddr);
-            
+
             String vnp_CreateDate = vnPayConfig.getCurrentDateTime();
             vnp_Params.put("vnp_CreateDate", vnp_CreateDate);
-            
+
             String vnp_ExpireDate = vnPayConfig.getExpireDateTime();
             vnp_Params.put("vnp_ExpireDate", vnp_ExpireDate);
-            
+
             // Build data to hash and query string
             List<String> fieldNames = new ArrayList<>(vnp_Params.keySet());
             Collections.sort(fieldNames);
             StringBuilder hashData = new StringBuilder();
             StringBuilder query = new StringBuilder();
-            
+
             Iterator<String> itr = fieldNames.iterator();
             while (itr.hasNext()) {
                 String fieldName = itr.next();
@@ -131,14 +130,14 @@ public class PaymentService {
                     }
                 }
             }
-            
+
             String queryUrl = query.toString();
             String vnp_SecureHash = vnPayConfig.hmacSHA512(vnPayConfig.vnp_HashSecret, hashData.toString());
             queryUrl += "&vnp_SecureHash=" + vnp_SecureHash;
             String paymentUrl = vnPayConfig.vnp_PayUrl + "?" + queryUrl;
-            
+
             return new PaymentUrlResponse("00", "success", paymentUrl, txnRef);
-            
+
         } catch (UnsupportedEncodingException e) {
             throw new AppException(ErrorCode.UNIDENTIFIED_EXCEPTION);
         }
@@ -168,11 +167,11 @@ public class PaymentService {
         Map<String, String> fields = new HashMap<>(params);
         fields.remove("vnp_SecureHash");
         fields.remove("vnp_SecureHashType");
-        
+
         List<String> fieldNames = new ArrayList<>(fields.keySet());
         Collections.sort(fieldNames);
         StringBuilder hashData = new StringBuilder();
-        
+
         Iterator<String> itr = fieldNames.iterator();
         while (itr.hasNext()) {
             String fieldName = itr.next();
@@ -190,9 +189,9 @@ public class PaymentService {
                 }
             }
         }
-        
+
         String secureHash = vnPayConfig.hmacSHA512(vnPayConfig.vnp_HashSecret, hashData.toString());
-        
+
         if (!secureHash.equals(vnp_SecureHash)) {
             throw new AppException(ErrorCode.UNIDENTIFIED_EXCEPTION);
         }
@@ -228,4 +227,4 @@ public class PaymentService {
                 .map(paymentMapper::toPaymentResponse);
         return resultPanigationMapper.toResultPanigationMapper(page);
     }
-} 
+}

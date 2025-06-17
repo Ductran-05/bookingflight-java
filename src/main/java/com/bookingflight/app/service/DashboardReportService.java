@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.bookingflight.app.domain.Flight;
 import com.bookingflight.app.domain.Flight_Seat;
 import com.bookingflight.app.domain.Ticket;
+import com.bookingflight.app.domain.TicketStatus;
 import com.bookingflight.app.dto.response.APIResponse;
 import com.bookingflight.app.dto.response.DashboardResponse;
 import com.bookingflight.app.dto.response.YearlyTicketResponse;
@@ -75,7 +76,11 @@ public class DashboardReportService {
                         for (Flight flight : flightsInMonth) {
                                 // Calculate tickets sold
                                 List<Ticket> tickets = ticketRepository.findAll().stream()
-                                                .filter(ticket -> ticket.getFlight().getId().equals(flight.getId()))
+                                                .filter(ticket -> {
+                                                        return ticket.getFlight().getId().equals(flight.getId())
+                                                                        && ticket.getTicketStatus()
+                                                                                        .equals(TicketStatus.USED);
+                                                })
                                                 .toList();
                                 ticketsSold += tickets.size(); // All tickets are sold
 

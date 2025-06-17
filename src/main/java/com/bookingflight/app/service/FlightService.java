@@ -146,7 +146,11 @@ public class FlightService {
         }
 
         private boolean canDeleteFlight(String id) {
-                return ticketRepository.countByFlightIdAndTicketStatus(id, TicketStatus.AVAILABLE) == 0;
+                for (Ticket ticket : ticketRepository.findAllByFlightId(id)) {
+                        if (ticket.getTicketStatus() != TicketStatus.AVAILABLE)
+                                return false;
+                }
+                return true;
         }
 
         public List<SeatResponse> getSeatsByFlightId(String id) {
