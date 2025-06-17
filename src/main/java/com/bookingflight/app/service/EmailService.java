@@ -1,8 +1,15 @@
 package com.bookingflight.app.service;
 
+import java.io.File;
+
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
+
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeMessage;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -21,4 +28,16 @@ public class EmailService {
         message.setText(content);
         mailSender.send(message);
     }
+
+    public void sendHtmlEmail(String to, String subject, String htmlContent) throws MessagingException {
+        MimeMessage message = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+
+        helper.setTo(to);
+        helper.setSubject(subject);
+        helper.setText(htmlContent, true); // <-- chú ý chỗ này: true nghĩa là HTML
+
+        mailSender.send(message);
+    }
+
 }

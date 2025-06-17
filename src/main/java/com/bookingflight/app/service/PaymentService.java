@@ -23,6 +23,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -209,8 +210,14 @@ public class PaymentService {
             for (String orderInfo : paymentMapper.toPaymentResponse(payment).getOrderInfo()) {
                 Ticket ticket = ticketRepository.findById(orderInfo)
                         .orElseThrow(() -> new AppException(ErrorCode.UNIDENTIFIED_EXCEPTION));
-                emailService.send(ticket.getPassengerEmail(),
-                        buildEmail(ticket.getUrlImage()));
+                String emailContent = buildEmail("http://localhost:5173/ticketSearchPage", ticket);
+                // try {
+                // emailService.sendHtmlEmail(ticket.getPassengerEmail(), "Your Ticket",
+                // emailContent);
+                // } catch (MessagingException e) {
+                // throw new RuntimeException("Failed to send email", e);
+                // }
+                emailService.send(ticket.getPassengerEmail(), emailContent);
             }
 
         } else {
@@ -226,12 +233,55 @@ public class PaymentService {
         return paymentMapper.toPaymentResponse(payment);
     }
 
-    private String buildEmail(String link) {
-        return "Chào bạn,\n\n"
-                + "Cảm ơn bạn đã đặt vé. Vui lòng nhấn vào liên kết dưới đây để xem thông tin vé:\n"
+    private String buildEmail(String link, Ticket ticket) {
+        return "Chào bạn " + ticket.getPassengerName() + ",\n\n"
+                + "Cảm ơn bạn đã đặt vé thành công. Dưới đây là thông tin vé của bạn:\n"
+                + "----------------------------------------\n"
+                + "Mã vé: " + ticket.getId() + "\n"
+                + "Tên hành khách: " + ticket.getPassengerName() + "\n"
+                + "Số điện thoại: " + ticket.getPassengerPhone() + "\n"
+                + "Email: " + ticket.getPassengerEmail() + "\n"
+                + "Số ghế: " + ticket.getSeatNumber() + "\n"
+                + "Mang hành lý: " + (ticket.getHaveBaggage() ? "Có" : "Không") + "\n"
+                + "Trạng thái vé: " + ticket.getTicketStatus().name() + "\n"
+                + "Ngày giờ đón: " + ticket.getPickupAt() + "\n"
+                + "----------------------------------------\n\n"
+                + "Để xem hoặc tải hình ảnh vé, vui lòng nhấn vào liên kết sau:\n"
                 + link + "\n\n"
                 + "Trân trọng.";
     }
+
+    // private String buildEmail(String base64Image) {
+    // return "<!DOCTYPE html>"
+    // + "<html><body>"
+    // + "<p>Hello,</p>"
+    // // nếu bạn cần in vé hãy vào đây để tải
+    // //ticket info code, ...
+    // + "<p></p>"
+
+    // + "<p>Thank you for booking your ticket. Please click the link below to view
+    // your ticket information:</p>"
+    // + "http://localhost:5173/ticketSearchPage"
+    // + "<p></p>"
+    // + "<p>Best regards.</p>"
+    // + "</body></html>";
+    // }
+
+    // private String buildEmail(String link) {
+    // return "<!DOCTYPE html>"
+    // + "<html><body>"
+    // + "<p>Hello,</p>"
+    // + "<p>Thank you for booking your ticket. Please click the link below to view
+    // your ticket information:</p>"
+    // + "<p><a href=\"" + link + "\" target=\"_blank\" rel=\"noopener
+    // noreferrer\">View Ticket</a></p>"
+    // + "<p>Or you can download the ticket image directly:</p>"
+    // + "<p><a href=\"" + link
+    // + "\" download=\"ticket-image.jpg\" target=\"_blank\" rel=\"noopener
+    // noreferrer\">Download Image</a></p>"
+    // + "<p>Best regards.</p>"
+    // + "</body></html>";
+    // }
 
     public PaymentResponse getPaymentByTxnRef(String txnRef) {
         Payment payment = paymentRepository.findByTxnRef(txnRef)
