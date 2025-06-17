@@ -36,6 +36,7 @@ public class PaymentService {
     private final AccountRepository accountRepository;
     private final VNPayConfig vnPayConfig;
     private final ResultPanigationMapper resultPanigationMapper;
+    private final EmailService emailService;
 
     @Transactional
     public PaymentUrlResponse createPaymentUrl(PaymentRequest request, HttpServletRequest servletRequest) {
@@ -148,7 +149,7 @@ public class PaymentService {
         String randomPart = vnPayConfig.getRandomNumber(4);
         // Take last 4 digits of timestamp + 4 random digits = 8 digits total
         return timestampStr.substring(timestampStr.length() - 4) + randomPart;
-    }
+    } 
 
     @Transactional
     public PaymentResponse handlePaymentReturn(Map<String, String> params) {
@@ -201,6 +202,8 @@ public class PaymentService {
         if ("00".equals(vnp_ResponseCode)) {
             payment.setStatus(Payment.PaymentStatus.SUCCESS);
             payment.setPaidAt(LocalDateTime.now());
+
+           
         } else {
             payment.setStatus(Payment.PaymentStatus.FAILED);
         }
