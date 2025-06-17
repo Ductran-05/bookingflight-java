@@ -234,21 +234,19 @@ public class PaymentService {
     }
 
     private String buildEmail(String link, Ticket ticket) {
-        return "Chào bạn " + ticket.getPassengerName() + ",\n\n"
-                + "Cảm ơn bạn đã đặt vé thành công. Dưới đây là thông tin vé của bạn:\n"
+        return "Dear " + ticket.getPassengerName() + ",\n\n"
+                + "Thank you for booking your ticket successfully. Here are your ticket details:\n"
                 + "----------------------------------------\n"
-                + "Mã vé: " + ticket.getId() + "\n"
-                + "Tên hành khách: " + ticket.getPassengerName() + "\n"
-                + "Số điện thoại: " + ticket.getPassengerPhone() + "\n"
+                + "Flight Code: " + ticket.getFlight().getFlightCode() + "\n"
+                + "Passenger Name: " + ticket.getPassengerName() + "\n"
+                + "Phone Number: " + ticket.getPassengerPhone() + "\n"
                 + "Email: " + ticket.getPassengerEmail() + "\n"
-                + "Số ghế: " + ticket.getSeatNumber() + "\n"
-                + "Mang hành lý: " + (ticket.getHaveBaggage() ? "Có" : "Không") + "\n"
-                + "Trạng thái vé: " + ticket.getTicketStatus().name() + "\n"
-                + "Ngày giờ đón: " + ticket.getPickupAt() + "\n"
+                + "Seat Number: " + ticket.getSeatNumber() + "\n"
+                + "Baggage: " + (ticket.getHaveBaggage() ? "Yes" : "No") + "\n"
                 + "----------------------------------------\n\n"
-                + "Để xem hoặc tải hình ảnh vé, vui lòng nhấn vào liên kết sau:\n"
+                + "To view or download your ticket image, please click the following link:\n"
                 + link + "\n\n"
-                + "Trân trọng.";
+                + "Best regards.";
     }
 
     // private String buildEmail(String base64Image) {
