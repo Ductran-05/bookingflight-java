@@ -53,7 +53,7 @@ public class AuthController {
         final ForgotPasswordService forgotPasswordService;
 
         @PostMapping("/login")
-        public ResponseEntity<APIResponse<LoginResponse>> login(@Valid @RequestBody LoginRequest request) {
+        public ResponseEntity<APIResponse<LoginResponse>> login(@RequestBody LoginRequest request) {
                 // Nạp input gồm username/password vào Security
                 UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
                                 request.getUsername(), request.getPassword());
@@ -135,7 +135,7 @@ public class AuthController {
         }
 
         @PostMapping("/register")
-        public ResponseEntity<APIResponse<AccountResponse>> register(@Valid @RequestBody RegisterRequest request) {
+        public ResponseEntity<APIResponse<AccountResponse>> register(@RequestBody RegisterRequest request) {
                 APIResponse<AccountResponse> apiResponse = APIResponse.<AccountResponse>builder()
                                 .Code(201)
                                 .Message("Register account successfully")
@@ -197,7 +197,7 @@ public class AuthController {
         }
 
         @PostMapping("/reset-password")
-        public ResponseEntity<APIResponse<Void>> resetPassword(@Valid @RequestBody ResetPasswordRequest request) {
+        public ResponseEntity<APIResponse<Void>> resetPassword(@RequestBody ResetPasswordRequest request) {
                 forgotPasswordService.resetPassword(request.getToken(), request.getNewPassword());
                 return ResponseEntity.ok(
                                 APIResponse.<Void>builder()

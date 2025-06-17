@@ -3,6 +3,7 @@ package com.bookingflight.app.service;
 import com.bookingflight.app.config.VNPayConfig;
 import com.bookingflight.app.domain.Account;
 import com.bookingflight.app.domain.Payment;
+import com.bookingflight.app.domain.Ticket;
 import com.bookingflight.app.dto.ResultPaginationDTO;
 import com.bookingflight.app.dto.request.PaymentRequest;
 import com.bookingflight.app.dto.response.PaymentResponse;
@@ -13,6 +14,7 @@ import com.bookingflight.app.mapper.PaymentMapper;
 import com.bookingflight.app.mapper.ResultPanigationMapper;
 import com.bookingflight.app.repository.AccountRepository;
 import com.bookingflight.app.repository.PaymentRepository;
+import com.bookingflight.app.repository.TicketRepository;
 import com.bookingflight.app.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -37,6 +39,7 @@ public class PaymentService {
     private final VNPayConfig vnPayConfig;
     private final ResultPanigationMapper resultPanigationMapper;
     private final EmailService emailService;
+    private final TicketRepository ticketRepository;
 
     @Transactional
     public PaymentUrlResponse createPaymentUrl(PaymentRequest request, HttpServletRequest servletRequest) {
@@ -149,7 +152,7 @@ public class PaymentService {
         String randomPart = vnPayConfig.getRandomNumber(4);
         // Take last 4 digits of timestamp + 4 random digits = 8 digits total
         return timestampStr.substring(timestampStr.length() - 4) + randomPart;
-    } 
+    }
 
     @Transactional
     public PaymentResponse handlePaymentReturn(Map<String, String> params) {
@@ -203,7 +206,13 @@ public class PaymentService {
             payment.setStatus(Payment.PaymentStatus.SUCCESS);
             payment.setPaidAt(LocalDateTime.now());
 
-           
+            for (String orderInfo : paymentMapper.toPaymentResponse(payment).getOrderInfo()) {
+                Ticket ticket = ticketRepository.findById(orderInfo)
+                        .orElseThrow(() -> new AppException(ErrorCode.UNIDENTIFIED_EXCEPTION));
+                emailService.send(ticket.getPassengerEmail(),
+                        buildEmail(ticket.getUrlImage()));
+            }
+
         } else {
             payment.setStatus(Payment.PaymentStatus.FAILED);
         }
@@ -215,6 +224,13 @@ public class PaymentService {
         paymentRepository.save(payment);
 
         return paymentMapper.toPaymentResponse(payment);
+    }
+
+    private String buildEmail(String link) {
+        return "Chào bạn,\n\n"
+                + "Cảm ơn bạn đã đặt vé. Vui lòng nhấn vào liên kết dưới đây để xem thông tin vé:\n"
+                + link + "\n\n"
+                + "Trân trọng.";
     }
 
     public PaymentResponse getPaymentByTxnRef(String txnRef) {

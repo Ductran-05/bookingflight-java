@@ -45,7 +45,7 @@ public class AirportController {
 
         @PostMapping
         public ResponseEntity<APIResponse<AirportResponse>> createAirport(
-                        @RequestBody @Valid AirportRequest airportRequest) {
+                        @RequestBody AirportRequest airportRequest) {
                 APIResponse<AirportResponse> response = APIResponse.<AirportResponse>builder()
                                 .Code(200)
                                 .Message("Created airport successfully")

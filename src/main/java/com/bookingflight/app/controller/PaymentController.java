@@ -44,7 +44,7 @@ public class PaymentController {
 
     @PostMapping("/create")
     public ResponseEntity<APIResponse<PaymentUrlResponse>> createPayment(
-            @Valid @RequestBody PaymentRequest request,
+            @RequestBody PaymentRequest request,
             HttpServletRequest httpRequest) {
         PaymentUrlResponse response = paymentService.createPaymentUrl(request, httpRequest);
         APIResponse<PaymentUrlResponse> apiResponse = APIResponse.<PaymentUrlResponse>builder()

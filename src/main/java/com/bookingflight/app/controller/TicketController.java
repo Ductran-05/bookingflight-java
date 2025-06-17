@@ -39,7 +39,7 @@ public class TicketController {
     }
 
     @PostMapping("/pickup")
-    public ResponseEntity<APIResponse<TicketResponse>> pickUpTicket(@RequestBody @Valid List<String> listId) {
+    public ResponseEntity<APIResponse<TicketResponse>> pickUpTicket(@RequestBody List<String> listId) {
         TicketResponse ticket = ticketService.pickUpTicket(listId);
         APIResponse<TicketResponse> apiResponse = APIResponse.<TicketResponse>builder()
                 .Code(HttpStatus.OK.value())
@@ -61,7 +61,7 @@ public class TicketController {
     }
 
     @PostMapping
-    public ResponseEntity<APIResponse<TicketResponse>> createTicket(@RequestBody @Valid TicketRequest request) {
+    public ResponseEntity<APIResponse<TicketResponse>> createTicket(@RequestBody TicketRequest request) {
         TicketResponse ticket = ticketService.createTicket(request);
         APIResponse<TicketResponse> apiResponse = APIResponse.<TicketResponse>builder()
                 .Code(HttpStatus.CREATED.value())

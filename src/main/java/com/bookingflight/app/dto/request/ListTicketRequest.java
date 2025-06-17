@@ -25,7 +25,6 @@ public class ListTicketRequest {
     @NotBlank(message = "Seat ID is required")
     String seatId;
 
-    @Valid
     @NotEmpty(message = "Passengers list cannot be empty")
     List<Passenger> passengers;
 

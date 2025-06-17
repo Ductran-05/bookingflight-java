@@ -44,7 +44,7 @@ public class CityController {
     }
 
     @PostMapping
-    public ResponseEntity<APIResponse<CityResponse>> createCity(@RequestBody @Valid CityRequest cityRequest) {
+    public ResponseEntity<APIResponse<CityResponse>> createCity(@RequestBody CityRequest cityRequest) {
         APIResponse<CityResponse> response = APIResponse.<CityResponse>builder()
                 .Code(200)
                 .Message("Created city successfully")
@@ -55,7 +55,7 @@ public class CityController {
 
     @PutMapping("/{id}")
     public ResponseEntity<APIResponse<CityResponse>> updateCity(@PathVariable("id") String id,
-            @RequestBody @Valid CityRequest cityRequest) {
+            @RequestBody CityRequest cityRequest) {
         APIResponse<CityResponse> response = APIResponse.<CityResponse>builder()
                 .Code(200)
                 .Message("Success")

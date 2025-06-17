@@ -50,7 +50,7 @@ public class RoleController {
     }
 
     @PostMapping()
-    public ResponseEntity<APIResponse<RoleResponse>> createRole(@RequestBody @Valid RoleRequest roleRequest) {
+    public ResponseEntity<APIResponse<RoleResponse>> createRole(@RequestBody RoleRequest roleRequest) {
         APIResponse<RoleResponse> response = APIResponse.<RoleResponse>builder()
                 .Code(200)
                 .Message("Success")
@@ -61,7 +61,7 @@ public class RoleController {
 
     @PutMapping("/{id}")
     public ResponseEntity<APIResponse<RoleResponse>> updateRole(@PathVariable("id") String id,
-            @RequestBody @Valid RoleRequest roleRequest) {
+            @RequestBody RoleRequest roleRequest) {
         APIResponse<RoleResponse> response = APIResponse.<RoleResponse>builder()
                 .Code(200)
                 .Message("Success")

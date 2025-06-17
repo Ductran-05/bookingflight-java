@@ -50,7 +50,7 @@ public class AccountController {
         }
 
         @PostMapping
-        public ResponseEntity<APIResponse<AccountResponse>> createAccount(@RequestBody @Valid AccountRequest request) {
+        public ResponseEntity<APIResponse<AccountResponse>> createAccount(@RequestBody AccountRequest request) {
 
                 String hashPassword = passwordEncoder.encode(request.getPassword());
                 request.setPassword(hashPassword);

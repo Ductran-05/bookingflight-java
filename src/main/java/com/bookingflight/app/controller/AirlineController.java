@@ -46,7 +46,7 @@ public class AirlineController {
 
         @PostMapping
         public ResponseEntity<APIResponse<AirlineResponse>> createAirline(
-                        @RequestBody @Valid AirlineRequest airlineRequest) {
+                        @RequestBody AirlineRequest airlineRequest) {
                 System.out.println("Request: " + airlineRequest);
                 APIResponse<AirlineResponse> response = APIResponse.<AirlineResponse>builder()
                                 .Code(200)

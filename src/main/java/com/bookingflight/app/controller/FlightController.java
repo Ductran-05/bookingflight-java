@@ -55,7 +55,7 @@ public class FlightController {
     }
 
     @PostMapping()
-    public ResponseEntity<APIResponse<FlightResponse>> createFlight(@RequestBody @Valid FlightRequest request) {
+    public ResponseEntity<APIResponse<FlightResponse>> createFlight(@RequestBody FlightRequest request) {
         APIResponse<FlightResponse> response = APIResponse.<FlightResponse>builder()
                 .Code(200)
                 .Message("Success")

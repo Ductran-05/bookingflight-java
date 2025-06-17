@@ -52,7 +52,7 @@ public class PlaneController {
     }
 
     @PostMapping()
-    public ResponseEntity<APIResponse<PlaneResponse>> createPlane(@RequestBody @Valid PlaneRequest request) {
+    public ResponseEntity<APIResponse<PlaneResponse>> createPlane(@RequestBody PlaneRequest request) {
         APIResponse<PlaneResponse> apiResponse = APIResponse.<PlaneResponse>builder()
                 .Code(201)
                 .Message("Create plane successfully")

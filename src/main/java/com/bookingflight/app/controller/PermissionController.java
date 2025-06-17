@@ -54,7 +54,7 @@ public class PermissionController {
 
         @PostMapping()
         public ResponseEntity<APIResponse<PermissionResponse>> createPermission(
-                        @RequestBody @Valid PermissionRequest request) {
+                        @RequestBody PermissionRequest request) {
                 APIResponse<PermissionResponse> response = APIResponse.<PermissionResponse>builder()
                                 .Code(200)
                                 .Message("Success")
@@ -65,7 +65,7 @@ public class PermissionController {
 
         @PutMapping("/{id}")
         public ResponseEntity<APIResponse<PermissionResponse>> updatePermission(
-                        @RequestBody @Valid PermissionRequest request, @PathVariable("id") String id) {
+                        @RequestBody PermissionRequest request, @PathVariable("id") String id) {
                 APIResponse<PermissionResponse> response = APIResponse.<PermissionResponse>builder()
                                 .Code(200)
                                 .Message("Success")

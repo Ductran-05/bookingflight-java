@@ -53,7 +53,7 @@ public class SeatController {
     }
 
     @PostMapping()
-    public ResponseEntity<APIResponse<SeatResponse>> createSeat(@RequestBody @Valid SeatRequest request) {
+    public ResponseEntity<APIResponse<SeatResponse>> createSeat(@RequestBody SeatRequest request) {
         APIResponse<SeatResponse> apiResponse = APIResponse.<SeatResponse>builder()
                 .Code(201)
                 .Message("Create seat successfully")
