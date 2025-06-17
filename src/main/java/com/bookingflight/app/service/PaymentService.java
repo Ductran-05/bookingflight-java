@@ -44,9 +44,7 @@ public class PaymentService {
             String currentUserEmail = SecurityUtil.getCurrentUserLogin().isPresent()
                     ? SecurityUtil.getCurrentUserLogin().get()
                     : "";
-
-            Account account = accountRepository.findByEmail(currentUserEmail)
-                    .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+            Account account = accountRepository.findByEmail(currentUserEmail).orElse(null);
 
             // Generate unique transaction reference
             String txnRef;
