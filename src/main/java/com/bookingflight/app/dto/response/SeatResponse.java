@@ -20,4 +20,6 @@ public class SeatResponse {
     String seatName;
     BigDecimal price;
     String description;
+    Boolean canUpdate;
+    Boolean canDelete;
 }

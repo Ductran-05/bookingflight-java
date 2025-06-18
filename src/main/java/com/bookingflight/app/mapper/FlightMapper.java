@@ -57,7 +57,8 @@ public class FlightMapper {
                 // kiểm tra nếu hết vé thì flightStatus = SOLD_OUT
                 List<Ticket> tickets = ticketRepository.findAllByFlightId(flight.getId());
                 boolean isSoldOut = tickets.stream().allMatch(Ticket::getIsBooked);
-
+                Boolean hasTicket = flight.getHasTicket();
+                hasTicket = ticketRepository.existsByFlightIdAndIsBookedTrue(flight.getId());
                 if (isSoldOut) {
                         flightStatus = FlightStatus.SOLD_OUT;
                 }
@@ -74,7 +75,7 @@ public class FlightMapper {
                                 .departureTime(flight.getDepartureTime())
                                 .arrivalTime(flight.getArrivalTime())
                                 .originPrice(flight.getOriginPrice())
-
+                                .hasTicket(hasTicket)
                                 .flightStatus(flightStatus)
 
                                 .listFlight_Airport(flight_AirportRepository.findAllByFlightId(flight.getId())

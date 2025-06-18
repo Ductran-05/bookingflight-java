@@ -54,4 +54,6 @@ public class Flight {
 
     @Column(precision = 10, scale = 2) // DECIMAL(10,2)
     BigDecimal originPrice;
+    @Builder.Default
+    Boolean hasTicket = false;
 }

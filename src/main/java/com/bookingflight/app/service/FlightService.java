@@ -139,7 +139,11 @@ public class FlightService {
 
                 if (!canDeleteFlight(id))
                         throw new AppException(ErrorCode.FLIGHT_HAVE_TICKET);
-                ticketRepository.deleteAllByFlightId(id);
+                for (Ticket ticket : ticketRepository.findAllByFlightId(id)) {
+                        ticket.setTicketStatus(TicketStatus.CANCELLED);
+                        ticket.setFlight(null);
+                        ticketRepository.save(ticket);
+                }
                 flight_SeatRepository.deleteAllByFlightId(id);
                 flight_AirportRepository.deleteAllByFlightId(id);
                 flightRepository.delete(flight);

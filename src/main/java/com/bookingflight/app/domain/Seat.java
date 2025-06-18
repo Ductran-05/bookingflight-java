@@ -29,4 +29,8 @@ public class Seat {
     String seatName;
     BigDecimal price;
     String description;
+    @Builder.Default
+    Boolean canUpdate = true;
+    @Builder.Default
+    Boolean canDelete = true;
 }

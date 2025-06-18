@@ -24,4 +24,6 @@ public class Role {
 
     String roleName;
 
+    @Builder.Default
+    Boolean canDelete = true;
 }

@@ -15,6 +15,6 @@ import lombok.experimental.FieldDefaults;
 public class RoleResponse {
     String id;
     String roleName;
-
+    Boolean canDelete;
     List<PermissionResponse> permissions;
 }

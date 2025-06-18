@@ -44,4 +44,6 @@ public interface TicketRepository extends JpaRepository<Ticket, String>, JpaSpec
     @Transactional
     @Query("UPDATE Ticket t SET t.account = NULL WHERE t.account = :account")
     void removeAccountFromTickets(@Param("account") Account account);
+
+    Boolean existsByFlightIdAndIsBookedTrue(String id);
 }
