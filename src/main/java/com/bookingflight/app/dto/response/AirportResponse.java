@@ -14,4 +14,6 @@ public class AirportResponse {
     String airportName;
     String cityId;
     String cityName;
+    Boolean canUpdate;
+    Boolean canDelete;
 }

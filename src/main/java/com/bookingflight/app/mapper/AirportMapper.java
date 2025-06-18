@@ -7,7 +7,7 @@ import com.bookingflight.app.dto.response.AirportResponse;
 import com.bookingflight.app.exception.AppException;
 import com.bookingflight.app.exception.ErrorCode;
 import com.bookingflight.app.repository.CityRepository;
-
+import com.bookingflight.app.repository.Flight_AirportRepository;
 import lombok.RequiredArgsConstructor;
 
 import org.mapstruct.MappingTarget;
@@ -16,6 +16,8 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class AirportMapper {
+
+    private final Flight_AirportRepository flight_AirportRepository;
 
     private final CityRepository cityRepository;
 
@@ -52,7 +54,8 @@ public class AirportMapper {
             response.setCityId(airport.getCity().getId());
             response.setCityName(airport.getCity().getCityName());
         }
-
+        response.setCanUpdate(!flight_AirportRepository.existsByAirport(airport));
+        response.setCanDelete(!flight_AirportRepository.existsByAirport(airport));
         return response;
     }
 }

@@ -9,6 +9,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -17,6 +18,7 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Builder
 @Table(name = "Airport")
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Airport {
@@ -29,4 +31,8 @@ public class Airport {
     @ManyToOne
     @JoinColumn(name = "cityId")
     City city;
+    @Builder.Default
+    Boolean canUpdate = true;
+    @Builder.Default
+    Boolean canDelete = true;
 }

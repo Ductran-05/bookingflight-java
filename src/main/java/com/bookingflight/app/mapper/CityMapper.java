@@ -32,9 +32,9 @@ public class CityMapper {
         Boolean canDelete = city.getCanDelete();
         // kiểm tra nếu có bất kỳ chuyến bay nào có san bay thuộc thành phố
         // này thì trả về false
-        canDelete = !flight_AirportRepository.findAll().stream()
+        canUpdate = !flight_AirportRepository.findAll().stream()
                 .anyMatch(flightAirport -> flightAirport.getAirport().getCity().getId().equals(city.getId()));
-        canUpdate = !airportRepository.existsByCity(city);
+        canDelete = !airportRepository.existsByCity(city);
         CityResponse cityResponse = CityResponse.builder()
                 .id(city.getId())
                 .cityCode(city.getCityCode())

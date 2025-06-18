@@ -8,7 +8,6 @@ import com.bookingflight.app.dto.response.AirportResponse;
 import com.bookingflight.app.service.AirportService;
 import com.turkraft.springfilter.boot.Filter;
 
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.data.domain.Pageable;
