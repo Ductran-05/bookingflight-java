@@ -7,6 +7,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -15,6 +16,7 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Builder
 @Table(name = "Airline")
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Airline {
@@ -23,4 +25,8 @@ public class Airline {
     String id;
     String airlineCode;
     String airlineName;
+    @Builder.Default
+    Boolean canUpdate = true;
+    @Builder.Default
+    Boolean canDelete = true;
 }

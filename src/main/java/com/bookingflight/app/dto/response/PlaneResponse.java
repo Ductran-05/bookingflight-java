@@ -14,4 +14,6 @@ public class PlaneResponse {
     String planeName;
     String airlineId;
     String airlineName;
+    Boolean canUpdate;
+    Boolean canDelete;
 }

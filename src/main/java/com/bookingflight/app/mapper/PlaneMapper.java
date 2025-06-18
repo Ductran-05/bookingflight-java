@@ -9,12 +9,14 @@ import com.bookingflight.app.dto.response.PlaneResponse;
 import com.bookingflight.app.exception.AppException;
 import com.bookingflight.app.exception.ErrorCode;
 import com.bookingflight.app.repository.AirlineRepository;
-
+import com.bookingflight.app.repository.FlightRepository;
 import lombok.RequiredArgsConstructor;
 
 @Component
 @RequiredArgsConstructor
 public class PlaneMapper {
+
+    private final FlightRepository flightRepository;
 
     private final AirlineRepository airlineRepository;
 
@@ -39,6 +41,7 @@ public class PlaneMapper {
                     .orElseThrow(() -> new AppException(ErrorCode.AIRLINE_NOT_EXISTED));
             plane.setAirline(airline);
         }
+
     }
 
     public PlaneResponse toPlaneResponse(Plane plane) {
@@ -51,7 +54,8 @@ public class PlaneMapper {
             response.setAirlineId(plane.getAirline().getId());
             response.setAirlineName(plane.getAirline().getAirlineName());
         }
-
+        response.setCanUpdate(!flightRepository.existsByPlane(plane));
+        response.setCanDelete(!flightRepository.existsByPlane(plane));
         return response;
     }
 }

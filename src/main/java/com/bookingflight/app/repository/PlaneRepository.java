@@ -14,4 +14,6 @@ public interface PlaneRepository extends JpaRepository<Plane, String>, JpaSpecif
 
     Plane[] findAllByAirline(Airline airline);
 
+    Boolean existsByAirline(Airline airline);
+
 }
