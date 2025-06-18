@@ -107,7 +107,7 @@ public class MyProfileService {
                 account.setPhone(request.getPhone());
                 account.setEmail(request.getEmail());
                 account.setAvatar(request.getAvatar());
-                account.setRole(roleRepository.findById(request.getRoleId()).get());
+                // account.setRole(roleRepository.findById(request.getRoleId()).get());
                 accountRepository.save(account);
                 return ResponseEntity.ok(
                                 APIResponse.<AccountResponse>builder()
