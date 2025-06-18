@@ -2,6 +2,7 @@ package com.bookingflight.app.service;
 
 import com.bookingflight.app.domain.Account;
 import com.bookingflight.app.domain.Role;
+import com.bookingflight.app.domain.Ticket;
 import com.bookingflight.app.domain.VerificationToken;
 import com.bookingflight.app.dto.ResultPaginationDTO;
 import com.bookingflight.app.dto.request.AccountRequest;
@@ -13,7 +14,10 @@ import com.bookingflight.app.exception.ErrorCode;
 import com.bookingflight.app.mapper.AccountMapper;
 import com.bookingflight.app.mapper.ResultPanigationMapper;
 import com.bookingflight.app.repository.AccountRepository;
+import com.bookingflight.app.repository.PaymentRepository;
+import com.bookingflight.app.repository.ResetPasswordTokenRepository;
 import com.bookingflight.app.repository.RoleRepository;
+import com.bookingflight.app.repository.TicketRepository;
 import com.bookingflight.app.repository.VerificationTokenRepository;
 
 import jakarta.transaction.Transactional;
@@ -43,6 +47,9 @@ public class AccountService {
     private final AccountRepository accountRepository;
     private final PasswordEncoder passwordEncoder;
     private final RoleRepository roleRepository;
+    private final TicketRepository ticketRepository;
+    private final ResetPasswordTokenRepository resetPasswordTokenRepository;
+    private final PaymentRepository paymentRepository;
 
     public AccountResponse getAccountByID(String id) {
         return accountMapper.toAccountResponse(accountRepository.findById(id)
@@ -79,6 +86,9 @@ public class AccountService {
     public void deleteAccount(String id) {
         Account account = accountRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.ACCOUNT_NOT_EXISTED));
+        ticketRepository.removeAccountFromTickets(account);
+        resetPasswordTokenRepository.deleteByAccount(account);
+        paymentRepository.deleteByAccount(account);
         accountRepository.delete(account);
     }
 

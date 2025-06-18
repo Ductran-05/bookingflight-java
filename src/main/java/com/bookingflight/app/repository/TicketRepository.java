@@ -5,6 +5,8 @@ import com.bookingflight.app.domain.Flight;
 import com.bookingflight.app.domain.Ticket;
 import com.bookingflight.app.domain.TicketStatus;
 
+import jakarta.transaction.Transactional;
+
 import java.util.List;
 
 import org.springframework.data.domain.Page;
@@ -12,6 +14,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -32,4 +37,11 @@ public interface TicketRepository extends JpaRepository<Ticket, String>, JpaSpec
     boolean existsByFlightId(String id);
 
     int countByFlightIdAndTicketStatus(String id, TicketStatus available);
+
+    Ticket[] findAllByAccount(Account account);
+
+    @Modifying
+    @Transactional
+    @Query("UPDATE Ticket t SET t.account = NULL WHERE t.account = :account")
+    void removeAccountFromTickets(@Param("account") Account account);
 }

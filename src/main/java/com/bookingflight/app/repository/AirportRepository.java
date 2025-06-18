@@ -12,4 +12,6 @@ public interface AirportRepository extends JpaRepository<Airport, String>, JpaSp
     boolean existsByAirportCode(String airportCode);
 
     Airport[] findAllByCity(City city);
+
+    Boolean existsByCity(City city);
 }

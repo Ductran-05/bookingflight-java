@@ -20,6 +20,7 @@ public class PublicEndpoints {
                         "/api/airlines/flights/airline-popular/**",
                         "/login/oauth2/**",
                         "/oauth2/**",
+                        "/api/files/**",
                         "/api/tickets/pickup/**");
 
         public static final List<String> GET_METHODS = List.of(
