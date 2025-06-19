@@ -8,6 +8,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.bookingflight.app.domain.Account;
 import com.bookingflight.app.domain.Flight;
@@ -45,6 +46,7 @@ public class MyProfileService {
         final TicketMapper ticketMapper;
         final ResultPanigationMapper resultPanigationMapper;
         final RoleRepository roleRepository;
+        final FileStorageService fileStorageService;
 
         public ResponseEntity<APIResponse<Void>> updatePassword(UpdatePasswordRequest request) {
                 String email = securityUtil.getCurrentUserLogin()
@@ -114,6 +116,41 @@ public class MyProfileService {
                                                 .Code(200)
                                                 .Message("Update account successfully")
                                                 .data(accountMapper.toAccountResponse(account))
+                                                .build());
+        }
+
+        public ResponseEntity<APIResponse<AccountResponse>> uploadAvatar(MultipartFile file) {
+                String email = securityUtil.getCurrentUserLogin()
+                                .orElseThrow(() -> new AppException(ErrorCode.UNAUTHORIZED));
+                Account account = accountRepository.findByEmail(email)
+                                .orElseThrow(() -> new AppException(ErrorCode.ACCOUNT_NOT_EXISTED));
+
+                String fileName = fileStorageService.storeFile(file);
+                String avatarUrl = fileStorageService.getFileUrl(fileName);
+                account.setAvatar(avatarUrl);
+                accountRepository.save(account);
+                
+                return ResponseEntity.ok(
+                                APIResponse.<AccountResponse>builder()
+                                                .Code(200)
+                                                .Message("Avatar uploaded successfully")
+                                                .data(accountMapper.toAccountResponse(account))
+                                                .build());
+        }
+
+        public ResponseEntity<APIResponse<Void>> deleteAvatar() {
+                String email = securityUtil.getCurrentUserLogin()
+                                .orElseThrow(() -> new AppException(ErrorCode.UNAUTHORIZED));
+                Account account = accountRepository.findByEmail(email)
+                                .orElseThrow(() -> new AppException(ErrorCode.ACCOUNT_NOT_EXISTED));
+                
+                account.setAvatar(null);
+                accountRepository.save(account);
+                
+                return ResponseEntity.ok(
+                                APIResponse.<Void>builder()
+                                                .Code(200)
+                                                .Message("Avatar deleted successfully")
                                                 .build());
         }
 
