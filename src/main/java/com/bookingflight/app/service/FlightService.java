@@ -50,6 +50,7 @@ public class FlightService {
         final SeatRepository seatRepository;
         final TicketRepository ticketRepository;
         final TicketMapper ticketMapper;
+        final EmailService emailService;
 
         public ResultPaginationDTO getAllFlights(Specification<Flight> spec, Pageable pageable) {
                 Page<FlightResponse> page = flightRepository.findAll(spec, pageable)
@@ -128,6 +129,15 @@ public class FlightService {
                         Flight_Seat flight_Seat = flight_SeatMapper.toFlight_Seat(flight_SeatRequest, flight);
                         flight_SeatRepository.save(flight_Seat);
                 }
+                for (Ticket ticket : ticketRepository.findAllByFlightId(id)) {
+
+                        // gửi mail cho khach hang bao cap nhat chuyen bay
+                        if (!ticket.getPassengerEmail().equals("")) {
+                                emailService.send(ticket.getPassengerEmail(),
+                                                buildUpdateEmail("http://localhost:5173/ticketSearchPage", ticket));
+                        }
+
+                }
                 return flightMapper.toFlightResponse(flight);
         }
 
@@ -137,16 +147,58 @@ public class FlightService {
                 Flight flight = flightRepository.findById(id)
                                 .orElseThrow(() -> new AppException(ErrorCode.FLIGHT_NOT_FOUND));
 
-                if (!canDeleteFlight(id))
-                        throw new AppException(ErrorCode.FLIGHT_HAVE_TICKET);
                 for (Ticket ticket : ticketRepository.findAllByFlightId(id)) {
                         ticket.setTicketStatus(TicketStatus.CANCELLED);
                         ticket.setFlight(null);
                         ticketRepository.save(ticket);
+                        if (!ticket.getPassengerEmail().equals("")) {
+                                emailService.send(ticket.getPassengerEmail(),
+                                                buildEmail("http://localhost:5173/ticketSearchPage", ticket));
+                        }
+
+                        // gửi mail cho khach hang bao cap nhat chuyen bay
+
                 }
                 flight_SeatRepository.deleteAllByFlightId(id);
                 flight_AirportRepository.deleteAllByFlightId(id);
                 flightRepository.delete(flight);
+        }
+
+        private String buildEmail(String link, Ticket ticket) {
+                return "Dear " + ticket.getPassengerName() + ",\n\n"
+                                + "We regret to inform you that your flight has been cancelled.\n\n"
+                                + "Here are your ticket details:\n"
+                                + "----------------------------------------\n"
+                                + "Passenger Name: " + ticket.getPassengerName() + "\n"
+                                + "Phone Number: " + ticket.getPassengerPhone() + "\n"
+                                + "Email: " + ticket.getPassengerEmail() + "\n"
+                                + "Seat Number: " + ticket.getSeatNumber() + "\n"
+                                + "Baggage: " + (ticket.getHaveBaggage() ? "Yes" : "No") + "\n"
+                                + "Ticket Status: " + ticket.getTicketStatus() + "\n"
+                                + "----------------------------------------\n\n"
+                                + "You can still access your ticket image for reference by clicking the link below:\n"
+                                + link + "\n\n"
+                                + "We apologize for any inconvenience this may have caused.\n"
+                                + "If you need further assistance, please contact our customer support.\n\n"
+                                + "Best regards.";
+        }
+
+        private String buildUpdateEmail(String link, Ticket ticket) {
+                return "Dear " + ticket.getPassengerName() + ",\n\n"
+                                + "Your ticket information has been successfully updated.\n\n"
+                                + "Here are your updated ticket details:\n"
+                                + "----------------------------------------\n"
+                                + "Flight Code: " + ticket.getFlight().getFlightCode() + "\n"
+                                + "Passenger Name: " + ticket.getPassengerName() + "\n"
+                                + "Phone Number: " + ticket.getPassengerPhone() + "\n"
+                                + "Email: " + ticket.getPassengerEmail() + "\n"
+                                + "Seat Number: " + ticket.getSeatNumber() + "\n"
+                                + "Baggage: " + (ticket.getHaveBaggage() ? "Yes" : "No") + "\n"
+                                + "----------------------------------------\n\n"
+                                + "You can view or download your updated ticket image by clicking the link below:\n"
+                                + link + "\n\n"
+                                + "If you have any further questions, please contact our customer support.\n\n"
+                                + "Best regards.";
         }
 
         private boolean canDeleteFlight(String id) {

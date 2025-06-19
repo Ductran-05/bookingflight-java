@@ -1,11 +1,14 @@
 package com.bookingflight.app.controller;
 
 import com.bookingflight.app.domain.Payment;
+import com.bookingflight.app.domain.Ticket;
+import com.bookingflight.app.domain.TicketStatus;
 import com.bookingflight.app.dto.ResultPaginationDTO;
 import com.bookingflight.app.dto.request.PaymentRequest;
 import com.bookingflight.app.dto.response.APIResponse;
 import com.bookingflight.app.dto.response.PaymentResponse;
 import com.bookingflight.app.dto.response.PaymentUrlResponse;
+import com.bookingflight.app.repository.TicketRepository;
 import com.bookingflight.app.service.EmailService;
 import com.bookingflight.app.service.PaymentService;
 import com.bookingflight.app.service.TicketService;
@@ -29,6 +32,7 @@ public class PaymentController {
     private final PaymentService paymentService;
     private final TicketService ticketService;
     private final EmailService emailService;
+    private final TicketRepository ticketRepository;
 
     @GetMapping("/")
     public ResponseEntity<APIResponse<ResultPaginationDTO>> getAllPayments(
@@ -71,7 +75,10 @@ public class PaymentController {
             if (orders != null && !orders.isEmpty()) {
                 for (String ticketId : orders) {
                     try {
-                        ticketService.deleteTicket(ticketId);
+                        Ticket ticket = ticketRepository.findById(ticketId).get();
+                        ticket.setIsBooked(false);
+                        ticket.setTicketStatus(TicketStatus.AVAILABLE);
+                        ticketRepository.save(ticket);
                     } catch (Exception e) {
                         System.err
                                 .println("Failed to delete ticket with ID: " + ticketId + ", Error: " + e.getMessage());

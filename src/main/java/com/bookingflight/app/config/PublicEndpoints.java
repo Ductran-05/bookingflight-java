@@ -21,6 +21,8 @@ public class PublicEndpoints {
                         "/login/oauth2/**",
                         "/oauth2/**",
                         "/api/files/**",
+                        "/api/auth/forgot-password/**",
+                        "/api/auth/reset-password/**",
                         "/api/tickets/pickup/**");
 
         public static final List<String> GET_METHODS = List.of(
