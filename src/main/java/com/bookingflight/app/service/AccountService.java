@@ -42,6 +42,7 @@ public class AccountService {
 
     private final EmailService emailService;
     private final CloudinaryService cloudinaryService;
+    private final FileStorageService fileStorageService;
     private final VerificationTokenRepository verificationTokenRepository;
     private final ResultPanigationMapper resultPanigationMapper;
     private final AccountMapper accountMapper;
@@ -62,12 +63,8 @@ public class AccountService {
         return resultPanigationMapper.toResultPanigationMapper(page);
     }
 
-    public AccountResponse createAccount(AccountRequest accountRequest, MultipartFile avatar)
-            throws IOException {
+    public AccountResponse createAccount(AccountRequest accountRequest) {
         Account account = accountMapper.toAccount(accountRequest);
-        String fileName = fileStorageService.storeFile(avatar);
-        String avatarUrl = fileStorageService.getFileUrl(fileName);
-        account.setAvatar(avatarUrl);
         account.setEnabled(true);
         if (accountRepository.existsByEmail(account.getEmail())) {
             throw new AppException(ErrorCode.ACCOUNT_EMAIL_EXISTED);
