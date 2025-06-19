@@ -40,7 +40,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class AccountService {
 
     private final EmailService emailService;
-    private final FileStorageService fileStorageService;
+    private final CloudinaryService cloudinaryService;
     private final VerificationTokenRepository verificationTokenRepository;
     private final ResultPanigationMapper resultPanigationMapper;
     private final AccountMapper accountMapper;
@@ -138,8 +138,7 @@ public class AccountService {
         Account account = accountRepository.findById(accountId)
                 .orElseThrow(() -> new AppException(ErrorCode.ACCOUNT_NOT_EXISTED));
 
-        String fileName = fileStorageService.storeFile(file);
-        String avatarUrl = fileStorageService.getFileUrl(fileName);
+        String avatarUrl = cloudinaryService.uploadImage(file);
         account.setAvatar(avatarUrl);
         accountRepository.save(account);
         return accountMapper.toAccountResponse(account);

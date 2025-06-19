@@ -52,22 +52,10 @@ public class AccountController {
 
         @PostMapping(consumes = "multipart/form-data")
         public ResponseEntity<APIResponse<AccountResponse>> createAccount(
-                @RequestParam("username") String username,
-                @RequestParam("password") String password,
-                @RequestParam("email") String email,
-                @RequestParam("fullName") String fullName,
-                @RequestParam("phone") String phone,
-                @RequestParam("roleId") String roleId,
-                @RequestPart(value = "file", required = false) MultipartFile file){
+                @RequestPart("account") AccountRequest request,
+                @RequestPart(value = "avatar", required = false) MultipartFile file) {
 
-                // Build AccountRequest from individual parameters
-                AccountRequest request = new AccountRequest();
-                request.setPassword(password);
-                request.setEmail(email);
-                request.setFullName(fullName);
-                request.setPhone(phone);
-                request.setRoleId(roleId);
-
+                // Password hash
                 String hashPassword = passwordEncoder.encode(request.getPassword());
                 request.setPassword(hashPassword);
 
@@ -77,15 +65,14 @@ public class AccountController {
                         account = accountService.uploadAvatar(account.getId(), file);
                 }
 
-                        APIResponse<AccountResponse> apiResponse = APIResponse.<AccountResponse>builder()
-                                .Code(201)
-                                .Message("Create account")
-                                .data(account)
-                                .build();
+                APIResponse<AccountResponse> apiResponse = APIResponse.<AccountResponse>builder()
+                        .Code(201)
+                        .Message("Create account")
+                        .data(account)
+                        .build();
 
                 return ResponseEntity.ok().body(apiResponse);
         }
-
         @PutMapping("/{id}")
         public ResponseEntity<APIResponse<AccountResponse>> updateAccount(@PathVariable("id") String id,
                         @RequestBody UpdateAccountRequest request) {
