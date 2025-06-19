@@ -46,7 +46,7 @@ public class MyProfileService {
         final TicketMapper ticketMapper;
         final ResultPanigationMapper resultPanigationMapper;
         final RoleRepository roleRepository;
-        final FileStorageService fileStorageService;
+        final CloudinaryService cloudinaryService;
 
         public ResponseEntity<APIResponse<Void>> updatePassword(UpdatePasswordRequest request) {
                 String email = securityUtil.getCurrentUserLogin()
@@ -125,8 +125,7 @@ public class MyProfileService {
                 Account account = accountRepository.findByEmail(email)
                                 .orElseThrow(() -> new AppException(ErrorCode.ACCOUNT_NOT_EXISTED));
 
-                String fileName = fileStorageService.storeFile(file);
-                String avatarUrl = fileStorageService.getFileUrl(fileName);
+                String avatarUrl = cloudinaryService.uploadImage(file);
                 account.setAvatar(avatarUrl);
                 accountRepository.save(account);
                 

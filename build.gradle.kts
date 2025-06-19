@@ -41,6 +41,7 @@ dependencies {
 	implementation("org.mapstruct:mapstruct:1.5.5.Final")
     annotationProcessor("org.mapstruct:mapstruct-processor:1.5.5.Final")
 	implementation("org.jasypt:jasypt:1.9.3")
+	implementation("com.cloudinary:cloudinary-http44:1.34.0")
 
 }
 

@@ -54,6 +54,7 @@ public class AccountController {
 
         @PostMapping(consumes = { "multipart/form-data" })
         public ResponseEntity<APIResponse<AccountResponse>> createAccount(
+<<<<<<< HEAD
                         @RequestPart("account") AccountRequest request,
                         @RequestPart(value = "avatar", required = false) MultipartFile avatar) throws IOException {
                 String hashPassword = passwordEncoder.encode(request.getPassword());
@@ -64,9 +65,29 @@ public class AccountController {
                                 .Message("Create account")
                                 .data(accountService.createAccount(request, avatar))
                                 .build();
+=======
+                @RequestPart("account") AccountRequest request,
+                @RequestPart(value = "avatar", required = false) MultipartFile file) {
+
+                // Password hash
+                String hashPassword = passwordEncoder.encode(request.getPassword());
+                request.setPassword(hashPassword);
+
+                AccountResponse account = accountService.createAccount(request);
+
+                if (file != null && !file.isEmpty()) {
+                        account = accountService.uploadAvatar(account.getId(), file);
+                }
+
+                APIResponse<AccountResponse> apiResponse = APIResponse.<AccountResponse>builder()
+                        .Code(201)
+                        .Message("Create account")
+                        .data(account)
+                        .build();
+
+>>>>>>> 3040a1d9482850d7c8a975e7a43a96b0ee98ba13
                 return ResponseEntity.ok().body(apiResponse);
         }
-
         @PutMapping("/{id}")
         public ResponseEntity<APIResponse<AccountResponse>> updateAccount(@PathVariable("id") String id,
                         @RequestBody UpdateAccountRequest request) {
