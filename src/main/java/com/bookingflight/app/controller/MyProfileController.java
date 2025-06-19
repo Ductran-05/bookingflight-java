@@ -8,7 +8,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.bookingflight.app.domain.Flight;
 import com.bookingflight.app.domain.Ticket;
@@ -50,6 +53,16 @@ public class MyProfileController {
     @PutMapping("/update-account")
     public ResponseEntity<APIResponse<AccountResponse>> updateAccount(@RequestBody UpdateAccountRequest request) {
         return myProfileService.updateAccount(request);
+    }
+
+    @PostMapping("/avatar")
+    public ResponseEntity<APIResponse<AccountResponse>> uploadAvatar(@RequestParam("file") MultipartFile file) {
+        return myProfileService.uploadAvatar(file);
+    }
+
+    @DeleteMapping("/avatar")
+    public ResponseEntity<APIResponse<Void>> deleteAvatar() {
+        return myProfileService.deleteAvatar();
     }
 
     @GetMapping("/tickets")
