@@ -11,6 +11,8 @@ import com.bookingflight.app.service.AccountService;
 import com.bookingflight.app.service.MyProfileService;
 import lombok.RequiredArgsConstructor;
 
+import java.io.IOException;
+
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.ResponseEntity;
@@ -50,39 +52,18 @@ public class AccountController {
                 return ResponseEntity.ok().body(apiResponse);
         }
 
-        @PostMapping(consumes = "multipart/form-data")
+        @PostMapping(consumes = { "multipart/form-data" })
         public ResponseEntity<APIResponse<AccountResponse>> createAccount(
-                @RequestParam("username") String username,
-                @RequestParam("password") String password,
-                @RequestParam("email") String email,
-                @RequestParam("fullName") String fullName,
-                @RequestParam("phone") String phone,
-                @RequestParam("roleId") String roleId,
-                @RequestPart(value = "file", required = false) MultipartFile file){
-
-                // Build AccountRequest from individual parameters
-                AccountRequest request = new AccountRequest();
-                request.setPassword(password);
-                request.setEmail(email);
-                request.setFullName(fullName);
-                request.setPhone(phone);
-                request.setRoleId(roleId);
-
+                        @RequestPart("account") AccountRequest request,
+                        @RequestPart(value = "avatar", required = false) MultipartFile avatar) throws IOException {
                 String hashPassword = passwordEncoder.encode(request.getPassword());
                 request.setPassword(hashPassword);
 
-                AccountResponse account = accountService.createAccount(request);
-
-                if (file != null && !file.isEmpty()) {
-                        account = accountService.uploadAvatar(account.getId(), file);
-                }
-
-                        APIResponse<AccountResponse> apiResponse = APIResponse.<AccountResponse>builder()
+                APIResponse<AccountResponse> apiResponse = APIResponse.<AccountResponse>builder()
                                 .Code(201)
                                 .Message("Create account")
-                                .data(account)
+                                .data(accountService.createAccount(request, avatar))
                                 .build();
-
                 return ResponseEntity.ok().body(apiResponse);
         }
 

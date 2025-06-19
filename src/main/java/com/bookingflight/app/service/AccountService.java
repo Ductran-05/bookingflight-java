@@ -24,6 +24,7 @@ import jakarta.transaction.Transactional;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -61,8 +62,12 @@ public class AccountService {
         return resultPanigationMapper.toResultPanigationMapper(page);
     }
 
-    public AccountResponse createAccount(AccountRequest accountRequest) {
+    public AccountResponse createAccount(AccountRequest accountRequest, MultipartFile avatar)
+            throws IOException {
         Account account = accountMapper.toAccount(accountRequest);
+        String fileName = fileStorageService.storeFile(avatar);
+        String avatarUrl = fileStorageService.getFileUrl(fileName);
+        account.setAvatar(avatarUrl);
         account.setEnabled(true);
         if (accountRepository.existsByEmail(account.getEmail())) {
             throw new AppException(ErrorCode.ACCOUNT_EMAIL_EXISTED);
