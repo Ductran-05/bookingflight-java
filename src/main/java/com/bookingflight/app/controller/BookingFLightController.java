@@ -70,7 +70,7 @@ public class BookingFLightController {
         for (String ticketId : ticketIds) {
             Ticket ticket = ticketRepository.findById(ticketId).get();
             ticket.setIsBooked(false);
-            ticket.setTicketStatus(TicketStatus.CANCELLED);
+            ticket.setTicketStatus(TicketStatus.AVAILABLE);
             ticketRepository.save(ticket);
         }
         APIResponse<String> apiResponse = APIResponse.<String>builder()

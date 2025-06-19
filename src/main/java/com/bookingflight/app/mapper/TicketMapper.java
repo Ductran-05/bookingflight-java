@@ -89,5 +89,8 @@ public class TicketMapper {
         ticket.setPassengerIDCard(request.getPassengerIDCard());
         ticket.setPassengerEmail(request.getPassengerEmail());
         ticket.setHaveBaggage(request.getHaveBaggage());
+        ticket.setIsBooked(true);
+        ticket.setTicketStatus(TicketStatus.BOOKED);
+
     }
 }

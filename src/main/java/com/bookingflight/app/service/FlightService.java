@@ -113,7 +113,7 @@ public class FlightService {
         public FlightResponse updateFlight(String id, FlightRequest request) throws AppException {
                 Flight flight = flightRepository.findById(id)
                                 .orElseThrow(() -> new AppException(ErrorCode.FLIGHT_NOT_FOUND));
-                flight_SeatRepository.deleteAllByFlightId(id);
+                // flight_SeatRepository.deleteAllByFlightId(id);
                 flight_AirportRepository.deleteAllByFlightId(id);
 
                 flight = flightMapper.updateFlight(id, request);
@@ -125,10 +125,11 @@ public class FlightService {
                         flight_AirportRepository.save(flight_Airport);
                 }
 
-                for (Flight_SeatRequest flight_SeatRequest : request.getListFlight_Seat()) {
-                        Flight_Seat flight_Seat = flight_SeatMapper.toFlight_Seat(flight_SeatRequest, flight);
-                        flight_SeatRepository.save(flight_Seat);
-                }
+                // for (Flight_SeatRequest flight_SeatRequest : request.getListFlight_Seat()) {
+                // Flight_Seat flight_Seat = flight_SeatMapper.toFlight_Seat(flight_SeatRequest,
+                // flight);
+                // flight_SeatRepository.save(flight_Seat);
+                // }
                 for (Ticket ticket : ticketRepository.findAllByFlightId(id)) {
 
                         // gửi mail cho khach hang bao cap nhat chuyen bay

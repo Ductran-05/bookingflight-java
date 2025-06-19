@@ -67,6 +67,7 @@ public class TicketService {
         seatRepository.findById(request.getSeatId()).orElseThrow(() -> new AppException(ErrorCode.SEAT_NOT_EXISTED));
         ticketMapper.updateTicket(request, ticket);
         ticketRepository.save(ticket);
+
         return ticketMapper.toTicketResponse(ticket);
     }
 
