@@ -5,6 +5,8 @@ import com.bookingflight.app.dto.request.AccountRequest;
 import com.bookingflight.app.dto.request.UpdateAccountRequest;
 import com.bookingflight.app.dto.response.AccountResponse;
 import com.bookingflight.app.repository.RoleRepository;
+import com.bookingflight.app.exception.AppException;
+import com.bookingflight.app.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -24,7 +26,8 @@ public class AccountMapper {
                 .email(request.getEmail())
                 .password(request.getPassword())
                 .avatar(request.getAvatar())
-                .role(roleRepository.findById(request.getRoleId()).get())
+                .role(roleRepository.findById(request.getRoleId())
+                        .orElseThrow(() -> new AppException(ErrorCode.ROLE_NOT_FOUND)))
                 .build();
     }
 
@@ -47,7 +50,8 @@ public class AccountMapper {
         account.setPhone(request.getPhone());
         account.setEmail(request.getEmail());
         account.setAvatar(request.getAvatar());
-        account.setRole(roleRepository.findById(request.getRoleId()).get());
+        account.setRole(roleRepository.findById(request.getRoleId())
+                .orElseThrow(() -> new AppException(ErrorCode.ROLE_NOT_FOUND)));
     }
 
 }

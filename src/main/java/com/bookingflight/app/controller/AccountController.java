@@ -11,8 +11,6 @@ import com.bookingflight.app.service.AccountService;
 import com.bookingflight.app.service.MyProfileService;
 import lombok.RequiredArgsConstructor;
 
-import java.io.IOException;
-
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import com.turkraft.springfilter.boot.Filter;
+import org.springframework.http.MediaType;
 
 @RestController
 @RequestMapping("/api/accounts")
@@ -52,20 +51,8 @@ public class AccountController {
                 return ResponseEntity.ok().body(apiResponse);
         }
 
-        @PostMapping(consumes = { "multipart/form-data" })
+        @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
         public ResponseEntity<APIResponse<AccountResponse>> createAccount(
-<<<<<<< HEAD
-                        @RequestPart("account") AccountRequest request,
-                        @RequestPart(value = "avatar", required = false) MultipartFile avatar) throws IOException {
-                String hashPassword = passwordEncoder.encode(request.getPassword());
-                request.setPassword(hashPassword);
-
-                APIResponse<AccountResponse> apiResponse = APIResponse.<AccountResponse>builder()
-                                .Code(201)
-                                .Message("Create account")
-                                .data(accountService.createAccount(request, avatar))
-                                .build();
-=======
                 @RequestPart("account") AccountRequest request,
                 @RequestPart(value = "avatar", required = false) MultipartFile file) {
 
@@ -85,7 +72,6 @@ public class AccountController {
                         .data(account)
                         .build();
 
->>>>>>> 3040a1d9482850d7c8a975e7a43a96b0ee98ba13
                 return ResponseEntity.ok().body(apiResponse);
         }
         @PutMapping("/{id}")

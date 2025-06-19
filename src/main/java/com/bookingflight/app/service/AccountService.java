@@ -165,7 +165,8 @@ public class AccountService {
     }
 
     public void updateAccountRefreshToken(String refreshToken, String email) {
-        Account currAccount = accountRepository.findByEmail(email).get();
+        Account currAccount = accountRepository.findByEmail(email)
+                .orElseThrow(() -> new AppException(ErrorCode.ACCOUNT_NOT_EXISTED));
         if (currAccount != null) {
             currAccount.setRefreshToken(refreshToken);
             accountRepository.save(currAccount);
