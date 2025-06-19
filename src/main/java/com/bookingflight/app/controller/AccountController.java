@@ -8,7 +8,7 @@ import com.bookingflight.app.dto.response.APIResponse;
 import com.bookingflight.app.dto.response.AccountResponse;
 import com.bookingflight.app.service.AccountService;
 
-import jakarta.validation.Valid;
+import com.bookingflight.app.service.MyProfileService;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.data.domain.Pageable;
@@ -25,6 +25,7 @@ import com.turkraft.springfilter.boot.Filter;
 public class AccountController {
         private final AccountService accountService;
         private final PasswordEncoder passwordEncoder;
+        private final MyProfileService myProfileService;
 
         @GetMapping("/{id}")
         public ResponseEntity<APIResponse<AccountResponse>> getAccountById(@PathVariable("id") String id) {
@@ -49,17 +50,39 @@ public class AccountController {
                 return ResponseEntity.ok().body(apiResponse);
         }
 
-        @PostMapping
-        public ResponseEntity<APIResponse<AccountResponse>> createAccount(@RequestBody AccountRequest request) {
+        @PostMapping(consumes = "multipart/form-data")
+        public ResponseEntity<APIResponse<AccountResponse>> createAccount(
+                @RequestParam("username") String username,
+                @RequestParam("password") String password,
+                @RequestParam("email") String email,
+                @RequestParam("fullName") String fullName,
+                @RequestParam("phone") String phone,
+                @RequestParam("roleId") String roleId,
+                @RequestPart(value = "file", required = false) MultipartFile file){
+
+                // Build AccountRequest from individual parameters
+                AccountRequest request = new AccountRequest();
+                request.setPassword(password);
+                request.setEmail(email);
+                request.setFullName(fullName);
+                request.setPhone(phone);
+                request.setRoleId(roleId);
 
                 String hashPassword = passwordEncoder.encode(request.getPassword());
                 request.setPassword(hashPassword);
 
-                APIResponse<AccountResponse> apiResponse = APIResponse.<AccountResponse>builder()
+                AccountResponse account = accountService.createAccount(request);
+
+                if (file != null && !file.isEmpty()) {
+                        account = accountService.uploadAvatar(account.getId(), file);
+                }
+
+                        APIResponse<AccountResponse> apiResponse = APIResponse.<AccountResponse>builder()
                                 .Code(201)
                                 .Message("Create account")
-                                .data(accountService.createAccount(request))
+                                .data(account)
                                 .build();
+
                 return ResponseEntity.ok().body(apiResponse);
         }
 
