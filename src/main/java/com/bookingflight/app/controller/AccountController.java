@@ -74,14 +74,22 @@ public class AccountController {
 
                 return ResponseEntity.ok().body(apiResponse);
         }
-        @PutMapping("/{id}")
-        public ResponseEntity<APIResponse<AccountResponse>> updateAccount(@PathVariable("id") String id,
-                        @RequestBody UpdateAccountRequest request) {
+        @PutMapping(path = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+        public ResponseEntity<APIResponse<AccountResponse>> updateAccount(
+                        @PathVariable("id") String id,
+                        @RequestPart("account") UpdateAccountRequest request,
+                        @RequestPart(value = "avatar", required = false) MultipartFile file) {
+
+                AccountResponse account = accountService.updateAccount(id, request);
+
+                if (file != null && !file.isEmpty()) {
+                        account = accountService.uploadAvatar(account.getId(), file);
+                }
 
                 APIResponse<AccountResponse> apiResponse = APIResponse.<AccountResponse>builder()
                                 .Code(200)
                                 .Message("Update account by id")
-                                .data(accountService.updateAccount(id, request))
+                                .data(account)
                                 .build();
                 return ResponseEntity.ok().body(apiResponse);
         }
