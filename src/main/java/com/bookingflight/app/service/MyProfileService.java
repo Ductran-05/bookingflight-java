@@ -33,6 +33,8 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
+import java.io.File;
+
 @Service
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
