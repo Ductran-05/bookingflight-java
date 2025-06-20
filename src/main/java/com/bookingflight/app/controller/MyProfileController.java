@@ -45,9 +45,19 @@ public class MyProfileController {
     }
 
     @PutMapping(path = "/update-account", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<APIResponse<AccountResponse>> updateAccount(@RequestPart("account") UpdateAccountRequest request, @RequestPart(value = "avatar", required = false) MultipartFile file) {
-        myProfileService.uploadAvatar(file);
-        return myProfileService.updateAccount(request);
+    public ResponseEntity<APIResponse<AccountResponse>> updateAccount(
+            @RequestPart("account") UpdateAccountRequest request, 
+            @RequestPart(value = "avatar", required = false) MultipartFile file) {
+        
+        // Update account details first
+        ResponseEntity<APIResponse<AccountResponse>> response = myProfileService.updateAccount(request);
+        
+        // If avatar file is provided, upload it
+        if (file != null && !file.isEmpty()) {
+            response = myProfileService.uploadAvatar(file);
+        }
+        
+        return response;
     }
 
     @PostMapping("/avatar")
