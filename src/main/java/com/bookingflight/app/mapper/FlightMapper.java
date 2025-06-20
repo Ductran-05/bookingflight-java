@@ -23,6 +23,8 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class FlightMapper {
 
+        private final FlightRepository flightRepository;
+
         final TicketRepository ticketRepository;
 
         final Flight_AirportRepository flight_AirportRepository;
@@ -62,7 +64,7 @@ public class FlightMapper {
                 if (isSoldOut) {
                         flightStatus = FlightStatus.SOLD_OUT;
                 }
-
+                flightRepository.save(flight);
                 return FlightResponse.builder()
                                 .id(flight.getId())
                                 .flightCode(flight.getFlightCode())
