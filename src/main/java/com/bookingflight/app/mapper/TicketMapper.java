@@ -15,6 +15,7 @@ import com.bookingflight.app.dto.response.TicketResponse;
 import com.bookingflight.app.repository.AccountRepository;
 import com.bookingflight.app.repository.FlightRepository;
 import com.bookingflight.app.repository.SeatRepository;
+import com.bookingflight.app.repository.TicketRepository;
 
 @Component
 @RequiredArgsConstructor
@@ -24,6 +25,7 @@ public class TicketMapper {
     final FlightRepository flightRepository;
     final SeatRepository seatRepository;
     final AccountRepository accountRepository;
+    final TicketRepository ticketRepository;
 
     public Ticket toTicket(TicketRequest request) {
         return Ticket.builder()
@@ -63,7 +65,7 @@ public class TicketMapper {
         }
 
         boolean canBook = pickupAt == null && ticket.getTicketStatus().equals(TicketStatus.AVAILABLE);
-
+        ticketRepository.save(ticket);
         return TicketResponse.builder()
                 .id(ticket.getId())
                 .flight(ticket.getFlight())
