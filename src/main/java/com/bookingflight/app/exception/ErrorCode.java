@@ -127,6 +127,10 @@ public enum ErrorCode {
     PAYMENT_INVALID_SIGNATURE(400, "Invalid payment signature"),
     PAYMENT_PROCESSING_FAILED(500, "Payment processing failed"),
 
+    // Chat errors
+    CHAT_SESSION_NOT_FOUND(404, "Chat session not found"),
+    CHATBOT_ERROR(500, "Chatbot service error"),
+    
     // Server errors
     UNIDENTIFIED_EXCEPTION(500, "Unidentified server error"), TOKEN_INVALID(401, "Token is invalid"),
     TOKEN_EXPIRED(401, "Token is expired"), TICKET_ALREADY_PICKED_UP(400, "Ticket already picked up"),

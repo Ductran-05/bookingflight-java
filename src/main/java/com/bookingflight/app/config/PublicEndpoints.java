@@ -23,7 +23,8 @@ public class PublicEndpoints {
                         "/api/files/**",
                         "/api/auth/forgot-password/**",
                         "/api/auth/reset-password/**",
-                        "/api/tickets/pickup/**");
+                        "/api/tickets/pickup/**",
+                        "/api/chat/**");
 
         public static final List<String> GET_METHODS = List.of(
                         "/api/airports/**",
