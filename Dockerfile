@@ -1,11 +1,11 @@
-# Use an official OpenJDK image
+# Stage 1: Build JAR
+FROM gradle:8.4.0-jdk17 AS build
+COPY --chown=gradle:gradle . /home/gradle/project
+WORKDIR /home/gradle/project
+RUN gradle bootJar --no-daemon
+
+# Stage 2: Run the app
 FROM eclipse-temurin:17-jdk
-
-# Set working directory
 WORKDIR /app
-
-# Copy build jar (adjust path if needed)
-COPY build/libs/*.jar app.jar
-
-# Run the jar
+COPY --from=build /home/gradle/project/build/libs/*.jar app.jar
 ENTRYPOINT ["java", "-jar", "app.jar"]
