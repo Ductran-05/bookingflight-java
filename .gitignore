@@ -38,7 +38,7 @@ out/
 
 ### Application Properties ###
 # Ignore application properties with sensitive data (OAuth2, DB credentials, JWT secrets)
-application.properties
+.env
 
 ### Logs ###
 *.log
