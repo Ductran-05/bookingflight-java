@@ -9,6 +9,10 @@ plugins {
 group = "com.bookingflight"
 version = "0.0.1-SNAPSHOT"
 
+tasks.bootJar {
+	archiveFileName.set("app.jar")
+}
+
 java {
 	toolchain {
 		languageVersion = JavaLanguageVersion.of(17)
